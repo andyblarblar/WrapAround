@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>804530a9-d6a3-49b7-a2fb-30c13c30fb5d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
+  </ItemGroup>
+
+
+
+</Project>
