@@ -53,7 +53,6 @@ namespace WrapAround
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<GameHub>("/game");
             });
         }
     }
