@@ -9,6 +9,10 @@
     <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\" />
+  </ItemGroup>
+
 
 
 </Project>
