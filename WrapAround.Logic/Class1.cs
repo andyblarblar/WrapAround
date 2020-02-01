@@ -2,7 +2,15 @@
 
 namespace WrapAround.Logic
 {
-    public class Class1 //TODO become game logic
+    public class GameContext
     {
+
+
+
+
+
+
+
+
     }
 }
