@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WrapAround.Logic
+﻿namespace WrapAround.Logic.Interfaces
 {
     /// <summary>
     /// Represents an entity that can be collided with. 

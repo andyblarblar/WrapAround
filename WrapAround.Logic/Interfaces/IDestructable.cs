@@ -1,4 +1,4 @@
-﻿namespace WrapAround.Logic
+﻿namespace WrapAround.Logic.Interfaces
 {
     /// <summary>
     /// Represents an entity that can be destroyed (ie blocks)

@@ -1,4 +1,4 @@
-﻿namespace WrapAround.Logic.Entitys
+﻿namespace WrapAround.Logic.Entities
 {
     public class Paddle
     {
