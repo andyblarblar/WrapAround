@@ -63,7 +63,7 @@ namespace WrapAround.Logic
 
         public bool IsLobbyFull()
         {
-            return players.Count !< 16;
+            return players.Count !< MAX_PLAYERS;
         }
 
 

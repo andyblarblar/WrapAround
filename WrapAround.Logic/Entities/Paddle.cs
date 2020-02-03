@@ -12,7 +12,7 @@ namespace WrapAround.Logic.Entities
 
         public Vector2 position { get; set; }
 
-        public int height { get; set; }
+        public float height { get; set; }
 
         public Paddle(int gameId, int playerId)
         {

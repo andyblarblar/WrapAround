@@ -6,6 +6,9 @@ using WrapAround.Logic.Entities;
 
 namespace WrapAround
 {
+    /// <summary>
+    /// the interface used for dependance injection of the game runtime
+    /// </summary>
     public interface IServerLoop
     {
         Task UpdatePlayerPosition(Paddle player);
