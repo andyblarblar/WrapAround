@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
 
 namespace WrapAround.Logic
@@ -13,21 +14,40 @@ namespace WrapAround.Logic
 
         private List<GameMap> maps;
 
-        private List<Paddle> players;
+        public List<Paddle> players { get; }
 
         private Ball ball;
 
         private GameMap currentMap { get; set; }
 
+        private ScoreBoard scoreBoard;
+
+
+
+
+        /// <summary>
+        /// adds a player to the game.
+        /// </summary>
+        /// <returns>the id of the player, -1 if lobby is full.</returns>
+        public async Task<int> AddPlayer()
+        {
+            return await Task.Run(() =>
+            {
+                if (IsLobbyFull()) return -1;
+
+                var newPlayer = new Paddle(gameId: id, playerId: players.Count);
+                players.Add(newPlayer); //May need to change playerId derivation
+
+                return newPlayer.id;
+            });
+        }
 
         /// <summary>
         /// Steps the physics forward, checking for conditions.
         /// </summary>
         public void Update()
         {
-            
             throw new NotImplementedException();
-
         }
 
         /// <summary>
@@ -35,9 +55,10 @@ namespace WrapAround.Logic
         /// </summary>
         public void Reset()
         {
-
-            throw new NotImplementedException();
-
+            players.ForEach((paddle => paddle.ResetLocation()));
+            ball.Reset();
+            currentMap = maps[new Random().Next(0, maps.Count)];
+            scoreBoard.Reset();
         }
 
         public bool IsLobbyFull()

@@ -26,6 +26,14 @@ namespace WrapAround.Logic.Entities
             throw new NotImplementedException();
         }
 
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
         /// <summary>
         /// When colliding with an implementer of ICollidable.
         /// </summary>
