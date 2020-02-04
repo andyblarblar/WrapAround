@@ -1,71 +1,55 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿:root {
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
+  --root-font-size: 3rem;
+  --root-corner-radius: 0rem;
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
+  --root-color-bg: #1E1E1E;
+  --root-color-fg: #EEEEEE;
+  --lobby-box-color-bg: #252526;
+  --lobby-box-color-fg: #333333;
+  --lobby-box-color-a1: #0C7D9D;
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
+  --animation-speed: 0.1s;
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  font-family: Roboto, sans-serif;
+  font-size: var(--root-font-size);
+  background: var(--root-color-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  height: 100%;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+::selection {
+  opacity: 0;
+ }
+
+.lobby-box {
+  transition: box-shadow var(--animation-speed);
+  background: var(--lobby-box-color-bg);
+  box-shadow: 0px 0px 0px 2px var(--lobby-box-color-bg) inset;
+  border-radius: var(--root-corner-radius);
+  cursor: hand;
+  color: #FFFFFF; }
+.lobby-box > .lobby-title {
+  font-weight: 700;
+  margin: 2rem 2rem 0.25rem 2rem;
+  font-family: monospace; }
+.lobby-box > .lobby-playernum {
+  transition: margin var(--animation-speed), padding-left var(--animation-speed);
+  background: var(--lobby-box-color-fg);
+  margin: 2px 0 2rem 0;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  font-size: 1rem;
+}
+
+.lobby-box:hover {
+  box-shadow: 0px 0px 0px 3px var(--lobby-box-color-a1) inset; }
+.lobby-box:hover > .lobby-playernum {
+  margin: 0 3px 2rem 3px;
+  padding-left: calc(2rem - 3px);
 }
