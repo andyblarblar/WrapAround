@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
@@ -23,19 +24,29 @@ namespace WrapAround.Logic
         private ScoreBoard scoreBoard;
 
 
+        public GameContext(int id, List<GameMap> maps)
+        {
+            currentMap = maps[new Random().Next(0, maps.Count)];
+            this.id = id;
+            this.maps = maps;
+            ball = new Ball(new Vector2(currentMap.canvasSize.Item1,currentMap.canvasSize.Item2), new Vector2(-1,0));
+            scoreBoard = new ScoreBoard();
+
+        }
+
 
 
         /// <summary>
         /// adds a player to the game.
         /// </summary>
         /// <returns>the id of the player, -1 if lobby is full.</returns>
-        public async Task<int> AddPlayer()
+        public async Task<int> AddPlayer(bool isRightSide)
         {
             return await Task.Run(() =>
             {
                 if (IsLobbyFull()) return -1;
 
-                var newPlayer = new Paddle(gameId: id, playerId: players.Count);
+                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide);
                 players.Add(newPlayer); //May need to change playerId derivation
 
                 return newPlayer.id;

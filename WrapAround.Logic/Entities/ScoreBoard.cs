@@ -7,7 +7,7 @@ namespace WrapAround.Logic.Entities
 {
     class ScoreBoard
     {
-        private (int, int) score { get; set; } = (0, 0);
+        public (int, int) score { get; set; } = (0, 0);
 
         public void Reset()
         {

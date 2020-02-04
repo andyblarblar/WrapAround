@@ -7,8 +7,7 @@ namespace WrapAround.Logic.Interfaces
     /// </summary>
     public interface IMapLoader
     {
-
-        List<GameMap> LoadMaps();
+        List<GameMap> LoadMaps(string path = @".\gameMaps\");
 
     }
 

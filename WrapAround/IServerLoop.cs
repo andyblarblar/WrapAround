@@ -12,7 +12,7 @@ namespace WrapAround
     public interface IServerLoop
     {
         Task UpdatePlayerPosition(Paddle player);
-        Task<int> AddPlayer(int gameId);
+        Task<int> AddPlayer(int gameId, bool paddleIsOnRight);
 
 
 

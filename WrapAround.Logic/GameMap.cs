@@ -11,7 +11,7 @@ namespace WrapAround.Logic
     {
        
         private List<Block> blocks;
-        private Tuple<int, int> canvasSize;
+        public Tuple<int, int> canvasSize { get; set; }
         private GoalZone leftGoal;
         private GoalZone rightGoal;
 

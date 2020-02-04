@@ -25,11 +25,12 @@ namespace WrapAround.hubs
         /// Adds a player to a lobby.
         /// </summary>
         /// <param name="gameId">the lobby to join</param>
+        /// <param name="isOnRight">which side the paddle will be on</param>
         /// <returns>the id given, -1 if lobby is full.</returns>
-        public async Task AddPlayer(int gameId)
+        public async Task AddPlayer(int gameId, bool isOnRight)
         {
-            var Id = await serverLoop.AddPlayer(gameId);
-            await Clients.Caller.SendAsync("ReceiveId", Id);
+            var id = await serverLoop.AddPlayer(gameId, isOnRight);
+            await Clients.Caller.SendAsync("ReceiveId", id);
 
         }
 
