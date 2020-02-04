@@ -45,7 +45,7 @@ namespace WrapAround
                 gameContextList.Add(new GameContext(id: i, maps: maps));
             }
 
-            //TODO set up timers 
+            broadCastLoop = new Timer();
         }
 
 

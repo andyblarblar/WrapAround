@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic
 {
@@ -12,7 +13,7 @@ namespace WrapAround.Logic
         public readonly int id;
 
         public const int MAX_PLAYERS = 16;
-
+        
         private List<GameMap> maps;
 
         public List<Paddle> players { get; }
@@ -23,6 +24,7 @@ namespace WrapAround.Logic
 
         private ScoreBoard scoreBoard;
 
+        public LobbyStates lobbyState;
 
         public GameContext(int id, List<GameMap> maps)
         {
@@ -31,7 +33,7 @@ namespace WrapAround.Logic
             this.maps = maps;
             ball = new Ball(new Vector2(currentMap.canvasSize.Item1,currentMap.canvasSize.Item2), new Vector2(-1,0));
             scoreBoard = new ScoreBoard();
-
+            lobbyState = LobbyStates.WaitingForPlayers;
         }
 
 
@@ -41,7 +43,7 @@ namespace WrapAround.Logic
         /// </summary>
         /// <returns>the id of the player, -1 if lobby is full.</returns>
         public async Task<int> AddPlayer(bool isRightSide)
-        {
+        { 
             return await Task.Run(() =>
             {
                 if (IsLobbyFull()) return -1;
@@ -57,7 +59,7 @@ namespace WrapAround.Logic
         /// Steps the physics forward, checking for conditions.
         /// </summary>
         public void Update()
-        {
+        { 
             throw new NotImplementedException();
         }
 
