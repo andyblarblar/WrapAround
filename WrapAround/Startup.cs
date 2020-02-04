@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WrapAround.hubs;
 using WrapAround.Logic;
+using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround
 {
@@ -27,6 +29,8 @@ namespace WrapAround
         {
             services.AddRazorPages();
             services.AddSignalRCore();
+            services.AddSingleton<IServerLoop,ServerLoop>();//injects server loop
+            services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
