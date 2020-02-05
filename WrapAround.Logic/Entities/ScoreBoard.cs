@@ -14,6 +14,20 @@ namespace WrapAround.Logic.Entities
             score = (0, 0);
         }
 
+        /// <summary>
+        /// Finds if the game is won
+        /// </summary>
+        /// <returns></returns>
+        public (bool, bool) isWon()
+        {
+            if (score.Item1 >= 10 || score.Item2 >= 10)
+            {
+                //TODO finish score logic
+
+            }
+
+
+        }
 
 
 

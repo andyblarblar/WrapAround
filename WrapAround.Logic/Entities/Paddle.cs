@@ -9,6 +9,7 @@ namespace WrapAround.Logic.Entities
         public int id { get; }
 
         public bool isOnRight { get; set; }
+
         public int gameId { get; }
 
         public Vector2 position { get; set; }
@@ -22,9 +23,6 @@ namespace WrapAround.Logic.Entities
             this.isOnRight = isOnRight;
             //TODO create position and size
         }
-
-
-
 
 
         public void ResetLocation()

@@ -37,7 +37,6 @@ namespace WrapAround.Logic.Entities
         {
             position.X = rate.X * UPDATE_RATE;
             position.Y = rate.Y * UPDATE_RATE;
-
         }
 
         public void Reset()

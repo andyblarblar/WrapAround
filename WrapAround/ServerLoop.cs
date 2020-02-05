@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
+using System.Timers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
@@ -22,11 +22,16 @@ namespace WrapAround
     {
          
         /// <summary>
-        /// The speed at which the server will send updates to clients.
+        /// The speed at which the server will send updates to clients. ~60fps
         /// </summary>
-        private readonly TimeSpan broadcastInterval = TimeSpan.FromMilliseconds(16);
+        private readonly int broadcastInterval = 17;
         private readonly IHubContext<GameHub> hubContext;
+
+        /// <summary>
+        /// the global ticker that steps the state and sends game contexts to clients on a timer
+        /// </summary>
         private Timer broadCastLoop;
+
         /// <summary>
         /// Holds the states of Contexts.
         /// </summary>
@@ -45,7 +50,22 @@ namespace WrapAround
                 gameContextList.Add(new GameContext(id: i, maps: maps));
             }
 
-            broadCastLoop = new Timer();
+            broadCastLoop = new Timer(broadcastInterval);
+
+            //Every 17ms, update all lobbies in parallel and then send to clients.
+            broadCastLoop.Elapsed += (sender, args) =>
+            { 
+                Parallel.ForEach(gameContextList, async context =>
+                {
+                    await context.Update();
+                    await hubContext.Clients.All.SendAsync("ReceiveGameContext",context);//send to frontend
+                });
+
+            };
+
+            broadCastLoop.AutoReset = true;
+            broadCastLoop.Start();
+
         }
 
 

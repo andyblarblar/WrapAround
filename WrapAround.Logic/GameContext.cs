@@ -24,7 +24,7 @@ namespace WrapAround.Logic
 
         private ScoreBoard scoreBoard;
 
-        public LobbyStates lobbyState;
+        public LobbyStates LobbyState;
 
         public GameContext(int id, List<GameMap> maps)
         {
@@ -33,7 +33,7 @@ namespace WrapAround.Logic
             this.maps = maps;
             ball = new Ball(new Vector2(currentMap.canvasSize.Item1,currentMap.canvasSize.Item2), new Vector2(-1,0));
             scoreBoard = new ScoreBoard();
-            lobbyState = LobbyStates.WaitingForPlayers;
+            LobbyState = LobbyStates.WaitingForPlayers;
         }
 
 
@@ -58,9 +58,19 @@ namespace WrapAround.Logic
         /// <summary>
         /// Steps the physics forward, checking for conditions.
         /// </summary>
-        public void Update()
-        { 
-            throw new NotImplementedException();
+        public async Task Update()
+        {
+            await Task.Run(() =>
+            {
+                if (IsLobbyFull()) LobbyState = LobbyStates.InGame;
+                if (LobbyState == LobbyStates.WaitingForPlayers) return; //do nothing if the lobby is still waiting
+
+                //TODO impliment hitboxes to detect collisions, then handle. (blocks, goalzone ect). Players are already done.
+
+                ball.Update();
+
+            });
+
         }
 
         /// <summary>
