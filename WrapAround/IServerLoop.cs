@@ -14,7 +14,7 @@ namespace WrapAround
         Task UpdatePlayerPosition(Paddle player);
         Task<int> AddPlayer(int gameId, bool paddleIsOnRight);
 
-
+        Task<List<int>> GetLobbyPlayerCounts();
 
 
     }

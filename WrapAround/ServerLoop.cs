@@ -85,6 +85,19 @@ namespace WrapAround
             });
 
         }
+        
+        /// <summary>
+        /// total players of each lobby as a list
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<int>> GetLobbyPlayerCounts()
+        {
+           return await Task.Run((() =>
+           {
+              return gameContextList.Select(game => game.players.Count).ToList();
+           }));
+
+        }
 
 
         /// <summary>

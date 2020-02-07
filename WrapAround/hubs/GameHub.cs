@@ -44,6 +44,14 @@ namespace WrapAround.hubs
             await serverLoop.UpdatePlayerPosition(player);
         }
 
+        public async Task GetLobbyPlayerCounts()
+        {
+            var lobbyCounts = await serverLoop.GetLobbyPlayerCounts();
+
+            await Clients.Caller.SendAsync("ReceiveLobbyCounts", lobbyCounts);
+
+        }  
+
 
 
 
