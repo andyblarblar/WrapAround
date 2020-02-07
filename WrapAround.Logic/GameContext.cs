@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace WrapAround.Logic
 
 
         /// <summary>
-        /// adds a player to the game.
+        /// adds a player to the game, resizing paddles on team as needed.
         /// </summary>
         /// <returns>the id of the player, -1 if lobby is full.</returns>
         public async Task<int> AddPlayer(bool isRightSide)
@@ -48,8 +49,12 @@ namespace WrapAround.Logic
             {
                 if (IsLobbyFull()) return -1;
 
-                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide);
-                players.Add(newPlayer); //May need to change playerId derivation
+                var numOnSide = players.Count(player => player.isOnRight == isRightSide) + 1;
+
+                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide);
+                players.Add(newPlayer); 
+
+                players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
 
                 return newPlayer.id;
             });
@@ -68,6 +73,13 @@ namespace WrapAround.Logic
                 //TODO impliment hitboxes to detect collisions, then handle. (blocks, goalzone ect). Players are already done.
 
                 ball.Update();
+
+
+
+
+
+
+
 
             });
 

@@ -21,24 +21,5 @@ namespace WrapAround.Logic
 
         }
 
-        /// <summary>
-        /// Serializes this map object to a standard model.
-        /// </summary>
-        /// <returns></returns>
-        public string Serialize()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Creates a GameMap from a serialized string.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static GameMap DeSerialize(string input)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

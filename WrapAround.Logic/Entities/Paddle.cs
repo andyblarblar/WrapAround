@@ -16,12 +16,13 @@ namespace WrapAround.Logic.Entities
 
         public float height { get; set; }
 
-        public Paddle(int gameId, int playerId, bool isOnRight)
+        private const float MAX_SIZE = 100;//TODO finialise size
+        public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide)
         {
             id = playerId;
             this.gameId = gameId;
             this.isOnRight = isOnRight;
-            //TODO create position and size
+            height = MAX_SIZE / playerTotalOnSide;
         }
 
 
@@ -30,6 +31,10 @@ namespace WrapAround.Logic.Entities
             throw new NotImplementedException();
         }
 
+        public void AdjustSize(int numberOfPlayersOnSide)
+        {
+            height = MAX_SIZE / numberOfPlayersOnSide;
+        }
 
 
 

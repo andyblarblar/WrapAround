@@ -6,7 +6,7 @@
     public interface IDestructable
     {
         int health { get; set; }
-        void Destroy();
+        void Damage();
 
     }
 

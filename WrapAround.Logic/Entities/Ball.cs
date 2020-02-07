@@ -35,14 +35,17 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         public void Update()
         {
-            position.X = rate.X * UPDATE_RATE;
-            position.Y = rate.Y * UPDATE_RATE;
+            position.X += rate.X * UPDATE_RATE;
+            position.Y += rate.Y * UPDATE_RATE;
         }
 
         public void Reset()
         {
             throw new NotImplementedException();
         }
+
+
+        #region CollisionLogic
 
 
         /// <summary>
@@ -64,7 +67,8 @@ namespace WrapAround.Logic.Entities
         /// <returns></returns>
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
-            Paddle p => new CollisionHandler(HandlePaddleCollision)
+            Paddle p => new CollisionHandler(HandlePaddleCollision),
+            Block b when b.health !=0 => new CollisionHandler(HandleBlockCollision)
             //TODO impliment all collision handlers.
 
         };
@@ -82,6 +86,17 @@ namespace WrapAround.Logic.Entities
 
         }
 
+        private void HandleBlockCollision(object block)
+        {
+            var realBlock = block as Block;
+
+            realBlock.Damage();
+
+            rate.Y *= -1;
+
+        }
+
+        #endregion
 
 
     }
