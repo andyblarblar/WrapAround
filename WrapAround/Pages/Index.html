@@ -1,52 +1,55 @@
 <html>
-    <head>
-        <link href="https://fonts.googleapis.com/css?family=Roboto:100,400&display=swap" rel="stylesheet"> <!-- Import Roboto -->
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Import Material Icons -->
-        <link href="../wwwroot/js/site.js" rel="stylesheet">
-        <link href="../wwwroot/css/site.css" rel="stylesheet">
-    </head>
-    <body>
-        <!-- Header -->
-        <div id="header">
-            <h2>Wrap<span>Ar∞und</span></h2>
-            <!-- Settings Menu Activator -->
-            <i class="material-icons" id="settings">settings</i>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400&display=swap" rel="stylesheet"> <!-- Import Roboto -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Import Material Icons -->
+    
+    <link href="../wwwroot/css/site.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div id="header">
+        <h2>Wrap<span>Ar∞und</span></h2>
+        <!-- Settings Menu Activator -->
+        <i class="material-icons" id="settings">settings</i>
+    </div>
+    <!-- Lobby Select -->
+    <div id="lobby-select">
+        <!-- Lobby 1 -->
+        <a class="lobby-box" id="lobby-1" href="#game-modal">
+            <div class="lobby-title">Lobby 1</div>
+            <div class="lobby-playernum">0/16 Players</div>
+        </a>
+        <!-- Lobby 2 -->
+        <a class="lobby-box" id="lobby-2" href="#game-modal">
+            <div class="lobby-title">Lobby 2</div>
+            <div class="lobby-playernum">0/16 Players</div>
+        </a>
+        <!-- Lobby 3 -->
+        <a class="lobby-box" id="lobby-3" href="#game-modal">
+            <div class="lobby-title">Lobby 3</div>
+            <div class="lobby-playernum">0/16 Players</div>
+        </a>
+        <!-- Lobby 4 -->
+        <a class="lobby-box" id="lobby-4" href="#game-modal">
+            <div class="lobby-title">Lobby 4</div>
+            <div class="lobby-playernum">0/16 Players</div>
+        </a>
+    </div>
+    <!-- Game Window Modal -->
+    <div id="game-modal">
+        <div id="game-window">
+            <canvas id="render-window" width="1250" height="700"></canvas>
+            <!-- <div id="chat-window">
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            </div> -->
+            <a id="close-modal" href="#"><i class="material-icons">close</i></a>
         </div>
-        <!-- Lobby Select -->
-        <div id="lobby-select">
-            <!-- Lobby 1 -->
-            <a class="lobby-box" id="lobby-1" href="#game-modal">
-                <div class="lobby-title">Lobby 1</div>
-                <div class="lobby-playernum">0/16 Players</div>
-            </a>
-            <!-- Lobby 2 -->
-            <a class="lobby-box" id="lobby-2" href="#game-modal">
-                <div class="lobby-title">Lobby 2</div>
-                <div class="lobby-playernum">0/16 Players</div>
-            </a>
-            <!-- Lobby 3 -->
-            <a class="lobby-box" id="lobby-3" href="#game-modal">
-                <div class="lobby-title">Lobby 3</div>
-                <div class="lobby-playernum">0/16 Players</div>
-            </a>
-            <!-- Lobby 4 -->
-            <a class="lobby-box" id="lobby-4" href="#game-modal">
-                <div class="lobby-title">Lobby 4</div>
-                <div class="lobby-playernum">0/16 Players</div>
-            </a>
-        </div>
-        <!-- Game Window Modal -->
-        <div id="game-modal">
-            <div id="game-window">
-                <canvas id="render-window" width="1250" height="700"></canvas>
-                <!-- <div id="chat-window">
-                    <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                    <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                    <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                    <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                </div> -->
-                <a id="close-modal" href="#"><i class="material-icons">close</i></a>
-            </div>
-        </div>
-    </body>
+    </div>
+
+    <script src="../wwwroot/js/site.js"></script>
+
+</body>
 </html>

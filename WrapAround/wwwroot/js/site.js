@@ -3,23 +3,18 @@
 
 // Write your Javascript code
 
-var 
+var lob1 = document.getElementById("lobby-1");
+lob1.innerHTML = "haha";
 
-var lobbyButton = document.createElement("div");
-var lobbyTitle = document.createElement("div");
-var lobbyNumP = document.createElement("div");
-lobbyButton.appendChild(lobbyTitle);
-lobbyButton.appendChild(lobbyNumP);
-document.body.appendChild(lobbyButton);
+//function addPlayerToLobby() {
+//    connection.invoke("AddPlayer");
+//}
 
-lobbyTitle.innerHTML("haha");
-lobbyNumP.innerHTML("funny123");
-
-function addPlayerToLobby() {
-    connection.invoke("AddPlayer",)
+function funny() {
+    lob1.innerHTML += "\nhaha";
 }
 
-lobbyButton.addEventListener('click', addPlayerToLobby)
+setInterval(funny, 10);
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/hubs/GameHub.cs")
@@ -31,4 +26,10 @@ connection.start().then(function () {
 });
 
 
+function globalRun() {
 
+
+
+}
+
+setInterval(globalRun, 50);
