@@ -15,15 +15,15 @@ namespace WrapAround.Logic
 
         public const int MAX_PLAYERS = 16;
         
-        private List<GameMap> maps;
+        private readonly List<GameMap> maps;
 
         public List<Paddle> players { get; }
 
-        private Ball ball;
+        private readonly Ball ball;
 
         private GameMap currentMap { get; set; }
 
-        private ScoreBoard scoreBoard;
+        private readonly ScoreBoard scoreBoard;
 
         public LobbyStates LobbyState;
 
@@ -67,17 +67,32 @@ namespace WrapAround.Logic
         {
             await Task.Run(() =>
             {
+                if (LobbyState == LobbyStates.WonByLeft || LobbyState == LobbyStates.WonByRight)
+                {
+                    Reset();
+                    return;
+                }
+
                 if (IsLobbyFull()) LobbyState = LobbyStates.InGame;
                 if (LobbyState == LobbyStates.WaitingForPlayers) return; //do nothing if the lobby is still waiting
 
                 //TODO impliment hitboxes to detect collisions, then handle. (blocks, goalzone ect). Players are already done.
 
                 ball.Update();
+                //Do rest of updates
+
+                //then collision detect
 
 
 
+                var actionIfWon = scoreBoard.isWon() switch
+                {
+                    var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; },
+                    var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; },
+                    _ => (Action) (() => {})
 
-
+                };
+                actionIfWon.Invoke();
 
 
 

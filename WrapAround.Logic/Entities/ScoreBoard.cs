@@ -5,6 +5,7 @@ using System.Text;
 
 namespace WrapAround.Logic.Entities
 {
+    
     class ScoreBoard
     {
         public (int, int) score { get; set; } = (0, 0);
@@ -17,15 +18,16 @@ namespace WrapAround.Logic.Entities
         /// <summary>
         /// Finds if the game is won
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A tuple of (bool,bool) where the side of the bool corresponds to the side of the player.</returns>
         public (bool, bool) isWon()
         {
-            if (score.Item1 >= 10 || score.Item2 >= 10)
+            return score switch
             {
-                //TODO finish score logic
+                var (left, _) when left >= 10 => (true, false),
+                var (_, right) when right >= 10 => (false, true),
+                _ => (false, false)
 
-            }
-
+            };
 
         }
 

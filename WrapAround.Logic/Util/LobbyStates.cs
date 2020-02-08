@@ -8,6 +8,8 @@ namespace WrapAround.Logic.Util
     {
         WaitingForPlayers,
         InGame,
+        WonByLeft,
+        WonByRight
 
 
 
