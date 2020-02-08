@@ -10,9 +10,9 @@ namespace WrapAround.Logic.Entities
     {
         public int health { get; set; }
 
-        public Vector2 position { get; set; }
+        public Vector2 Position { get; set; }
 
-        public Color color { get; set; }
+        public Color Color { get; set; }
 
         /// <summary>
         /// Decrements the blocks health and color
@@ -21,7 +21,7 @@ namespace WrapAround.Logic.Entities
         {
             health--;
 
-            color = health switch
+            Color = health switch
             {
                 1 => Color.Red,
                 2 => Color.Orange,

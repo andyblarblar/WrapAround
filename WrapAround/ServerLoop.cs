@@ -35,7 +35,7 @@ namespace WrapAround
         /// <summary>
         /// Holds the states of Contexts.
         /// </summary>
-        private List<GameContext> gameContextList;
+        private readonly List<GameContext> gameContextList;
 
         private const int MAX_LOBBY_COUNT = 4;
 
@@ -75,12 +75,12 @@ namespace WrapAround
         /// <param name="gameId">the lobby to be added to.</param>
         /// <param name="playerIsOnRight">which side the paddle is on</param>
         /// <returns>the player Id given.</returns>
-        public async Task<int> AddPlayer(int gameId, bool playerIsOnRight)
+        public async Task<int> AddPlayer(int gameId, bool playerIsOnRight, string hash)
         {
             return await Task.Run(async () =>
             {
                 var lobby = gameContextList.FirstOrDefault(context => context.id == gameId);
-                return await lobby.AddPlayer(playerIsOnRight);
+                return await lobby.AddPlayer(playerIsOnRight, hash);
 
             });
 
@@ -110,7 +110,8 @@ namespace WrapAround
             await Task.Run(() =>
             {
                 var context = gameContextList.FirstOrDefault(gameContext => gameContext.id == player.gameId);
-                context.players.FirstOrDefault(paddle => paddle.id == player.id).position = player.position;
+                var serverPlayer = context.players.FirstOrDefault(paddle => paddle.id == player.id);
+                if (serverPlayer.hash == player.hash) serverPlayer.position = player.position;
 
             });
 

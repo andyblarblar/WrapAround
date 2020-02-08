@@ -26,10 +26,11 @@ namespace WrapAround.hubs
         /// </summary>
         /// <param name="gameId">the lobby to join</param>
         /// <param name="isOnRight">which side the paddle will be on</param>
+        /// <param name="hash">a unique hash generated and stored on the client used for authorization</param>
         /// <returns>the id given, -1 if lobby is full.</returns>
-        public async Task AddPlayer(int gameId, bool isOnRight)
+        public async Task AddPlayer(int gameId, bool isOnRight, string hash)
         {
-            var id = await serverLoop.AddPlayer(gameId, isOnRight);
+            var id = await serverLoop.AddPlayer(gameId, isOnRight, hash);
             await Clients.Caller.SendAsync("ReceiveId", id);
 
         }
@@ -44,6 +45,10 @@ namespace WrapAround.hubs
             await serverLoop.UpdatePlayerPosition(player);
         }
 
+        /// <summary>
+        /// Sends the lobby player counts to the caller as a list of int
+        /// </summary>
+        /// <returns></returns>
         public async Task GetLobbyPlayerCounts()
         {
             var lobbyCounts = await serverLoop.GetLobbyPlayerCounts();

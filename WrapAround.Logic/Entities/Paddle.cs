@@ -16,8 +16,13 @@ namespace WrapAround.Logic.Entities
 
         public float height { get; set; }
 
+        /// <summary>
+        /// A unique id assigned to the player
+        /// </summary>
+        public string hash { get; set; }
+
         private const float MAX_SIZE = 100;//TODO finialise size
-        public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide)
+        public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash)
         {
             id = playerId;
             this.gameId = gameId;

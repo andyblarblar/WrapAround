@@ -43,7 +43,7 @@ namespace WrapAround.Logic
         /// adds a player to the game, resizing paddles on team as needed.
         /// </summary>
         /// <returns>the id of the player, -1 if lobby is full.</returns>
-        public async Task<int> AddPlayer(bool isRightSide)
+        public async Task<int> AddPlayer(bool isRightSide, string hash)
         { 
             return await Task.Run(() =>
             {
@@ -51,7 +51,7 @@ namespace WrapAround.Logic
 
                 var numOnSide = players.Count(player => player.isOnRight == isRightSide) + 1;
 
-                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide);
+                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash);
                 players.Add(newPlayer); 
 
                 players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
@@ -90,10 +90,12 @@ namespace WrapAround.Logic
         /// </summary>
         public void Reset()
         {
-            players.ForEach((paddle => paddle.ResetLocation()));
+            players.ForEach(paddle => paddle.ResetLocation());
             ball.Reset();
             currentMap = maps[new Random().Next(0, maps.Count)];
             scoreBoard.Reset();
+            LobbyState = IsLobbyFull() ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
+
         }
 
         public bool IsLobbyFull()
