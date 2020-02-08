@@ -14,6 +14,8 @@ namespace WrapAround.Logic.Entities
 
         public Color Color { get; set; }
 
+
+
         /// <summary>
         /// Decrements the blocks health and color
         /// </summary>

@@ -17,7 +17,7 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         private Vector2 rate;
 
-        private const int SPEED = 5;//TODO finalize when units are defined
+        private const int SPEED = 1;//TODO finalize when units are defined
 
         private const float MAX_ANGLE = (float) (Math.PI * 5 / 12);// ~75 degrees
 
@@ -68,7 +68,7 @@ namespace WrapAround.Logic.Entities
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
             Paddle p => new CollisionHandler(HandlePaddleCollision),
-            Block b when b.health !=0 => new CollisionHandler(HandleBlockCollision)
+            Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision)
             //TODO impliment all collision handlers.
 
         };

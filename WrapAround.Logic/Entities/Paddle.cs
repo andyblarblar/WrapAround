@@ -21,15 +21,17 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         public string hash { get; set; }
 
-        private const float MAX_SIZE = 100;//TODO finialise size
+        private const float MAX_SIZE = 300;
+
+
         public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash)
         {
             id = playerId;
             this.gameId = gameId;
             this.isOnRight = isOnRight;
             height = MAX_SIZE / playerTotalOnSide;
+            this.hash = hash;
         }
-
 
         public void ResetLocation()
         {
