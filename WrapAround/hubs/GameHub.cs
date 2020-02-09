@@ -32,7 +32,8 @@ namespace WrapAround.hubs
         {
             var id = await serverLoop.AddPlayer(gameId, isOnRight, hash);
             await Clients.Caller.SendAsync("ReceiveId", id);
-
+            if (id != -1) await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{id}");
+            
         }
 
         /// <summary>
@@ -55,11 +56,25 @@ namespace WrapAround.hubs
 
             await Clients.Caller.SendAsync("ReceiveLobbyCounts", lobbyCounts);
 
-        }  
+        }
+
+        /// <summary>
+        /// Gracefully removes a player from a lobby.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public async Task RemovePlayerFromLobby(Paddle player)
+        {
+            await serverLoop.RemovePlayer(player);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.gameId}");
+        }
 
 
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            Groups.RemoveFromGroupAsync(Context.ConnectionId, ) //TODO figure out how to get lobby
 
-
-
+            return base.OnDisconnectedAsync(exception);
+        }
     }
 }

@@ -58,7 +58,8 @@ namespace WrapAround
                 Parallel.ForEach(gameContextList, async context =>
                 {
                     await context.Update();
-                    await hubContext.Clients.All.SendAsync("ReceiveGameContext",context);//send to frontend
+                    await hubContext.Clients.Group($"lobby{context.id}").SendAsync("ReceiveContextUpdate",context);//send to frontend
+                    
                 });
 
             };
@@ -85,7 +86,24 @@ namespace WrapAround
             });
 
         }
-        
+
+        /// <summary>
+        /// Removes a player from a lobby.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public async Task RemovePlayer(Paddle player)
+        {
+            await Task.Run((async () =>
+            {
+                var context = gameContextList.First((gameContext => gameContext.id == player.gameId));
+                await context.RemovePlayer(player);
+
+            }));
+
+
+        }
+
         /// <summary>
         /// total players of each lobby as a list
         /// </summary>
@@ -111,6 +129,7 @@ namespace WrapAround
             {
                 var context = gameContextList.FirstOrDefault(gameContext => gameContext.id == player.gameId);
                 var serverPlayer = context.players.FirstOrDefault(paddle => paddle.id == player.id);
+                //TODO do check to make sure player movement was possible without cheating
                 if (serverPlayer.hash == player.hash) serverPlayer.position = player.position;
 
             });

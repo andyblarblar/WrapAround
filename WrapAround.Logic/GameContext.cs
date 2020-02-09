@@ -61,6 +61,20 @@ namespace WrapAround.Logic
         }
 
         /// <summary>
+        /// Removes the specified player from the lobby.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public async Task RemovePlayer(Paddle player)
+        {
+            await Task.Run((() =>
+            {
+                players.Remove(players.AsParallel().Single(paddle => paddle.id == player.id && paddle.hash == player.hash));
+
+            }));
+        }
+
+        /// <summary>
         /// Steps the physics forward, checking for conditions.
         /// </summary>
         public async Task Update()

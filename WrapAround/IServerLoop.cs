@@ -13,7 +13,7 @@ namespace WrapAround
     {
         Task UpdatePlayerPosition(Paddle player);
         Task<int> AddPlayer(int gameId, bool paddleIsOnRight, string hash);
-
+        Task RemovePlayer(Paddle player);
         Task<List<int>> GetLobbyPlayerCounts();
 
 
