@@ -8,7 +8,7 @@ using WrapAround.Logic.Entities;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic
-{//TODO ompliment all hitboxes
+{
     public class GameContext
     {
         public readonly int id;
@@ -96,12 +96,11 @@ namespace WrapAround.Logic
                 if (IsLobbyFull()) LobbyState = LobbyStates.InGame;
                 if (LobbyState == LobbyStates.WaitingForPlayers) return; //do nothing if the lobby is still waiting
 
-                //TODO impliment hitboxes to detect collisions, then handle. (blocks, goalzone ect). Players are already done.
+                //TODO detect collisions, then handle. (blocks, goalzone ect). Players are already done.
 
                 ball.Update();
                 //Do rest of updates
 
-                //then collision detect, make sure to check if ball should wraparound TM
 
 
                 var actionIfWon = scoreBoard.isWon() switch

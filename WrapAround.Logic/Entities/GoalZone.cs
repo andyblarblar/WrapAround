@@ -1,15 +1,24 @@
 ﻿using System.Numerics;
+using WrapAround.Logic.Interfaces;
 
 namespace WrapAround.Logic.Entities
 {
     /// <summary>
     /// Represents the area that counts as a goal. 
     /// </summary>
-    public class GoalZone
+    public class GoalZone : IHitbox
     {
         public Vector2 Position { get; set; }
 
-        public (int, int) WidthHigthTuple { get; } = (10, 703);
+        public Hitbox Hitbox { get; set; }
+
+        public GoalZone(Vector2 position)
+        {
+            Position = position;
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10,Position.Y + 703));
+
+        }
+
 
     }
 }

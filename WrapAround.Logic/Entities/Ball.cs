@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Globalization;
 using System.Numerics;
 using WrapAround.Logic.Interfaces;
 
 namespace WrapAround.Logic.Entities
 {
-    public class Ball : ICollidable
+    /// <summary>
+    /// A 10 Px by 10 Px ball (well, square) that bounces around
+    /// </summary>
+    public class Ball : ICollidable, IHitbox
     {
         /// <summary>
         /// the position of the ball on the canvas
@@ -22,6 +24,7 @@ namespace WrapAround.Logic.Entities
         private const float MAX_ANGLE = (float) (Math.PI * 5 / 12);// ~75 degrees
 
         private const float UPDATE_RATE = 16;//16ms update rate
+        public Hitbox Hitbox { get; set; }
 
         private readonly Vector2 startingPosition;
 
@@ -30,7 +33,7 @@ namespace WrapAround.Logic.Entities
             position = startingPosition;
             this.startingPosition = startingPosition;
             this.rate = rate;
-            
+            Hitbox = new Hitbox(position, new Vector2(position.X + 10,position.Y + 10));
         }
 
         /// <summary>
@@ -40,6 +43,8 @@ namespace WrapAround.Logic.Entities
         {
             position.X += rate.X * UPDATE_RATE;
             position.Y += rate.Y * UPDATE_RATE;
+            Hitbox = new Hitbox(position, new Vector2(position.X + 10, position.Y + 10));
+            
         }
 
         public void Reset()
@@ -73,7 +78,6 @@ namespace WrapAround.Logic.Entities
         {
             Paddle p  => new CollisionHandler(HandlePaddleCollision),
             Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision)
-            //TODO impliment all collision handlers.
 
         };
 
@@ -88,6 +92,7 @@ namespace WrapAround.Logic.Entities
             rate.X = (float) (SPEED * Math.Cos(bounceAngle));
             rate.Y = (float) (SPEED * -Math.Sin(bounceAngle));
 
+            Update();//update to avoid getting stuck
         }
 
         private void HandleBlockCollision(object block)
@@ -98,11 +103,13 @@ namespace WrapAround.Logic.Entities
 
             rate.Y *= -1;
 
+            Update();//update to avoid getting stuck
         }
 
         #endregion
 
 
+        
     }
 
 

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Hosting;
 using WrapAround.hubs;
 using WrapAround.Logic;
 using WrapAround.Logic.Entities;
 using WrapAround.Logic.Interfaces;
-using WrapAround.Logic.Util;
 
 namespace WrapAround
 {
@@ -129,8 +124,7 @@ namespace WrapAround
             {
                 var context = gameContextList.First(gameContext => gameContext.id == player.GameId);
                 var serverPlayer = context.players.First(paddle => paddle.Id == player.Id);
-                //TODO do check to make sure player movement was possible without cheating
-                if (serverPlayer.Hash == player.Hash) serverPlayer.Position = player.Position;
+                if (serverPlayer.Hash == player.Hash) serverPlayer.Update(player.Position);
 
             });
 

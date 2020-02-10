@@ -1,20 +1,23 @@
-﻿using System;
-using System.Drawing;
-using System.Numerics;
-using System.Runtime.InteropServices.ComTypes;
+﻿using System.Numerics;
 using WrapAround.Logic.Interfaces;
 
 namespace WrapAround.Logic.Entities
 {
-    public class Paddle
+    /// <summary>
+    /// A player controlled paddle of variable height but static 10 pixel width
+    /// </summary>
+    public class Paddle : IHitbox 
     {
         public int Id { get; }
 
         public bool IsOnRight { get; set; }
 
         public int GameId { get; }
+        public Hitbox Hitbox { get; set; }
 
         public Vector2 Position { get; set; }
+
+        private Vector2 StartingPosition { get; }
 
         public float Height { get; set; } 
 
@@ -28,16 +31,18 @@ namespace WrapAround.Logic.Entities
         public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash, Vector2 startingPosition)
         {
             Id = playerId;
-            this.GameId = gameId;
-            this.IsOnRight = isOnRight;
+            GameId = gameId;
+            IsOnRight = isOnRight;
             Height = MAX_SIZE / playerTotalOnSide;
-            this.Hash = hash;
+            Hash = hash;
             Position = startingPosition;
+            StartingPosition = startingPosition;
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + Height));
         }
 
         public void ResetLocation()
         {
-            throw new NotImplementedException();
+           Update(StartingPosition);
         }
 
         public void AdjustSize(int numberOfPlayersOnSide)
@@ -45,9 +50,17 @@ namespace WrapAround.Logic.Entities
             Height = MAX_SIZE / numberOfPlayersOnSide;
         }
 
+        /// <summary>
+        /// Updates the position of both the players paddle and the underlying hitbox
+        /// </summary>
+        /// <param name="playerPosition"></param>
+        public void Update(Vector2 playerPosition)
+        {
+            Position = playerPosition;
+            Hitbox = new Hitbox(playerPosition, new Vector2(Position.X + 10, Position.Y + Height));
 
+        }
 
-
-
+        
     }
 }

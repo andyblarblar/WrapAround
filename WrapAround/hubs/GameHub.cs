@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using WrapAround.Logic.Entities;
@@ -72,7 +70,7 @@ namespace WrapAround.hubs
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            Groups.RemoveFromGroupAsync(Context.ConnectionId, ) //TODO figure out how to get lobby
+            //Groups.RemoveFromGroupAsync(Context.ConnectionId, ) //TODO figure out how to get lobby
 
             return base.OnDisconnectedAsync(exception);
         }

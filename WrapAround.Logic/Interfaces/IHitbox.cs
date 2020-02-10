@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿
+using System.Numerics;
+
 
 namespace WrapAround.Logic.Interfaces
 {
     public interface IHitbox
     {
-
         Hitbox Hitbox { get; set; }
+        //TODO add something like quadtrent to effecently find collisions. Then add a default method to this interface to calculate it.
+
 
     }
 
@@ -17,9 +17,9 @@ namespace WrapAround.Logic.Interfaces
     /// </summary>
     public struct Hitbox
     {
-        public Point TopLeft, BottomRight;
+        public Vector2 TopLeft, BottomRight;
 
-        public Hitbox(Point topLeft, Point bottomRight)
+        public Hitbox(Vector2 topLeft, Vector2 bottomRight)
         {
             TopLeft = topLeft;
             BottomRight = bottomRight;

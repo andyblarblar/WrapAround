@@ -18,9 +18,9 @@ namespace WrapAround.Logic
 
         public GameMap((int x, int y) canvasSize = default, List<Block> blocks = default)
         {
-            LeftGoal = new GoalZone{Position = new Vector2(0,0)};
-            RightGoal = new GoalZone{Position = new Vector2(canvasSize.x - 10,0)};
-            this.Blocks = blocks;
+            LeftGoal = new GoalZone(new Vector2(0, 0));
+            RightGoal = new GoalZone(new Vector2(canvasSize.x - 10,0));
+            Blocks = blocks;
         }
 
     }
