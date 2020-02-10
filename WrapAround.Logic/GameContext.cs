@@ -8,7 +8,7 @@ using WrapAround.Logic.Entities;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic
-{
+{//TODO ompliment all hitboxes
     public class GameContext
     {
         public readonly int id;
@@ -32,7 +32,7 @@ namespace WrapAround.Logic
             currentMap = maps[new Random().Next(0, maps.Count)];
             this.id = id;
             this.maps = maps;
-            ball = new Ball(new Vector2(currentMap.canvasSize.Item1,currentMap.canvasSize.Item2), new Vector2(-1,0));
+            ball = new Ball(new Vector2(currentMap.CanvasSize.Item1 / 2,currentMap.CanvasSize.Item2 / 2), new Vector2(-1,0));
             scoreBoard = new ScoreBoard();
             LobbyState = LobbyStates.WaitingForPlayers;
         }
@@ -49,14 +49,16 @@ namespace WrapAround.Logic
             {
                 if (IsLobbyFull()) return -1;
 
-                var numOnSide = players.Count(player => player.isOnRight == isRightSide) + 1;
+                var numOnSide = players.Count(player => player.IsOnRight == isRightSide) + 1;
 
-                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash);
+                var playerStartingPosition = isRightSide ? new Vector2(currentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
+
+                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);
                 players.Add(newPlayer); 
 
                 players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
 
-                return newPlayer.id;
+                return newPlayer.Id;
             });
         }
 
@@ -69,7 +71,11 @@ namespace WrapAround.Logic
         {
             await Task.Run((() =>
             {
-                players.Remove(players.AsParallel().Single(paddle => paddle.id == player.id && paddle.hash == player.hash));
+                players.Remove(players.AsParallel().Single(paddle => paddle.Id == player.Id && paddle.Hash == player.Hash));
+
+                var playersOnSide = players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
+                players.ForEach(paddle => paddle.AdjustSize(playersOnSide));//readjust sizes
+
 
             }));
         }
@@ -95,8 +101,7 @@ namespace WrapAround.Logic
                 ball.Update();
                 //Do rest of updates
 
-                //then collision detect
-
+                //then collision detect, make sure to check if ball should wraparound TM
 
 
                 var actionIfWon = scoreBoard.isWon() switch

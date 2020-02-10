@@ -17,15 +17,18 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         private Vector2 rate;
 
-        private const int SPEED = 1;//TODO finalize when units are defined
+        private const int SPEED = 1;
 
         private const float MAX_ANGLE = (float) (Math.PI * 5 / 12);// ~75 degrees
 
         private const float UPDATE_RATE = 16;//16ms update rate
-        
+
+        private readonly Vector2 startingPosition;
+
         public Ball(Vector2 startingPosition, Vector2 rate)
         {
-            this.position = startingPosition;
+            position = startingPosition;
+            this.startingPosition = startingPosition;
             this.rate = rate;
             
         }
@@ -41,7 +44,8 @@ namespace WrapAround.Logic.Entities
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            position = startingPosition;
+            rate = new Vector2(-1,0);
         }
 
 
@@ -67,7 +71,7 @@ namespace WrapAround.Logic.Entities
         /// <returns></returns>
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
-            Paddle p => new CollisionHandler(HandlePaddleCollision),
+            Paddle p  => new CollisionHandler(HandlePaddleCollision),
             Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision)
             //TODO impliment all collision handlers.
 
@@ -77,8 +81,8 @@ namespace WrapAround.Logic.Entities
         {
             var realPaddle = paddle as Paddle;
 
-            var relativeIntersectY = (realPaddle.position.Y + (realPaddle.height / 2)) - position.Y;//assuming ball Y is accurate to the collision
-            var normalizedRelativeIntersectionY = relativeIntersectY / (realPaddle.height / 2);
+            var relativeIntersectY = (realPaddle.Position.Y + (realPaddle.Height / 2)) - position.Y;//assuming ball Y is accurate to the collision
+            var normalizedRelativeIntersectionY = relativeIntersectY / (realPaddle.Height / 2);
             var bounceAngle = normalizedRelativeIntersectionY * MAX_ANGLE;
             //look ma, i'm actually using math!
             rate.X = (float) (SPEED * Math.Cos(bounceAngle));

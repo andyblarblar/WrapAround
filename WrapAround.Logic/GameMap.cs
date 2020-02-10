@@ -11,15 +11,16 @@ namespace WrapAround.Logic
     public class GameMap
     {
        
-        public List<Block> blocks { get; set; } = new List<Block>();
-        public (int, int) canvasSize { get; set; } = (1250, 703);
-        public GoalZone leftGoal; 
-        public GoalZone rightGoal;
+        public List<Block> Blocks { get; set; } = new List<Block>();
+        public (int, int) CanvasSize { get; set; } = (1250, 703);
+        public GoalZone LeftGoal; 
+        public GoalZone RightGoal;
 
         public GameMap((int x, int y) canvasSize = default, List<Block> blocks = default)
         {
-            leftGoal = new GoalZone{Position = new Vector2(0,0)};
-            rightGoal = new GoalZone{Position = new Vector2(canvasSize.x - 10,0)};
+            LeftGoal = new GoalZone{Position = new Vector2(0,0)};
+            RightGoal = new GoalZone{Position = new Vector2(canvasSize.x - 10,0)};
+            this.Blocks = blocks;
         }
 
     }

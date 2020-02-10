@@ -1,36 +1,38 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using System.Runtime.InteropServices.ComTypes;
+using WrapAround.Logic.Interfaces;
 
 namespace WrapAround.Logic.Entities
 {
     public class Paddle
     {
-        public int id { get; }
+        public int Id { get; }
 
-        public bool isOnRight { get; set; }
+        public bool IsOnRight { get; set; }
 
-        public int gameId { get; }
+        public int GameId { get; }
 
-        public Vector2 position { get; set; }
+        public Vector2 Position { get; set; }
 
-        public float height { get; set; }
+        public float Height { get; set; } 
 
         /// <summary>
         /// A unique id assigned to the player
         /// </summary>
-        public string hash { get; set; }
+        public string Hash { get; set; }
 
         private const float MAX_SIZE = 300;
 
-
-        public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash)
+        public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash, Vector2 startingPosition)
         {
-            id = playerId;
-            this.gameId = gameId;
-            this.isOnRight = isOnRight;
-            height = MAX_SIZE / playerTotalOnSide;
-            this.hash = hash;
+            Id = playerId;
+            this.GameId = gameId;
+            this.IsOnRight = isOnRight;
+            Height = MAX_SIZE / playerTotalOnSide;
+            this.Hash = hash;
+            Position = startingPosition;
         }
 
         public void ResetLocation()
@@ -40,7 +42,7 @@ namespace WrapAround.Logic.Entities
 
         public void AdjustSize(int numberOfPlayersOnSide)
         {
-            height = MAX_SIZE / numberOfPlayersOnSide;
+            Height = MAX_SIZE / numberOfPlayersOnSide;
         }
 
 

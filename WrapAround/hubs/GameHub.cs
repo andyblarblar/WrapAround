@@ -66,7 +66,7 @@ namespace WrapAround.hubs
         public async Task RemovePlayerFromLobby(Paddle player)
         {
             await serverLoop.RemovePlayer(player);
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.gameId}");
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.GameId}");
         }
 
 

@@ -80,7 +80,7 @@ namespace WrapAround
         {
             return await Task.Run(async () =>
             {
-                var lobby = gameContextList.FirstOrDefault(context => context.id == gameId);
+                var lobby = gameContextList.First(context => context.id == gameId);
                 return await lobby.AddPlayer(playerIsOnRight, hash);
 
             });
@@ -96,7 +96,7 @@ namespace WrapAround
         {
             await Task.Run((async () =>
             {
-                var context = gameContextList.First((gameContext => gameContext.id == player.gameId));
+                var context = gameContextList.First(gameContext => gameContext.id == player.GameId);
                 await context.RemovePlayer(player);
 
             }));
@@ -110,10 +110,10 @@ namespace WrapAround
         /// <returns></returns>
         public async Task<List<int>> GetLobbyPlayerCounts()
         {
-           return await Task.Run((() =>
+           return await Task.Run(() =>
            {
               return gameContextList.Select(game => game.players.Count).ToList();
-           }));
+           });
 
         }
 
@@ -127,10 +127,10 @@ namespace WrapAround
         {
             await Task.Run(() =>
             {
-                var context = gameContextList.FirstOrDefault(gameContext => gameContext.id == player.gameId);
-                var serverPlayer = context.players.FirstOrDefault(paddle => paddle.id == player.id);
+                var context = gameContextList.First(gameContext => gameContext.id == player.GameId);
+                var serverPlayer = context.players.First(paddle => paddle.Id == player.Id);
                 //TODO do check to make sure player movement was possible without cheating
-                if (serverPlayer.hash == player.hash) serverPlayer.position = player.position;
+                if (serverPlayer.Hash == player.Hash) serverPlayer.Position = player.Position;
 
             });
 
