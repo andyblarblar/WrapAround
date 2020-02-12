@@ -36,20 +36,41 @@
         </a>
     </div>
     <!-- Game Window Modal -->
-    <div id="game-modal">
-        <div id="game-window">
-            <canvas id="render-window" width="1250" height="700"></canvas>
-            <!-- <div id="chat-window">
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            </div> -->
-            <a id="close-modal" href="#"><i class="material-icons">close</i></a>
-        </div>
+<div id="game-modal">
+    <div id="game-window">
+        <canvas id="render-window" width="1250" height="700"></canvas>
+        <!-- <div id="chat-window">
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+        </div> -->
+        <a id="close-modal" href="#"><i class="material-icons">close</i></a>
     </div>
+</div>
 
-    <script src="/js/site.js"></script>
 
+    
+
+<!-- im sorry for the script gore lol -->
+<script src="/js/signalr/dist/browser/signalr.min.js"></script>
+<script>const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/game")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.start().then(function () {
+        console.log("connected")
+    })
+
+    function globalRun() {
+
+
+
+    }
+
+    setInterval(globalRun, 50)</script>
+    
+    
 </body>
 </html>

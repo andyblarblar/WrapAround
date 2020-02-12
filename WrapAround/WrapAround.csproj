@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>804530a9-d6a3-49b7-a2fb-30c13c30fb5d</UserSecretsId>
+    <ApplicationIcon />
+    <Win32Resource />
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
