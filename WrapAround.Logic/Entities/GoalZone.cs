@@ -1,16 +1,20 @@
 ﻿using System.Numerics;
+using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Entities
 {
     /// <summary>
     /// Represents the area that counts as a goal. 
     /// </summary>
-    public class GoalZone : IHitbox
+    public class GoalZone : IQuadrentHitbox
     {
         public Vector2 Position { get; set; }
 
         public Hitbox Hitbox { get; set; }
+
+        public QuadrantController SegmentController { get; set; }
 
         public GoalZone(Vector2 position)
         {

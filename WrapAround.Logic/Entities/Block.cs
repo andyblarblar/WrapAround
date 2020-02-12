@@ -1,19 +1,23 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Entities
 {
     /// <summary>
     /// A 40 px by 20 px breakable breakout-esk block
     /// </summary>
-    public class Block : IDestructable, IHitbox
+    public class Block : IDestructable, IQuadrentHitbox
     {
         public int health { get; set; }
 
         public Vector2 Position { get; set; }
 
         public Hitbox Hitbox { get; set; }
+
+        public QuadrantController SegmentController { get; set; }
 
         public Color Color { get; set; }
 
@@ -31,7 +35,7 @@ namespace WrapAround.Logic.Entities
         public virtual void Damage()
         {
             health--;
-
+            
             Color = health switch
             {
                 1 => Color.Red,
@@ -44,6 +48,5 @@ namespace WrapAround.Logic.Entities
         }
 
 
-        
     }
 }

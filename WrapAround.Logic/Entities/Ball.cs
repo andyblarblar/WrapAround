@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Numerics;
+using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Entities
 {
     /// <summary>
     /// A 10 Px by 10 Px ball (well, square) that bounces around
     /// </summary>
-    public class Ball : ICollidable, IHitbox
+    public class Ball : ICollidable, IQuadrentHitbox
     {
         /// <summary>
         /// the position of the ball on the canvas
@@ -25,6 +27,9 @@ namespace WrapAround.Logic.Entities
 
         private const float UPDATE_RATE = 16;//16ms update rate
         public Hitbox Hitbox { get; set; }
+
+        /// <inheritdoc />
+        public QuadrantController SegmentController { get; set; }
 
         private readonly Vector2 startingPosition;
 

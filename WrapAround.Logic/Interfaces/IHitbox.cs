@@ -1,59 +1,38 @@
-﻿
-using System.Numerics;
-
+﻿using System.Numerics;
+using System.Threading.Tasks;
+using WrapAround.Logic.Implimentations;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Interfaces
 {
-    public interface IHitbox
+    /// <summary>
+    /// Gives the ability to Segment the implementer and supply a hitbox for collision detection
+    /// </summary>
+    /// <typeparam name="T">The Type of the segment controller</typeparam>
+    /// <typeparam name="TU">the type of the segments</typeparam>
+    public interface IHitbox<T, TU> where T : IGameMapSegmentController<TU>
     {
         Hitbox Hitbox { get; set; }
-        //TODO add something like quadtrent to effecently find collisions. Then add a default method to this interface to calculate it.
 
+        T SegmentController { get; set; }
 
     }
 
     /// <summary>
-    /// A rectangle representing a hitbox
+    /// Represents a nondescript segment of a game map
+    /// <typeparam name="T">The Segment Type</typeparam>
     /// </summary>
-    public struct Hitbox
+    public interface IGameMapSegmentController<T>
     {
-        public Vector2 TopLeft, BottomRight;
-
-        public Hitbox(Vector2 topLeft, Vector2 bottomRight)
-        {
-            TopLeft = topLeft;
-            BottomRight = bottomRight;
-        }
-
         /// <summary>
-        /// Checks if two rectangles are intersecting by checking if either Rectangle is above
-        /// or to the left of the other rectangle.
+        /// The type that will designate the segments
         /// </summary>
-        /// <param name="hitbox">other hitbox</param>
-        public bool IsCollidingWith(Hitbox hitbox)
-        {
-            //if one rectangle is to the left of the other
-            if (TopLeft.X > hitbox.BottomRight.X || hitbox.TopLeft.X > BottomRight.X)
-            {
-                return false;
-            }
+        T Segment { get; }
 
-            //if one rectangle is above the other
-            if (TopLeft.Y < hitbox.BottomRight.Y || hitbox.TopLeft.Y < BottomRight.Y)
-            {
-                return false;
-            }
+        (int, int) CanvasSize { get; set; }
 
-            //now the rectangles must be intersecting
-            return true;
-
-        }
+        Task UpdateSegment(Vector2 position);
 
 
     }
-
-
-
-
-
 }

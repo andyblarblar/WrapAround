@@ -126,6 +126,11 @@ namespace WrapAround.Logic
             players.ForEach(paddle => paddle.ResetLocation());
             ball.Reset();
             currentMap = maps[new Random().Next(0, maps.Count)];
+
+            //update segment property
+            ball.SegmentController.CanvasSize = currentMap.CanvasSize;
+            players.ForEach(player => player.SegmentController.CanvasSize = currentMap.CanvasSize);
+
             scoreBoard.Reset();
             LobbyState = IsLobbyFull() ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
 

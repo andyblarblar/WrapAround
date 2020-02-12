@@ -1,12 +1,14 @@
 ﻿using System.Numerics;
+using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Entities
 {
     /// <summary>
     /// A player controlled paddle of variable height but static 10 pixel width
     /// </summary>
-    public class Paddle : IHitbox 
+    public class Paddle : IQuadrentHitbox
     {
         public int Id { get; }
 
@@ -14,6 +16,8 @@ namespace WrapAround.Logic.Entities
 
         public int GameId { get; }
         public Hitbox Hitbox { get; set; }
+
+        public QuadrantController SegmentController { get; set; }
 
         public Vector2 Position { get; set; }
 

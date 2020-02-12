@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace WrapAround.Logic.Util
+namespace WrapAround.Logic.Implimentations
 {
     /// <summary>
     /// A simple map loader that just reads from a Json rep on disk
