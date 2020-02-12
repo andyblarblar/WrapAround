@@ -85,7 +85,7 @@ namespace WrapAround.Logic
         /// </summary>
         public async Task Update()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 if (LobbyState == LobbyStates.WonByLeft || LobbyState == LobbyStates.WonByRight)
                 {
@@ -100,8 +100,10 @@ namespace WrapAround.Logic
 
                 ball.Update();
                 //Do rest of updates
+                await ball.SegmentController.UpdateSegment(ball.Hitbox);
 
-
+                players.AsParallel().Where(player => player.SegmentController.Segment.Contains(ball.SegmentController.Segment[0])).ForAll();//TODO finish players
+                //TODO finish blocks
 
                 var actionIfWon = scoreBoard.isWon() switch
                 {
