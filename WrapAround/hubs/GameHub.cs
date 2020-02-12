@@ -12,10 +12,15 @@ namespace WrapAround.hubs
         /// </summary>
         private readonly IServerLoop serverLoop;
 
-        public GameHub(IServerLoop serverLoop)
+        /// <summary>
+        /// To fix my spgett code
+        /// </summary>
+        private readonly IUserGameRepository userGameRepository;
+
+        public GameHub(IServerLoop serverLoop, IUserGameRepository userGameRepository)
         {
             this.serverLoop = serverLoop;
-
+            this.userGameRepository = userGameRepository;
         }
 
 
@@ -30,7 +35,11 @@ namespace WrapAround.hubs
         {
             var id = await serverLoop.AddPlayer(gameId, isOnRight, hash);
             await Clients.Caller.SendAsync("ReceiveId", id);
-            if (id != -1) await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{id}");
+            if (id != -1)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{gameId}");
+                userGameRepository.UserDictionary.Add(Context.ConnectionId,$"lobby{gameId}");
+            }
             
         }
 
@@ -67,12 +76,21 @@ namespace WrapAround.hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.GameId}");
         }
 
+        //TODO create "ping of death" to clean out player that dont respond
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        /// <summary>
+        /// Hot disconnects a user
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            //Groups.RemoveFromGroupAsync(Context.ConnectionId, ) //TODO figure out how to get lobby
-
-            return base.OnDisconnectedAsync(exception);
+           await Groups.RemoveFromGroupAsync(Context.ConnectionId, userGameRepository.UserDictionary[Context.ConnectionId]);
+            userGameRepository.UserDictionary.Remove(Context.ConnectionId);
+            await base.OnDisconnectedAsync(exception);
         }
+
+        
+
     }
 }

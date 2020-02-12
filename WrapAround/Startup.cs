@@ -30,6 +30,7 @@ namespace WrapAround
             services.AddSignalR();
             services.AddSingleton<IServerLoop,ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
+            services.AddSingleton<IUserGameRepository, UserDataRepo>();//injects user repo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
