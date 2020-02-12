@@ -48,6 +48,7 @@ namespace WrapAround
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

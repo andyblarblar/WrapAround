@@ -13,7 +13,7 @@ namespace WrapAround.hubs
         private readonly IServerLoop serverLoop;
 
         /// <summary>
-        /// To fix my spgett code
+        /// To fix a circular ascendancy
         /// </summary>
         private readonly IUserGameRepository userGameRepository;
 
@@ -76,7 +76,6 @@ namespace WrapAround.hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.GameId}");
         }
 
-        //TODO create "ping of death" to clean out player that dont respond
 
         /// <summary>
         /// Hot disconnects a user
