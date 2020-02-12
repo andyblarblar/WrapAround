@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Util;
@@ -27,11 +28,11 @@ namespace WrapAround.Logic.Interfaces
         /// <summary>
         /// The type that will designate the segments
         /// </summary>
-        T Segment { get; }
+        List<T> Segment { get; }
 
         (int, int) CanvasSize { get; set; }
 
-        Task UpdateSegment(Vector2 position);
+        Task UpdateSegment(Hitbox hitbox);
 
 
     }

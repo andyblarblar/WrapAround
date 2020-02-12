@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Implimentations
 {
@@ -11,31 +14,48 @@ namespace WrapAround.Logic.Implimentations
     /// </summary>
     public class QuadrantController : IGameMapSegmentController<Quadrant>
     {
-        public Quadrant Segment { get; set; }
+        /// <summary>
+        /// A list of all quad rents one is in
+        /// </summary>
+        public List<Quadrant> Segment { get; set; }
 
         public (int, int) CanvasSize { get; set; }
 
         /// <summary>
-        /// Updates Segment to the current Quadrant
+        /// Updates Segment to the current Quadrant(s)
         /// </summary>
         /// <param name="position">current position of the object</param>
-        public async Task UpdateSegment(Vector2 position)
-        {//TODO update to run on both sides of the hitbox and make it so you can be in multiple segments at once
+        public async Task UpdateSegment(Hitbox hitbox)
+        {
             await Task.Run(() =>
             {
+                Segment.Clear();
+
                 var (canX, canY) = CanvasSize;
 
                 var centerCorrs = new Vector2(canX * .5f, canY * .5f);
 
-                var resultant = centerCorrs + position;
+                var resultantL = centerCorrs + hitbox.TopLeft;
+                var resultantR = centerCorrs + hitbox.BottomRight;
 
-                Segment = Math.Atan(resultant.Y / resultant.X) switch
+                var leftSeg = (centerCorrs,resultantL) switch
                 {
-                    var r when r >= 0 && r <= 90 => Quadrant.Quadrent1, //90 and 0 degrees count as quadrant 1
-                    var r when r > 90 && r <= 180 => Quadrant.Quadrent2, //180 is in 2
-                    var r when r > 180 && r <= 270 => Quadrant.Quadrent3, //270 is in 3
-                    var r when r > 270 && r <= 360 => Quadrant.Quadrent4 //360 is in 4
+                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrent1,
+                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrent2,
+                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrent3,
+                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrent4
                 };
+
+                var rightSeg = (centerCorrs, resultantR) switch
+                {
+                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrent1,
+                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrent2,
+                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrent3,
+                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrent4
+                };
+
+                Segment.Add(leftSeg);
+                Segment.Add(rightSeg);
 
             });
 
