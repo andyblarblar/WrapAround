@@ -16,7 +16,7 @@ namespace WrapAround.Logic
         public readonly int id;
 
         public const int MAX_PLAYERS = 16;
-        
+
         private readonly List<GameMap> maps;
 
         public List<Paddle> players { get; }
@@ -31,15 +31,14 @@ namespace WrapAround.Logic
 
         public GameContext(int id, List<GameMap> maps)
         {
-            currentMap = maps[new Random().Next(0, maps.Count)];
+            currentMap = maps.Count == 1 ? maps[0] : maps[new Random().Next(0, maps.Count)];
             this.id = id;
             this.maps = maps;
-            ball = new Ball(new Vector2(currentMap.CanvasSize.Item1 / 2,currentMap.CanvasSize.Item2 / 2), new Vector2(-1,0));
+            ball = new Ball(new Vector2(currentMap.CanvasSize.Item1 / 2, currentMap.CanvasSize.Item2 / 2),
+                new Vector2(-1, 0));
             scoreBoard = new ScoreBoard();
             LobbyState = LobbyStates.WaitingForPlayers;
         }
-
-
 
         /// <summary>
         /// adds a player to the game, resizing paddles on team as needed.
@@ -132,13 +131,19 @@ namespace WrapAround.Logic
                     }
                 }
 
-                //TODO check if ball should wraparound TM
+                //WrapAround!
+                ball.position.Y = ball.position.Y switch
+                {
+                    var pos when pos < 0 => currentMap.CanvasSize.Item2,
+                    var pos when pos > currentMap.CanvasSize.Item2 => 1,
+                };
 
+                //check for wins
                 var actionIfWon = scoreBoard.IsWon() switch
                 {
                     var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; },
                     var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; },
-                    _ => (Action) (() => {})
+                    _ => (Action) (() => { })
 
                 };
                 actionIfWon.Invoke();
@@ -153,13 +158,12 @@ namespace WrapAround.Logic
         /// <param name="obj1"></param>
         /// <param name="obj2"></param>
         /// <returns></returns>
-        public async Task CollideAsync(ICollidable obj1, ICollidable obj2)
+        public static async Task CollideAsync(ICollidable obj1, ICollidable obj2)
         { 
             await obj1.Collide(obj2);
             await obj2.Collide(obj1);
 
         }
-
 
 
         /// <summary>
@@ -179,6 +183,7 @@ namespace WrapAround.Logic
             LobbyState = IsLobbyFull() ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
 
         }
+
 
         public bool IsLobbyFull()
         {

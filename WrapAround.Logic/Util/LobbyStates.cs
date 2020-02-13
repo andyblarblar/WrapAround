@@ -11,9 +11,5 @@ namespace WrapAround.Logic.Util
         WonByLeft,
         WonByRight
 
-
-
-
-
     }
 }

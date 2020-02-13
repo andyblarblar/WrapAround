@@ -15,16 +15,15 @@ namespace WrapAround.Logic.Implimentations
     public class QuadrantController : IGameMapSegmentController<Quadrant>
     {
         /// <summary>
-        /// A list of all quad rents one is in
+        /// A list of all quadrants one is in
         /// </summary>
-        public List<Quadrant> Segment { get; set; }
+        public List<Quadrant> Segment { get; } = new List<Quadrant>();
 
         public (int, int) CanvasSize { get; set; }
 
         /// <summary>
         /// Updates Segment to the current Quadrant(s)
         /// </summary>
-        /// <param name="position">current position of the object</param>
         public async Task UpdateSegment(Hitbox hitbox)
         {
             await Task.Run(() =>
@@ -40,18 +39,18 @@ namespace WrapAround.Logic.Implimentations
 
                 var leftSeg = (centerCorrs,resultantL) switch
                 {
-                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrent1,
-                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrent2,
-                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrent3,
-                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrent4
+                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
+                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrant2,
+                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrant3,
+                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrant4
                 };
 
                 var rightSeg = (centerCorrs, resultantR) switch
                 {
-                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrent1,
-                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrent2,
-                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrent3,
-                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrent4
+                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
+                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrant2,
+                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrant3,
+                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrant4
                 };
 
                 Segment.Add(leftSeg);

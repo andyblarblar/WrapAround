@@ -8,7 +8,7 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// Represents the area that counts as a goal. 
     /// </summary>
-    public class GoalZone : IQuadrentHitbox
+    public class GoalZone : IQuadrantHitbox
     {
         public Vector2 Position { get; set; }
 

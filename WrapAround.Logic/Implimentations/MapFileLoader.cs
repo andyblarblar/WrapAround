@@ -16,6 +16,14 @@ namespace WrapAround.Logic.Implimentations
         /// <returns>all deserialized GameMaps</returns>
         public List<GameMap> LoadMaps(string dirPath = @".\gameMaps\")
         {
+            if (Directory.GetFiles(dirPath).Length == 0)
+            {
+                return new List<GameMap>
+                {
+                    new GameMap()
+                };
+            }
+
             var dir = Directory.GetFiles(dirPath);
 
             var maps = from file in dir.AsParallel()
@@ -23,7 +31,6 @@ namespace WrapAround.Logic.Implimentations
                 select JsonSerializer.Deserialize<GameMap>(File.ReadAllText(file));
 
             return maps.ToList();
-
         }
     }
 }

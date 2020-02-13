@@ -5,10 +5,10 @@
     /// </summary>
     public enum Quadrant 
     {
-        Quadrent1,
-        Quadrent2,
-        Quadrent3,
-        Quadrent4
+        Quadrant1,
+        Quadrant2,
+        Quadrant3,
+        Quadrant4
 
     }
 }

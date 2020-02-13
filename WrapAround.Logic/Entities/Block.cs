@@ -10,7 +10,7 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A 40 px by 20 px breakable breakout-esk block
     /// </summary>
-    public class Block : IDestructable, IQuadrentHitbox, ICollidable
+    public class Block : IDestructable, IQuadrantHitbox, ICollidable
     {
         public int health { get; set; }
 

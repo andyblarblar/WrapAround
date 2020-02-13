@@ -10,12 +10,12 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A 10 Px by 10 Px ball (well, square) that bounces around
     /// </summary>
-    public class Ball : ICollidable, IQuadrentHitbox
+    public class Ball : ICollidable, IQuadrantHitbox
     {
         /// <summary>
         /// the position of the ball on the canvas
         /// </summary>
-        private Vector2 position;
+        public Vector2 position;
 
         /// <summary>
         /// the position vector of the ball relative to the field "position". Velocity in pixels/ms

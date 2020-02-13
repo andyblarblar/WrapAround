@@ -9,7 +9,7 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A player controlled paddle of variable height but static 10 pixel width
     /// </summary>
-    public class Paddle : IQuadrentHitbox, ICollidable
+    public class Paddle : IQuadrantHitbox, ICollidable
     {
         public int Id { get; }
 
