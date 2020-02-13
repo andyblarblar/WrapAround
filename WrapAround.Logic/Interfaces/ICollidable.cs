@@ -1,4 +1,6 @@
-﻿namespace WrapAround.Logic.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace WrapAround.Logic.Interfaces
 {
     /// <summary>
     /// Represents an entity that can be collided with. 
@@ -9,7 +11,7 @@
         /// Logic that defines collisions.
         /// </summary>
         /// <param name="collided">The other entity that was collided</param>
-        void Collide(object collided);
+        Task Collide(object collided);
         
 
     }

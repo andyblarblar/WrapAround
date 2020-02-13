@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
@@ -8,7 +9,7 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A player controlled paddle of variable height but static 10 pixel width
     /// </summary>
-    public class Paddle : IQuadrentHitbox
+    public class Paddle : IQuadrentHitbox, ICollidable
     {
         public int Id { get; }
 
@@ -65,6 +66,10 @@ namespace WrapAround.Logic.Entities
 
         }
 
-        
+
+        public Task Collide(object collided)
+        {
+            return Task.CompletedTask;//purposely empty, for future use
+        }
     }
 }

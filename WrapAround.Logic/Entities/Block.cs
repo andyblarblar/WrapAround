@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
@@ -9,7 +10,7 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A 40 px by 20 px breakable breakout-esk block
     /// </summary>
-    public class Block : IDestructable, IQuadrentHitbox
+    public class Block : IDestructable, IQuadrentHitbox, ICollidable
     {
         public int health { get; set; }
 
@@ -48,5 +49,9 @@ namespace WrapAround.Logic.Entities
         }
 
 
+        public async Task Collide(object collided)
+        {
+            await Task.Run(Damage);
+        }
     }
 }

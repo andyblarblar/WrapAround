@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
@@ -65,10 +66,13 @@ namespace WrapAround.Logic.Entities
         /// <summary>
         /// When colliding with an implementer of ICollidable.
         /// </summary>
-        public void Collide(object collidedWith)
+        public async Task Collide(object collidedWith)
         {
-            var handler = FindCollisionHandler(collidedWith);
-            handler.Invoke(collidedWith);
+            await Task.Run(() =>
+            {
+                var handler = FindCollisionHandler(collidedWith);
+                handler.Invoke(collidedWith);
+            });
 
         }
 

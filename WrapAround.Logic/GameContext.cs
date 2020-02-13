@@ -5,6 +5,8 @@ using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
+using WrapAround.Logic.Implimentations;
+using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic
@@ -59,7 +61,7 @@ namespace WrapAround.Logic
                 players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
 
                 return newPlayer.Id;
-            });
+            }).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace WrapAround.Logic
         /// <returns></returns>
         public async Task RemovePlayer(Paddle player)
         {
-            await Task.Run((() =>
+            await Task.Run(() =>
             {
                 players.Remove(players.AsParallel().Single(paddle => paddle.Id == player.Id && paddle.Hash == player.Hash));
 
@@ -77,7 +79,7 @@ namespace WrapAround.Logic
                 players.ForEach(paddle => paddle.AdjustSize(playersOnSide));//readjust sizes
 
 
-            }));
+            }).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace WrapAround.Logic
         {
             await Task.Run(async () =>
             {
-                if (LobbyState == LobbyStates.WonByLeft || LobbyState == LobbyStates.WonByRight)
+                if (LobbyState == LobbyStates.WonByLeft || LobbyState == LobbyStates.WonByRight)//check for win
                 {
                     Reset();
                     return;
@@ -96,16 +98,43 @@ namespace WrapAround.Logic
                 if (IsLobbyFull()) LobbyState = LobbyStates.InGame;
                 if (LobbyState == LobbyStates.WaitingForPlayers) return; //do nothing if the lobby is still waiting
 
-                //TODO detect collisions, then handle. (blocks, goalzone ect). Players are already done.
-
+                //update segments
                 ball.Update();
-                //Do rest of updates
-                await ball.SegmentController.UpdateSegment(ball.Hitbox);
+                await ball.SegmentController.UpdateSegment(ball.Hitbox).ConfigureAwait(true);
+                players.AsParallel().ForAll(async paddle => await paddle.SegmentController.UpdateSegment(paddle.Hitbox));
 
-                players.AsParallel().Where(player => player.SegmentController.Segment.Contains(ball.SegmentController.Segment[0])).ForAll();//TODO finish players
-                //TODO finish blocks
+                //Collision handle
+                players.AsParallel()
+                    .Where(player => player.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))//all paddles in same segment as ball
+                    .Where(paddle => paddle.Hitbox.IsCollidingWith(ball.Hitbox))//check for collision
+                    .ForAll(async paddle => await CollideAsync(paddle, ball));//Handle Collisions 
 
-                var actionIfWon = scoreBoard.isWon() switch
+                currentMap.Blocks.AsParallel()
+                    .Where(block => block.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))
+                    .Where(block => block.Hitbox.IsCollidingWith(ball.Hitbox))
+                    .ForAll(async block => await CollideAsync(block,ball));
+
+                //Goal scoring
+                if (currentMap.LeftGoal.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))
+                {
+                    if (currentMap.LeftGoal.Hitbox.IsCollidingWith(ball.Hitbox))
+                    {
+                        scoreBoard.ScoreLeft();
+                        ball.Reset();
+                    }
+                }
+                else if (currentMap.RightGoal.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))
+                {
+                    if (currentMap.RightGoal.Hitbox.IsCollidingWith(ball.Hitbox))
+                    {
+                        scoreBoard.ScoreRight();
+                        ball.Reset();
+                    }
+                }
+
+                //TODO check if ball should wraparound TM
+
+                var actionIfWon = scoreBoard.IsWon() switch
                 {
                     var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; },
                     var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; },
@@ -114,11 +143,24 @@ namespace WrapAround.Logic
                 };
                 actionIfWon.Invoke();
 
-
-
             });
 
         }
+
+        /// <summary>
+        /// Simply calls the collision handler on each object
+        /// </summary>
+        /// <param name="obj1"></param>
+        /// <param name="obj2"></param>
+        /// <returns></returns>
+        public async Task CollideAsync(ICollidable obj1, ICollidable obj2)
+        { 
+            await obj1.Collide(obj2);
+            await obj2.Collide(obj1);
+
+        }
+
+
 
         /// <summary>
         /// Resets state and finds a new map randomly.
