@@ -27,10 +27,10 @@ namespace WrapAround.Logic.Entities
         private const float MAX_ANGLE = (float) (Math.PI * 5 / 12);// ~75 degrees
 
         private const float UPDATE_RATE = 16;//16ms update rate
-        public Hitbox Hitbox { get; set; }
+        public Hitbox Hitbox { get; set; } 
 
         /// <inheritdoc />
-        public QuadrantController SegmentController { get; set; }
+        public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
         private readonly Vector2 startingPosition;
 
@@ -86,7 +86,8 @@ namespace WrapAround.Logic.Entities
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
             Paddle p  => new CollisionHandler(HandlePaddleCollision),
-            Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision)
+            Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision),
+            _ => new CollisionHandler(_ => {})
 
         };
 

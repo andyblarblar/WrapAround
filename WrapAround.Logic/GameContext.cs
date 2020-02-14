@@ -29,8 +29,9 @@ namespace WrapAround.Logic
 
         public LobbyStates LobbyState;
 
-        public GameContext(int id, List<GameMap> maps)
+        public GameContext(int id, List<GameMap> maps)//TODO make sure all fields are initialized
         {
+            players = new List<Paddle>();
             currentMap = maps.Count == 1 ? maps[0] : maps[new Random().Next(0, maps.Count)];
             this.id = id;
             this.maps = maps;
@@ -136,6 +137,7 @@ namespace WrapAround.Logic
                 {
                     var pos when pos < 0 => currentMap.CanvasSize.Item2,
                     var pos when pos > currentMap.CanvasSize.Item2 => 1,
+                    _ => ball.position.Y
                 };
 
                 //check for wins

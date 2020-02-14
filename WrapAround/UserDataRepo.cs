@@ -7,7 +7,7 @@ namespace WrapAround
         /// <summary>
         /// Keys are UserIds, Values are the lobby they are in
         /// </summary>
-        public Dictionary<string, string> UserDictionary { get; set; }
+        public Dictionary<string, string> UserDictionary { get; set; } = new Dictionary<string, string>();
 
     }
 }

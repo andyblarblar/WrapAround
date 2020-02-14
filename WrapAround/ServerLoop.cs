@@ -15,11 +15,11 @@ namespace WrapAround
     /// </summary>
     public class ServerLoop : IServerLoop
     {
-         
         /// <summary>
         /// The speed at which the server will send updates to clients. ~60fps
         /// </summary>
-        private readonly int broadcastInterval = 17;
+        private const int broadcastInterval = 17;
+
         private readonly IHubContext<GameHub> hubContext;
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace WrapAround.Logic.Entities
 
         public Hitbox Hitbox { get; set; }
 
-        public QuadrantController SegmentController { get; set; }
+        public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
         public Color Color { get; set; }
 
@@ -43,7 +43,8 @@ namespace WrapAround.Logic.Entities
                 2 => Color.Orange,
                 3 => Color.Yellow,
                 4 => Color.Green,
-                5 => Color.Azure
+                5 => Color.Azure,
+                _ => Color.Empty
             };
 
         }

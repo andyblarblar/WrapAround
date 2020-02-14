@@ -11,7 +11,7 @@ namespace WrapAround.Logic
     public class GameMap
     {
 
-        public List<Block> Blocks { get; set; } 
+        public List<Block> Blocks { get; } 
         public (int, int) CanvasSize { get; set; } = (1250, 703);
         public GoalZone LeftGoal;
         public GoalZone RightGoal;

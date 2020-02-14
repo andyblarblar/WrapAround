@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,17 @@ namespace WrapAround
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalR();
+            services.AddCors(op =>
+            {
+                op.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin());
+
+            });
+
+            services.AddSignalR(hubOption =>
+            {
+                hubOption.EnableDetailedErrors = true;
+            });
+
             services.AddSingleton<IServerLoop,ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
             services.AddSingleton<IUserGameRepository, UserDataRepo>();//injects user repo

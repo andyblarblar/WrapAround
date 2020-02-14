@@ -90,6 +90,11 @@ namespace WrapAround.hubs
             await base.OnDisconnectedAsync(exception);
         }
 
+        public async Task Ping()
+        {
+            Console.WriteLine("ping");
+            await Clients.Caller.SendAsync("pong");
+        }
         
 
     }

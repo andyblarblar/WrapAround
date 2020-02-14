@@ -18,7 +18,7 @@ namespace WrapAround.Logic.Entities
         public int GameId { get; }
         public Hitbox Hitbox { get; set; }
 
-        public QuadrantController SegmentController { get; set; }
+        public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
         public Vector2 Position { get; set; }
 
