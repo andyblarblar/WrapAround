@@ -29,12 +29,6 @@ namespace WrapAround
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(op =>
-            {
-                op.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin());
-
-            });
-
             services.AddSignalR(hubOption =>
             {
                 hubOption.EnableDetailedErrors = true;
@@ -43,6 +37,7 @@ namespace WrapAround
             services.AddSingleton<IServerLoop,ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
             services.AddSingleton<IUserGameRepository, UserDataRepo>();//injects user repo
+            services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,9 +61,7 @@ namespace WrapAround
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
-
+      
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/game");

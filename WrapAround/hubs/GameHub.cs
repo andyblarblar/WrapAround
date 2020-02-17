@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using WrapAround.Logic.Entities;
 
 namespace WrapAround.hubs
@@ -17,10 +18,13 @@ namespace WrapAround.hubs
         /// </summary>
         private readonly IUserGameRepository userGameRepository;
 
-        public GameHub(IServerLoop serverLoop, IUserGameRepository userGameRepository)
+        private readonly ILogger<GameHub> logger;
+
+        public GameHub(IServerLoop serverLoop, IUserGameRepository userGameRepository, ILogger<GameHub> logger)
         {
             this.serverLoop = serverLoop;
             this.userGameRepository = userGameRepository;
+            this.logger = logger;
         }
 
 
@@ -83,11 +87,20 @@ namespace WrapAround.hubs
         /// </summary>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override Task OnDisconnectedAsync(Exception exception)
         {
-           await Groups.RemoveFromGroupAsync(Context.ConnectionId, userGameRepository.UserDictionary[Context.ConnectionId]);
-            userGameRepository.UserDictionary.Remove(Context.ConnectionId);
-            await base.OnDisconnectedAsync(exception);
+            try
+            { 
+                Groups.RemoveFromGroupAsync(Context.ConnectionId, userGameRepository.UserDictionary[Context.ConnectionId]);
+                userGameRepository.UserDictionary.Remove(Context.ConnectionId);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task Ping()
@@ -95,7 +108,11 @@ namespace WrapAround.hubs
             Console.WriteLine("ping");
             await Clients.Caller.SendAsync("pong");
         }
-        
 
+        public override Task OnConnectedAsync()
+        {
+            Console.WriteLine("connected");
+            return base.OnConnectedAsync();
+        }
     }
 }

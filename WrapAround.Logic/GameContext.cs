@@ -100,7 +100,7 @@ namespace WrapAround.Logic
 
                 //update segments
                 ball.Update();
-                await ball.SegmentController.UpdateSegment(ball.Hitbox).ConfigureAwait(true);
+                await ball.SegmentController.UpdateSegment(ball.Hitbox);
                 players.AsParallel().ForAll(async paddle => await paddle.SegmentController.UpdateSegment(paddle.Hitbox));
 
                 //Collision handle
@@ -189,7 +189,7 @@ namespace WrapAround.Logic
 
         public bool IsLobbyFull()
         {
-            return players.Count !< MAX_PLAYERS;
+            return players.Count !> MAX_PLAYERS;//TODO change counting mech, I belive the list is always the same as max players because we max the list at that lol arrow used to be !< for refrence
         }
 
 

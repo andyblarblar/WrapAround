@@ -59,11 +59,12 @@
     .withAutomaticReconnect()
     .configureLogging(signalR.LogLevel.Trace)
         .build();
-    connection.serverTimeoutInMilliseconds = 1000000
 
     connection.start().then(function () {
         console.log("connected")
     })
+
+    connection.log("hi")
 
     connection.on("pong",
         () => {
