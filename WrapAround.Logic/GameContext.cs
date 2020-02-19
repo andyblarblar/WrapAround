@@ -29,7 +29,7 @@ namespace WrapAround.Logic
 
         public LobbyStates LobbyState;
 
-        public GameContext(int id, List<GameMap> maps)//TODO make sure all fields are initialized
+        public GameContext(int id, List<GameMap> maps)
         {
             players = new List<Paddle>();
             currentMap = maps.Count == 1 ? maps[0] : maps[new Random().Next(0, maps.Count)];
@@ -189,7 +189,7 @@ namespace WrapAround.Logic
 
         public bool IsLobbyFull()
         {
-            return players.Count !> MAX_PLAYERS;//TODO change counting mech, I belive the list is always the same as max players because we max the list at that lol arrow used to be !< for refrence
+            return players.Count == MAX_PLAYERS;//TODO change counting mech, I belive the list is always the same as max players because we max the list at that lol arrow used to be !< for refrence
         }
 
 
