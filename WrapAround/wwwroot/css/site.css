@@ -160,15 +160,21 @@ a.lobby-box:hover > .lobby-playernum {
 	margin: 1rem;
 }
 
-#game-modal #close-modal {
+#game-modal a {
 	position: absolute;
 	right: calc((100% - (var(--game-canvas-width) + 2rem)) / 2 - 0.5rem);
 	transform: translate(50%, -12px);
 	transition: background var(--animation-speed);
 	border-radius: 1rem;
+	color: var(--root-color-fg);
 	margin: 1rem;
-	padding: 12px;
-	color: #FF0000; }
-#game-modal #close-modal:hover {
+	padding: 12px; }
+#game-modal a:hover {
 	background: rgba(255,255,255,0.2);
+}
+
+#game-modal #close-modal {
+	color: #FF0000; }
+#game-modal #lights-out {
+	top: 4rem;
 }
