@@ -53,7 +53,7 @@ namespace WrapAround
                 Parallel.ForEach(gameContextList, async context =>
                 {
                     await context.Update();
-                    await hubContext.Clients.Group($"lobby{context.id}").SendAsync("ReceiveContextUpdate",context);//send to frontend
+                    await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate",context);//send to frontend
                     
                 });
 
@@ -75,7 +75,7 @@ namespace WrapAround
         {
             return await Task.Run(async () =>
             {
-                var lobby = gameContextList.First(context => context.id == gameId);
+                var lobby = gameContextList.First(context => context.Id == gameId);
                 return await lobby.AddPlayer(playerIsOnRight, hash);
 
             });
@@ -91,7 +91,7 @@ namespace WrapAround
         {
             await Task.Run((async () =>
             {
-                var context = gameContextList.First(gameContext => gameContext.id == player.GameId);
+                var context = gameContextList.First(gameContext => gameContext.Id == player.GameId);
                 await context.RemovePlayer(player);
 
             }));
@@ -122,7 +122,7 @@ namespace WrapAround
         {
             await Task.Run(() =>
             {
-                var context = gameContextList.First(gameContext => gameContext.id == player.GameId);
+                var context = gameContextList.First(gameContext => gameContext.Id == player.GameId);
                 var serverPlayer = context.players.First(paddle => paddle.Id == player.Id);
                 if (serverPlayer.Hash == player.Hash) serverPlayer.Update(player.Position);
 

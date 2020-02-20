@@ -85,9 +85,9 @@ namespace WrapAround.Logic.Entities
         /// <returns></returns>
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
-            Paddle p  => new CollisionHandler(HandlePaddleCollision),
-            Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision),
-            _ => new CollisionHandler(_ => {})
+            Paddle p  => HandlePaddleCollision,
+            Block b when b.health != 0 => HandleBlockCollision,
+            _ => (_ => {})
 
         };
 

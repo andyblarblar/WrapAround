@@ -13,7 +13,7 @@ namespace WrapAround.Logic
 {
     public class GameContext
     {
-        public readonly int id;
+        public readonly int Id;
 
         public const int MAX_PLAYERS = 16;
 
@@ -33,7 +33,7 @@ namespace WrapAround.Logic
         {
             players = new List<Paddle>();
             currentMap = maps.Count == 1 ? maps[0] : maps[new Random().Next(0, maps.Count)];
-            this.id = id;
+            this.Id = id;
             this.maps = maps;
             ball = new Ball(new Vector2(currentMap.CanvasSize.Item1 / 2, currentMap.CanvasSize.Item2 / 2),
                 new Vector2(-1, 0));
@@ -55,7 +55,7 @@ namespace WrapAround.Logic
 
                 var playerStartingPosition = isRightSide ? new Vector2(currentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
 
-                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);
+                var newPlayer = new Paddle(gameId: Id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);
                 players.Add(newPlayer); 
 
                 players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
@@ -189,7 +189,7 @@ namespace WrapAround.Logic
 
         public bool IsLobbyFull()
         {
-            return players.Count == MAX_PLAYERS;//TODO change counting mech, I belive the list is always the same as max players because we max the list at that lol arrow used to be !< for refrence
+            return players.Count == MAX_PLAYERS;
         }
 
 
