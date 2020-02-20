@@ -7,7 +7,7 @@ const lobs = [
     document.getElementById("lobby-4")
 ];
 
-const _lobbyCounts = [];
+var _lobbyCounts = [];
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
@@ -23,5 +23,23 @@ connection.invoke("GetLobbyPlayerCounts");
 
 connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
     _lobbyCounts = lobbyCounts;
-    //update lobby boxes
+    var i;
+    for (i = 0; i < 4; ++i) {
+        lobs[i].getElementsByClassName("player-count-span").innerHTML = _lobbyCounts[i];
+    }
 });
+
+//Global function loop
+function loop() {
+    connection.invoke("GetLobbyPlayerCounts");
+
+    connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
+        _lobbyCounts = lobbyCounts;
+        var i;
+        for (i = 0; i < 4; ++i) {
+            lobs[i].getElementsByClassName("player-count-span").innerHTML = _lobbyCounts[i];
+        }
+    });
+}
+
+setInterval(loop,11);
