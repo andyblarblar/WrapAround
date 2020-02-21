@@ -15,19 +15,13 @@ const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Trace)
     .build();
 
+function genHash() {
+
+}
+
 connection.start().then(function () {
-    console.log("connected");
+    console.log("connection initialized ;)");
 })
-
-connection.invoke("GetLobbyPlayerCounts");
-
-connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
-    _lobbyCounts = lobbyCounts;
-    var i;
-    for (i = 0; i < 4; ++i) {
-        lobs[i].getElementsByClassName("player-count-span").innerHTML = _lobbyCounts[i];
-    }
-});
 
 //Global function loop
 function loop() {
@@ -42,4 +36,8 @@ function loop() {
     });
 }
 
-setInterval(loop,11);
+function joinLobby(lobbyId) {
+    connection.invoke("AddPlayer",lobbyId,)
+}
+
+setInterval(loop,30);
