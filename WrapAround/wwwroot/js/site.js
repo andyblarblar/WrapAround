@@ -43,7 +43,7 @@ connection.start().then(function () {
 //Global function loop
 function loop() {
 
-    connection.invoke("GetLobbyPlayerCounts");
+    //connection.invoke("GetLobbyPlayerCounts");
 
     connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
         _lobbyCounts = lobbyCounts;
@@ -57,11 +57,11 @@ function loop() {
         _context = context;
         if (!playerStateFetched) {
             // This probably won't work yet -- See render()
-            /*context.players.forEach((item) => {
-                if (item.Hash == userHash)
+            context.players.forEach((item) => {
+                if (item.Hash === userHash)
                     playerPaddle = item;
             });
-            playerStateFetched = true;*/
+            playerStateFetched = true;
         }
         render(context);
     });
@@ -84,25 +84,27 @@ function render(context) {
 
     /*
      * ALL OF THIS DOESN'T WORK YET -- the received context is undefined in many places right now
-     * /
+     */
 
     // Render Blocks
-    //let blockList = context.currentMap.Blocks;
-    /*blockList.forEach((item) => {
-        ctx.fillStyle = formatColorString(item.Color);
-        ctx.fillRect(item.Hitbox.TopLeft.X, item.Hitbox.TopLeft.Y, 40, 20);
-    });*/
+    let blockList = context.currentMap.Blocks;
+    if (blockList != null) {
+        blockList.forEach((item) => {
+            ctx.fillStyle = formatColorString(item.Color);
+            ctx.fillRect(item.Hitbox.TopLeft.X, item.Hitbox.TopLeft.Y, 40, 20);
+        });
+    }
 
-    // Render Ball (Just a rectangle right now, change to texture when available)
-    //ctx.fillStyle = "rgb(140,140,140)";
-    //ctx.fillRect(context.ball.Hitbox.TopLeft.X, context.ball.Hitbox.TopLeft.Y, 10, 10);
+// Render Ball (Just a rectangle right now, change to texture when available)
+    ctx.fillStyle = "rgb(140,140,140)";
+    ctx.fillRect(context.ball.Hitbox.TopLeft.X, context.ball.Hitbox.TopLeft.Y, 10, 10);
 
     // Render Paddles (Just rectangles right now, change to texture when available)
-    /*let paddleList = context.players;
+    let paddleList = context.players;
     paddleList.forEach((item) => {
         ctx.fillStyle = "rgb(" + Math.floor(Math.random() * 256).toString() + ", " + Math.floor(Math.random() * 256).toString() + ", " + Math.floor(Math.random() * 256).toString() + ")";
         ctx.fillRect(item.Hitbox.TopLeft.X, item.Hitbox.TopLeft.Y, 10, item.Height);
-    });*/
+    });
 
 }
 

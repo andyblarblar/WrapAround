@@ -18,49 +18,52 @@ namespace WrapAround
         /// <summary>
         /// The speed at which the server will send updates to clients. ~60fps
         /// </summary>
-        private const int broadcastInterval = 17;
+        private const int BroadcastInterval = 17;
 
-        private readonly IHubContext<GameHub> hubContext;
+        private readonly IHubContext<GameHub> _hubContext;
 
         /// <summary>
         /// the global ticker that steps the state and sends game contexts to clients on a timer
         /// </summary>
-        private Timer broadCastLoop;
+        private readonly Timer _broadCastLoop;
 
         /// <summary>
         /// Holds the states of Contexts.
         /// </summary>
-        private readonly List<GameContext> gameContextList;
+        private readonly List<GameContext> _gameContextList;
 
-        private const int MAX_LOBBY_COUNT = 4;
+        private const int MaxLobbyCount = 4;
 
         public ServerLoop(IHubContext<GameHub> hubContext, IMapLoader mapLoader)
         {
-            this.hubContext = hubContext;
-            gameContextList = new List<GameContext>(MAX_LOBBY_COUNT);
+            _hubContext = hubContext;
+            _gameContextList = new List<GameContext>(MaxLobbyCount);
             var maps = mapLoader.LoadMaps();
 
-            for (var i = 0; i < MAX_LOBBY_COUNT; i++)
+            for (var i = 0; i < MaxLobbyCount; i++)
             {
-                gameContextList.Add(new GameContext(id: i, maps: maps));
+                _gameContextList.Add(new GameContext(id: i, maps: maps));
             }
 
-            broadCastLoop = new Timer(broadcastInterval);
+            _broadCastLoop = new Timer(BroadcastInterval);
 
             //Every 17ms, update all lobbies in parallel and then send to clients.
-            broadCastLoop.Elapsed += (sender, args) =>
+            _broadCastLoop.Elapsed += (sender, args) =>
             { 
-                Parallel.ForEach(gameContextList, async context =>
+                Parallel.ForEach(_gameContextList, async context =>
                 {
                     await context.Update();
+
+
+
                     await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate",context);//send to frontend
                     
                 });
 
             };
 
-            broadCastLoop.AutoReset = true;
-            broadCastLoop.Start();
+            _broadCastLoop.AutoReset = true;
+            _broadCastLoop.Start();
 
         }
 
@@ -75,7 +78,7 @@ namespace WrapAround
         {
             return await Task.Run(async () =>
             {
-                var lobby = gameContextList.First(context => context.Id == gameId);
+                var lobby = _gameContextList.First(context => context.Id == gameId);
                 return await lobby.AddPlayer(playerIsOnRight, hash);
 
             });
@@ -91,7 +94,7 @@ namespace WrapAround
         {
             await Task.Run((async () =>
             {
-                var context = gameContextList.First(gameContext => gameContext.Id == player.GameId);
+                var context = _gameContextList.First(gameContext => gameContext.Id == player.GameId);
                 await context.RemovePlayer(player);
 
             }));
@@ -107,7 +110,7 @@ namespace WrapAround
         {
            return await Task.Run(() =>
            {
-              return gameContextList.Select(game => game.players.Count).ToList();
+              return _gameContextList.Select(game => game.Players.Count).ToList();
            });
 
         }
@@ -122,8 +125,8 @@ namespace WrapAround
         {
             await Task.Run(() =>
             {
-                var context = gameContextList.First(gameContext => gameContext.Id == player.GameId);
-                var serverPlayer = context.players.First(paddle => paddle.Id == player.Id);
+                var context = _gameContextList.First(gameContext => gameContext.Id == player.GameId);
+                var serverPlayer = context.Players.First(paddle => paddle.Id == player.Id);
                 if (serverPlayer.Hash == player.Hash) serverPlayer.Update(player.Position);
 
             });
