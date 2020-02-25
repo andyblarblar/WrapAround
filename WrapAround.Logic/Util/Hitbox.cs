@@ -1,4 +1,6 @@
 ﻿using System.Numerics;
+using System.Text.Json.Serialization;
+using WrapAround;
 
 namespace WrapAround.Logic.Util
 {
@@ -7,6 +9,7 @@ namespace WrapAround.Logic.Util
     /// </summary>
     public struct Hitbox
     {
+        [JsonConverter(typeof(Vector2Converter))]
         public Vector2 TopLeft { get; }
         public Vector2 BottomRight { get; }
 
