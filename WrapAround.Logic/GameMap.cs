@@ -18,8 +18,7 @@ namespace WrapAround.Logic
 
         public GameMap(List<Block> blocks = default, (int x, int y) canvasSize = default)
         {
-            if (blocks is null) blocks = new List<Block>();
-            
+
             LeftGoal = new GoalZone(new Vector2(0, 0));
             RightGoal = new GoalZone(new Vector2(canvasSize.x - 10, 0));
             Blocks = blocks;

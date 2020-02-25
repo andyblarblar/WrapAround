@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Resources;
-using System.Text;
-
+﻿
 namespace WrapAround.Logic.Entities
 {
-    
-    class ScoreBoard
+    public class ScoreBoard
     {
-        private (int, int) score;
+        public (int, int) Score { get; set; }
 
         public void Reset()
         {
-            score = (0, 0);
+            Score = (0, 0);
         }
 
         public void ScoreLeft()
         {
-            score = (score.Item1++, score.Item2);
+            var (leftScore, rightScore) = Score;
+
+            Score = (++leftScore, rightScore);
         }
 
         public void ScoreRight()
         {
-            score = (score.Item1, score.Item2++);
+            var (leftScore, rightScore) = Score;
+
+            Score = (leftScore, ++rightScore);
         }
 
-        public (int, int) GetScore => score;
 
         /// <summary>
         /// Finds if the game is won
@@ -33,7 +31,7 @@ namespace WrapAround.Logic.Entities
         /// <returns>A tuple of (bool,bool) where the side of the bool corresponds to the side of the player.</returns>
         public (bool, bool) IsWon()
         {
-            return score switch
+            return Score switch
             {
                 var (left, _) when left >= 10 => (true, false),
                 var (_, right) when right >= 10 => (false, true),

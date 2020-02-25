@@ -7,7 +7,8 @@ namespace WrapAround.Logic.Util
     /// </summary>
     public struct Hitbox
     {
-        public Vector2 TopLeft, BottomRight;
+        public Vector2 TopLeft { get; }
+        public Vector2 BottomRight { get; }
 
         public Hitbox(Vector2 topLeft, Vector2 bottomRight)
         {

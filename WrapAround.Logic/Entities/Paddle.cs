@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
@@ -18,6 +19,7 @@ namespace WrapAround.Logic.Entities
         public int GameId { get; }
         public Hitbox Hitbox { get; set; }
 
+        [JsonIgnore]
         public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
         public Vector2 Position { get; set; }
