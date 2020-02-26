@@ -54,8 +54,6 @@ namespace WrapAround
                 {
                     await context.Update();
 
-
-
                     await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate",context);//send to frontend
                     
                 });

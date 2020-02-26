@@ -11,6 +11,8 @@ namespace WrapAround.Logic.Util
     {
         [JsonConverter(typeof(Vector2Converter))]
         public Vector2 TopLeft { get; }
+
+        [JsonConverter(typeof(Vector2Converter))]
         public Vector2 BottomRight { get; }
 
         public Hitbox(Vector2 topLeft, Vector2 bottomRight)
@@ -24,7 +26,7 @@ namespace WrapAround.Logic.Util
         /// or to the left of the other rectangle.
         /// </summary>
         /// <param name="hitbox">other hitbox</param>
-        public bool IsCollidingWith(Hitbox hitbox)
+        public bool IsCollidingWith(in Hitbox hitbox)
         {
             //if one rectangle is to the left of the other
             if (TopLeft.X > hitbox.BottomRight.X || hitbox.TopLeft.X > BottomRight.X)

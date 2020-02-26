@@ -17,6 +17,10 @@
     <None Include="wwwroot\Index.html" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
+  </ItemGroup>
+
 
 
 </Project>

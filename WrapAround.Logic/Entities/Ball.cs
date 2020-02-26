@@ -24,7 +24,7 @@ namespace WrapAround.Logic.Entities
 
         private const int Speed = 1;
 
-        private const float MaxAngle = (float) (Math.PI * 5 / 12);// ~75 degrees
+        private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
 
         private const float UpdateRate = 16;//16ms update rate
         public Hitbox Hitbox { get; set; } 
@@ -32,13 +32,13 @@ namespace WrapAround.Logic.Entities
         /// <inheritdoc />
         public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
-        private readonly Vector2 startingPosition;
+        private readonly Vector2 _startingPosition;
 
         public Ball(Vector2 startingPosition, Vector2 rate)
         {
             Position = startingPosition;
-            this.startingPosition = startingPosition;
-            this._rate = rate;
+            _startingPosition = startingPosition;
+            _rate = rate;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10,Position.Y + 10));
         }
 
@@ -55,7 +55,7 @@ namespace WrapAround.Logic.Entities
 
         public void Reset()
         {
-            Position = startingPosition;
+            Position = _startingPosition;
             _rate = new Vector2(-1,0);
         }
 
