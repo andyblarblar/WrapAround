@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Text.Json.Serialization;
 using WrapAround;
 
@@ -45,6 +46,36 @@ namespace WrapAround.Logic.Util
 
         }
 
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                if (obj ! is Hitbox) return false;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
 
+            var hb = (Hitbox) obj;
+
+            return hb.TopLeft == this.TopLeft && hb.BottomRight == this.BottomRight;
+
+        }
+
+        public override int GetHashCode()
+        {
+            return TopLeft.GetHashCode() ^ BottomRight.GetHashCode();
+        }
+
+        public static bool operator ==(Hitbox left, Hitbox right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Hitbox left, Hitbox right)
+        {
+            return !(left == right);
+        }
     }
 }

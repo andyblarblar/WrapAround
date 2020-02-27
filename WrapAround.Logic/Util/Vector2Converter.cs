@@ -12,22 +12,38 @@ namespace WrapAround.Logic.Util
     {
         public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            
-            var x = reader.GetSingle();
-            var y = reader.GetSingle();
+            float x = 0, y = 0;
 
-            return new Vector2(x,y);
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonTokenType.PropertyName:
+                        var propName = reader.GetString();
+                        if (propName.Equals("X", StringComparison.InvariantCulture))
+                        {
+                            reader.Read();
+                            x = reader.GetSingle();
+                        }
+                        else if (propName.Equals("Y", StringComparison.InvariantCulture))
+                        {
+                            reader.Read();
+                            y = reader.GetSingle();
+                        }
+                        break;
+                }
+            }
+
+            return new Vector2(x, y);
 
         }
 
         public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
         {
-            ReadOnlySpan<char> xBuff = stackalloc char[]{'X'};
-            ReadOnlySpan<char> yBuff = stackalloc char[]{'Y'};
 
             writer.WriteStartObject();
-            writer.WriteNumber(xBuff, value.X);
-            writer.WriteNumber(yBuff, value.Y);
+            writer.WriteNumber(stackalloc char[] { 'X' }, value.X);
+            writer.WriteNumber(stackalloc char[] { 'Y' }, value.Y);
             writer.WriteEndObject();
 
             writer.Flush();
