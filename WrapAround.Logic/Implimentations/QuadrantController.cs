@@ -34,6 +34,7 @@ namespace WrapAround.Logic.Implimentations
                 var resultantL = centerCorrs + hitbox.TopLeft;
                 var resultantR = centerCorrs + hitbox.BottomRight;
 
+
                 var leftSeg = (centerCorrs, resultantL) switch
                 {
                     var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
