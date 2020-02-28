@@ -29,8 +29,8 @@ namespace WrapAround.Logic.Implimentations
             var dir = Directory.GetFiles(dirPath);
 
             var maps = from file in dir.AsParallel()
-                where file.EndsWith(".wamap", StringComparison.CurrentCulture)
-                select JsonSerializer.Deserialize<GameMap>(File.ReadAllText(file));
+                       where file.EndsWith(".wamap", StringComparison.CurrentCulture)
+                       select JsonSerializer.Deserialize<GameMap>(File.ReadAllText(file));
 
             return maps.ToList();
         }

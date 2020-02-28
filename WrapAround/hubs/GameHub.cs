@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
 
 namespace WrapAround.hubs
@@ -42,9 +42,9 @@ namespace WrapAround.hubs
             if (id != -1)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{gameId}");
-                userGameRepository.UserDictionary.Add(Context.ConnectionId,$"lobby{gameId}");
+                userGameRepository.UserDictionary.Add(Context.ConnectionId, $"lobby{gameId}");
             }
-            
+
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace WrapAround.hubs
         public override Task OnDisconnectedAsync(Exception exception)
         {
             try
-            { 
+            {
                 Groups.RemoveFromGroupAsync(Context.ConnectionId, userGameRepository.UserDictionary[Context.ConnectionId]);
                 userGameRepository.UserDictionary.Remove(Context.ConnectionId);
             }

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
-using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
 
@@ -46,7 +44,7 @@ namespace WrapAround.Logic
         /// </summary>
         /// <returns>the id of the player, -1 if lobby is full.</returns>
         public async Task<int> AddPlayer(bool isRightSide, string hash)
-        { 
+        {
             return await Task.Run(() =>
             {
                 if (IsLobbyFull()) return -1;
@@ -56,7 +54,7 @@ namespace WrapAround.Logic
                 var playerStartingPosition = isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
 
                 var newPlayer = new Paddle(gameId: Id, playerId: Players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);
-                Players.Add(newPlayer); 
+                Players.Add(newPlayer);
 
                 Players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
 
@@ -112,7 +110,7 @@ namespace WrapAround.Logic
                 CurrentMap.Blocks.AsParallel()
                     .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
                     .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
-                    .ForAll(async block => await CollideAsync(block,Ball));
+                    .ForAll(async block => await CollideAsync(block, Ball));
 
                 //Goal scoring
                 if (CurrentMap.LeftGoal.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
@@ -143,9 +141,11 @@ namespace WrapAround.Logic
                 //check for wins
                 var actionIfWon = ScoreBoard.IsWon() switch
                 {
-                    var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; },
-                    var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; },
-                    _ => (Action) (() => { })
+                    var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; }
+                    ,
+                    var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; }
+                    ,
+                    _ => (Action)(() => { })
 
                 };
                 actionIfWon.Invoke();
@@ -161,7 +161,7 @@ namespace WrapAround.Logic
         /// <param name="obj2"></param>
         /// <returns></returns>
         public static async Task CollideAsync(ICollidable obj1, ICollidable obj2)
-        { 
+        {
             await obj1.Collide(obj2);
             await obj2.Collide(obj1);
 

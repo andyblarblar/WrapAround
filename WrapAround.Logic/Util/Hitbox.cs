@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using System.Text.Json.Serialization;
-using WrapAround;
 
 namespace WrapAround.Logic.Util
 {
@@ -11,10 +10,10 @@ namespace WrapAround.Logic.Util
     public struct Hitbox
     {
         [JsonConverter(typeof(Vector2Converter))]
-        public Vector2 TopLeft { get; }
+        public Vector2 TopLeft { get; set; }
 
         [JsonConverter(typeof(Vector2Converter))]
-        public Vector2 BottomRight { get; }
+        public Vector2 BottomRight { get; set; }
 
         public Hitbox(Vector2 topLeft, Vector2 bottomRight)
         {
@@ -46,18 +45,28 @@ namespace WrapAround.Logic.Util
 
         }
 
+        /// <summary>
+        /// Checks if the hitbox is a valid rectangle, IE: the top left point is the top left and the
+        /// bottom right point is bottom right. Collision does not work if invalid rectangles are used.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return TopLeft.X > BottomRight.X && TopLeft.Y > BottomRight.Y;
+        }
+
         public override bool Equals(object obj)
         {
+            Hitbox hb;
+
             try
             {
-                if (obj ! is Hitbox) return false;
+                hb = (Hitbox)obj;
             }
             catch (Exception)
             {
-                // ignored
+                return false;
             }
-
-            var hb = (Hitbox) obj;
 
             return hb.TopLeft == this.TopLeft && hb.BottomRight == this.BottomRight;
 

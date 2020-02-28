@@ -2,7 +2,7 @@
 
 namespace WrapAround
 {
-    public class UserDataRepo : IUserGameRepository 
+    public class UserDataRepo : IUserGameRepository
     {
         /// <summary>
         /// Keys are UserIds, Values are the lobby they are in

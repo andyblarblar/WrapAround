@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
@@ -27,9 +28,10 @@ namespace WrapAround.Logic.Entities
         private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
 
         private const float UpdateRate = 16;//16ms update rate
-        public Hitbox Hitbox { get; set; } 
 
-        /// <inheritdoc />
+        public Hitbox Hitbox { get; set; }
+
+        [JsonIgnore]
         public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
         private readonly Vector2 _startingPosition;
@@ -39,7 +41,7 @@ namespace WrapAround.Logic.Entities
             Position = startingPosition;
             _startingPosition = startingPosition;
             _rate = rate;
-            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10,Position.Y + 10));
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 10));
         }
 
         /// <summary>
@@ -50,13 +52,13 @@ namespace WrapAround.Logic.Entities
             Position.X += _rate.X * UpdateRate;
             Position.Y += _rate.Y * UpdateRate;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 10));
-            
+
         }
 
         public void Reset()
         {
             Position = _startingPosition;
-            _rate = new Vector2(-1,0);
+            _rate = new Vector2(-1, 0);
         }
 
 
@@ -85,9 +87,9 @@ namespace WrapAround.Logic.Entities
         /// <returns></returns>
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
-            Paddle p  =>  HandlePaddleCollision,
+            Paddle p => HandlePaddleCollision,
             Block b when b.health != 0 => HandleBlockCollision,
-            _ => (CollisionHandler)(_ => {})
+            _ => (CollisionHandler)(_ => { })
 
         };
 
@@ -119,10 +121,10 @@ namespace WrapAround.Logic.Entities
         #endregion
 
 
-        
+
     }
 
 
 
 }
-    
+

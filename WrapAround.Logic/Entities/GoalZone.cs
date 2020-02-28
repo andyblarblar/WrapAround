@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using WrapAround.Logic.Implimentations;
-using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Entities
@@ -19,7 +18,7 @@ namespace WrapAround.Logic.Entities
         public GoalZone(Vector2 position)
         {
             Position = position;
-            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10,Position.Y + 703));
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 703));
 
         }
 

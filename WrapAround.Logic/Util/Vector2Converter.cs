@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace WrapAround.Logic.Util
 {
@@ -31,11 +28,13 @@ namespace WrapAround.Logic.Util
                             y = reader.GetSingle();
                         }
                         break;
+
+                    case JsonTokenType.EndObject:
+                        return new Vector2(x, y);
                 }
             }
 
             return new Vector2(x, y);
-
         }
 
         public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)

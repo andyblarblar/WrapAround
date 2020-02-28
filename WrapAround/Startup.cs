@@ -1,19 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WrapAround.hubs;
-using WrapAround.Logic;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
-using WrapAround.Logic.Util;
 
 namespace WrapAround
 {
@@ -34,7 +26,7 @@ namespace WrapAround
                 hubOption.EnableDetailedErrors = true;
             });
 
-            services.AddSingleton<IServerLoop,ServerLoop>();//injects server loop
+            services.AddSingleton<IServerLoop, ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
             services.AddSingleton<IUserGameRepository, UserDataRepo>();//injects user repo
             services.AddLogging();
@@ -61,7 +53,7 @@ namespace WrapAround
             app.UseStaticFiles();
 
             app.UseRouting();
-      
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/game");

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.SignalR;
+using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+using System.Timers;
 using WrapAround.hubs;
 using WrapAround.Logic;
 using WrapAround.Logic.Entities;
@@ -20,13 +20,6 @@ namespace WrapAround
         /// </summary>
         private const int BroadcastInterval = 17;
 
-        private readonly IHubContext<GameHub> _hubContext;
-
-        /// <summary>
-        /// the global ticker that steps the state and sends game contexts to clients on a timer
-        /// </summary>
-        private readonly Timer _broadCastLoop;
-
         /// <summary>
         /// Holds the states of Contexts.
         /// </summary>
@@ -36,7 +29,6 @@ namespace WrapAround
 
         public ServerLoop(IHubContext<GameHub> hubContext, IMapLoader mapLoader)
         {
-            _hubContext = hubContext;
             _gameContextList = new List<GameContext>(MaxLobbyCount);
             var maps = mapLoader.LoadMaps();
 
@@ -45,23 +37,23 @@ namespace WrapAround
                 _gameContextList.Add(new GameContext(id: i, maps: maps));
             }
 
-            _broadCastLoop = new Timer(BroadcastInterval);
+            var broadCastLoop = new Timer(BroadcastInterval);
 
             //Every 17ms, update all lobbies in parallel and then send to clients.
-            _broadCastLoop.Elapsed += (sender, args) =>
-            { 
+            broadCastLoop.Elapsed += (sender, args) =>
+            {
                 Parallel.ForEach(_gameContextList, async context =>
                 {
                     await context.Update();
 
-                    await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate",context);//send to frontend
-                    
+                    await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate", context);//send to frontend
+
                 });
 
             };
 
-            _broadCastLoop.AutoReset = true;
-            _broadCastLoop.Start();
+            broadCastLoop.AutoReset = true;
+            broadCastLoop.Start();
 
         }
 
@@ -106,10 +98,10 @@ namespace WrapAround
         /// <returns></returns>
         public async Task<List<int>> GetLobbyPlayerCounts()
         {
-           return await Task.Run(() =>
-           {
-              return _gameContextList.Select(game => game.Players.Count).ToList();
-           });
+            return await Task.Run(() =>
+            {
+                return _gameContextList.Select(game => game.Players.Count).ToList();
+            });
 
         }
 

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Numerics;
 using System.Threading.Tasks;
-using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Interfaces

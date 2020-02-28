@@ -17,20 +17,23 @@ namespace WrapAround.Logic.Entities
         public bool IsOnRight { get; set; }
 
         public int GameId { get; }
+
         public Hitbox Hitbox { get; set; }
 
         [JsonIgnore]
         public QuadrantController SegmentController { get; set; } = new QuadrantController();
 
+        [JsonIgnore]
         public Vector2 Position { get; set; }
 
         private Vector2 StartingPosition { get; }
 
-        public float Height { get; set; } 
+        public float Height { get; set; }
 
         /// <summary>
         /// A unique id assigned to the player
         /// </summary>
+        [JsonIgnore]
         public string Hash { get; set; }
 
         private const float MAX_SIZE = 300;
@@ -49,7 +52,7 @@ namespace WrapAround.Logic.Entities
 
         public void ResetLocation()
         {
-           Update(StartingPosition);
+            Update(StartingPosition);
         }
 
         public void AdjustSize(int numberOfPlayersOnSide)

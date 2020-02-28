@@ -1,12 +1,11 @@
-﻿using System.Numerics;
-using WrapAround.Logic.Interfaces;
+﻿using WrapAround.Logic.Interfaces;
 
 namespace WrapAround.Logic.Implimentations
 {
     /// <summary>
     /// Provides utility for a class to be indexed into quadrants, for use in collision detection
     /// </summary>
-    public interface IQuadrantHitbox : IHitbox<QuadrantController,Quadrant>
+    public interface IQuadrantHitbox : IHitbox<QuadrantController, Quadrant>
     {
 
     }

@@ -1,8 +1,7 @@
+using NUnit.Framework;
 using System;
 using System.Numerics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using NUnit.Framework;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Tests
@@ -17,20 +16,19 @@ namespace WrapAround.Tests
         [Test]
         public void HitboxSerializesProperly()
         {
-            var con = new JsonSerializerOptions();
-            con.Converters.Add(new Vector2Converter());
-
             var hitbox = new Hitbox(new Vector2(10f, 20f), new Vector2(30f, 10f));
 
-            Console.WriteLine(JsonSerializer.Serialize(hitbox,con));
-            var bl = JsonSerializer.Deserialize<Hitbox>(JsonSerializer.Serialize(hitbox,con),con);
+            var ser = JsonSerializer.Serialize(hitbox);
+            Console.WriteLine(hitbox.TopLeft);
+            Console.WriteLine(ser);
+            var des = JsonSerializer.Deserialize<Hitbox>(ser);
 
-            Console.WriteLine(bl.TopLeft);
-            Assert.AreEqual("<10, 20>", bl.TopLeft);
+            Console.WriteLine(des.TopLeft);
+            Assert.AreEqual(hitbox, des);
 
             Assert.Pass();
-        } 
-        
+        }
+
         [Test]
         public void Vector2SerializesProperly()
         {
