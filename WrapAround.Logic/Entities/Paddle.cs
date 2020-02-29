@@ -21,7 +21,7 @@ namespace WrapAround.Logic.Entities
         public Hitbox Hitbox { get; set; }
 
         [JsonIgnore]
-        public QuadrantController SegmentController { get; set; } = new QuadrantController();
+        public QuadrantController SegmentController { get; set; } 
 
         [JsonIgnore]
         public Vector2 Position { get; set; }
@@ -40,6 +40,7 @@ namespace WrapAround.Logic.Entities
 
         public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash, Vector2 startingPosition)
         {
+            SegmentController = new QuadrantController();
             Id = playerId;
             GameId = gameId;
             IsOnRight = isOnRight;

@@ -15,11 +15,11 @@ namespace WrapAround.Logic
         public GoalZone LeftGoal;
         public GoalZone RightGoal;
 
-        public GameMap(List<Block> blocks = default, (int x, int y) canvasSize = default)
+        public GameMap(List<Block> blocks = default)
         {
-
+            if(blocks == null) blocks = new List<Block>();
             LeftGoal = new GoalZone(new Vector2(0, 0));
-            RightGoal = new GoalZone(new Vector2(canvasSize.x - 10, 0));
+            RightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 30, 0));
             Blocks = blocks;
         }
 
