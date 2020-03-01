@@ -28,14 +28,14 @@ namespace WrapAround.Logic.Util
         /// <param name="hitbox">other hitbox</param>
         public bool IsCollidingWith(in Hitbox hitbox)
         {
-            //if one rectangle is to the left of the other
-            if (TopLeft.X > hitbox.BottomRight.X || hitbox.TopLeft.X > BottomRight.X)
+            //if one rectangle is to the right of the other (one rectangles point is to the right of both points of the other rectangle)
+            if (TopLeft.X > hitbox.BottomRight.X && TopLeft.X > hitbox.TopLeft.X || hitbox.TopLeft.X > BottomRight.X && hitbox.TopLeft.X > TopLeft.X)
             {
                 return false;
             }
 
-            //if one rectangle is above the other
-            if (TopLeft.Y < hitbox.BottomRight.Y || hitbox.TopLeft.Y < BottomRight.Y)
+            //if one rectangle is above the other (one rectangles top left point is above both points of the other rectangle)
+            if (TopLeft.Y < hitbox.TopLeft.Y && BottomRight.Y < hitbox.TopLeft.Y || hitbox.TopLeft.Y < TopLeft.Y && hitbox.BottomRight.Y < TopLeft.Y)
             {
                 return false;
             }

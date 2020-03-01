@@ -19,7 +19,7 @@ namespace WrapAround.Logic
         {
             if(blocks == null) blocks = new List<Block>();
             LeftGoal = new GoalZone(new Vector2(0, 0));
-            RightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 30, 0));
+            RightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 20, 0));
             Blocks = blocks;
         }
 
