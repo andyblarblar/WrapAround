@@ -13,13 +13,14 @@ namespace WrapAround.Logic.Entities
 
         public Hitbox Hitbox { get; set; }
 
-        public QuadrantController SegmentController { get; set; } = new QuadrantController();
+        public QuadrantController SegmentController { get; set; } 
 
         public GoalZone(Vector2 position)
         {
+            SegmentController = new QuadrantController();
             Position = position;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 703));
-
+            _ = SegmentController.UpdateSegment(Hitbox);
         }
 
 

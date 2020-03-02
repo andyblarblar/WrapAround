@@ -85,8 +85,6 @@ function formatColorString(color) {
 // Called after each context update, renders that info to the scn canvas
 function render(context) {
 
-    console.log(context);
-
     gameLoaded = true;
     let ctx = scn.getContext("2d");
 
@@ -113,6 +111,8 @@ function render(context) {
         ctx.fillStyle = "rgb(" + paddleR + ", " + paddleG + ", " + paddleB + ")";
         ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 10, item.height);
     });
+
+    console.log(context.ball.hitbox.topLeft.X)
 
 }
 

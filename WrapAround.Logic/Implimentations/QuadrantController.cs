@@ -37,18 +37,18 @@ namespace WrapAround.Logic.Implimentations
 
                 var leftSeg = (centerCorrs, resultantL) switch
                 {
-                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
-                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrant2,
-                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrant3,
-                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrant4
+                    var (center, res) when res.X >= center.X && res.Y >= center.Y => Quadrant.Quadrant1,
+                    var (center, res) when res.X <= center.X && res.Y >= center.Y => Quadrant.Quadrant2,
+                    var (center, res) when res.X <= center.X && res.Y <= center.Y => Quadrant.Quadrant3,
+                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4
                 };
 
                 var rightSeg = (centerCorrs, resultantR) switch
                 {
-                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
-                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrant2,
-                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrant3,
-                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrant4
+                    var (center, res) when res.X >= center.X && res.Y >= center.Y => Quadrant.Quadrant1,
+                    var (center, res) when res.X <= center.X && res.Y >= center.Y => Quadrant.Quadrant2,
+                    var (center, res) when res.X <= center.X && res.Y <= center.Y => Quadrant.Quadrant3,
+                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4
                 };
 
                 Segment.Add(leftSeg);

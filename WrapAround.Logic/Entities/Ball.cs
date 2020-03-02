@@ -27,17 +27,18 @@ namespace WrapAround.Logic.Entities
 
         private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
 
-        private const float UpdateRate = 16;//16ms update rate
+        private const float UpdateRate = 1.6f;//16ms update rate
 
         public Hitbox Hitbox { get; set; }
 
         [JsonIgnore]
-        public QuadrantController SegmentController { get; set; } = new QuadrantController();
+        public QuadrantController SegmentController { get; set; } 
 
         private readonly Vector2 _startingPosition;
 
         public Ball(Vector2 startingPosition, Vector2 rate)
         {
+            SegmentController = new QuadrantController();
             Position = startingPosition;
             _startingPosition = startingPosition;
             _rate = rate;

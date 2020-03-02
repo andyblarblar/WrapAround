@@ -107,28 +107,24 @@ namespace WrapAround.Logic
                     .Where(paddle => paddle.Hitbox.IsCollidingWith(Ball.Hitbox))//check for collision
                     .ForAll(async paddle => await CollideAsync(paddle, Ball));//Handle Collisions 
 
-                CurrentMap.Blocks.AsParallel()
+                CurrentMap?.Blocks.AsParallel()
                     .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
                     .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
                     .ForAll(async block => await CollideAsync(block, Ball));
 
                 //Goal scoring
-                if (CurrentMap.LeftGoal.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
+                if (CurrentMap.LeftGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
                 {
-                    if (CurrentMap.LeftGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
-                    {
-                        ScoreBoard.ScoreLeft();
-                        Ball.Reset();
-                    }
+                    ScoreBoard.ScoreLeft();
+                    Ball.Reset();
                 }
-                else if (CurrentMap.RightGoal.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
+
+                else if (CurrentMap.RightGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
                 {
-                    if (CurrentMap.RightGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
-                    {
-                        ScoreBoard.ScoreRight();
-                        Ball.Reset();
-                    }
+                    ScoreBoard.ScoreRight();
+                    Ball.Reset();
                 }
+                
 
                 //WrapAround!
                 Ball.Position.Y = Ball.Position.Y switch
