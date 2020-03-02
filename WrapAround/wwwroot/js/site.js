@@ -14,7 +14,8 @@ const userHash = genHash("Pl@ceh01d&r");
 var userId;
 var _context = null;
 var playerPaddle = {
-    "Id": 0, "IsOnRight": true, "GameId": 0, "Hitbox": { "TopLeft": { "X": 0, "Y": 0 }, "BottomRight": { "X": 0, "Y": 0 } }, "Height": 0.0};
+    "Id": 0, "IsOnRight": true, "GameId": 0, "Hitbox": { "TopLeft": { "X": 0, "Y": 0 }, "BottomRight": { "X": 0, "Y": 0 } }, "Height": 0.0, "Hash": userHash, "MAX_SIZE": 300, "Position": { "X": 0, "Y": 0 }
+};
 var playerStateFetched = false;
 var gameLoaded = false;
 var paddleR = Math.floor(Math.random() * 256).toString();
@@ -137,14 +138,20 @@ document.addEventListener("keydown", event => {
     if (gameLoaded) {
         console.log(event.code);
         if (event.code === "ArrowUp" && playerPaddle.Hitbox.TopLeft.Y < 0) {
-            playerPaddle.Hitbox.TopLeft.Y -= 0.1;
-            playerPaddle.Hitbox.BottomRight.Y -= 0.1;
+            console.log("UP");
+            playerPaddle.Hitbox.TopLeft.Y -= 1;
+            playerPaddle.Hitbox.BottomRight.Y -= 1;
+            playerPaddle.Position.Y -= 1;
         } else if (event.code === "ArrowDown" && playerPaddle.Hitbox.BottomRight.Y > scnHeight) {
-            playerPaddle.Hitbox.TopLeft.Y += 0.1;
-            playerPaddle.Hitbox.BottomRight.Y += 0.1;
+            playerPaddle.Hitbox.TopLeft.Y += 1;
+            playerPaddle.Hitbox.BottomRight.Y += 1;
+            playerPaddle.Position.Y += 1;
+            console.log("DOWN");
         }
-        if (event.code === "ArrowUp" || event.code === "ArrowDown")
+        if (event.code === "ArrowUp" || event.code === "ArrowDown") {
             connection.invoke("UpdatePlayerPosition", playerPaddle);
+            console.log("MOVE SENT");
+        }
     }
 });
 

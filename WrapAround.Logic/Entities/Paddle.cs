@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
@@ -51,6 +52,10 @@ namespace WrapAround.Logic.Entities
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + Height));
         }
 
+        public Paddle() {
+
+        }
+
         public void ResetLocation()
         {
             Update(StartingPosition);
@@ -67,6 +72,7 @@ namespace WrapAround.Logic.Entities
         /// <param name="playerPosition"></param>
         public void Update(Vector2 playerPosition)
         {
+            Console.WriteLine(playerPosition);
             Position = playerPosition;
             Hitbox = new Hitbox(playerPosition, new Vector2(Position.X + 10, Position.Y + Height));
 
