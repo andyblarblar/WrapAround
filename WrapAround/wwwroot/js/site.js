@@ -14,7 +14,7 @@ const userHash = genHash("Pl@ceh01d&r");
 var userId;
 var _context = null;
 var playerPaddle = {
-    "Id": 0, "IsOnRight": true, "GameId": 0, "Hitbox": { "TopLeft": { "X": 0, "Y": 0 }, "BottomRight": { "X": 0, "Y": 0 } }, "Height": 0.0, "Hash": userHash, "MAX_SIZE": 300, "Position": { "X": 0, "Y": 0 }
+    Id: 0, IsOnRight: true, GameId: 0, Hitbox: { TopLeft: { X: 0, Y: 0 }, BottomRight: { X: 0, Y: 0 } }, Height: 0.0, Hash: userHash, MAX_SIZE: 300, Position: { X: 0, Y: 0 }
 };
 var playerStateFetched = false;
 var gameLoaded = false;
@@ -28,7 +28,7 @@ const scnHeight = 703;
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
     .withAutomaticReconnect()
-    .configureLogging(signalR.LogLevel.Trace)
+    //.configureLogging(signalR.LogLevel.Trace)
     .build();
 
 // Generates a unique hash based on the input string and the current time
@@ -113,7 +113,7 @@ function render(context) {
         ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 10, item.height);
     });
 
-    console.log(context.ball.hitbox.topLeft.X)
+   // console.log(context.ball.hitbox.topLeft.X)
 
 }
 

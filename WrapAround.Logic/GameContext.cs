@@ -103,7 +103,7 @@ namespace WrapAround.Logic
 
                 //Collision handle
                 Players.AsParallel()
-                    .Where(player => player.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))//all paddles in same segment as ball
+                    .Where(player => player.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First()))//all paddles in same segment as ball
                     .Where(paddle => paddle.Hitbox.IsCollidingWith(Ball.Hitbox))//check for collision
                     .ForAll(async paddle => await CollideAsync(paddle, Ball));//Handle Collisions 
 

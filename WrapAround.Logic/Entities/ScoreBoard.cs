@@ -1,27 +1,32 @@
 ﻿
+using System.Numerics;
+using System.Text.Json.Serialization;
+using WrapAround.Logic.Util;
+
 namespace WrapAround.Logic.Entities
 {
     public class ScoreBoard
     {
-        public (int, int) Score { get; set; }
+        [JsonConverter(typeof(Vector2Converter))]
+        public Vector2 Score { get; set; }
 
         public void Reset()
         {
-            Score = (0, 0);
+            Score = new Vector2(0,0);
         }
 
         public void ScoreLeft()
         {
             var (leftScore, rightScore) = Score;
 
-            Score = (++leftScore, rightScore);
+            Score = new Vector2(++leftScore, rightScore);
         }
 
         public void ScoreRight()
         {
             var (leftScore, rightScore) = Score;
 
-            Score = (leftScore, ++rightScore);
+            Score = new Vector2(leftScore, ++rightScore);
         }
 
 
@@ -41,7 +46,6 @@ namespace WrapAround.Logic.Entities
 
         }
 
-
-
     }
+
 }

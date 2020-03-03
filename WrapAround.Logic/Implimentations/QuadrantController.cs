@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
@@ -40,7 +42,8 @@ namespace WrapAround.Logic.Implimentations
                     var (center, res) when res.X >= center.X && res.Y >= center.Y => Quadrant.Quadrant1,
                     var (center, res) when res.X <= center.X && res.Y >= center.Y => Quadrant.Quadrant2,
                     var (center, res) when res.X <= center.X && res.Y <= center.Y => Quadrant.Quadrant3,
-                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4
+                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4,
+                    _ => throw new Exception("Failed to find segment")
                 };
 
                 var rightSeg = (centerCorrs, resultantR) switch
@@ -48,7 +51,8 @@ namespace WrapAround.Logic.Implimentations
                     var (center, res) when res.X >= center.X && res.Y >= center.Y => Quadrant.Quadrant1,
                     var (center, res) when res.X <= center.X && res.Y >= center.Y => Quadrant.Quadrant2,
                     var (center, res) when res.X <= center.X && res.Y <= center.Y => Quadrant.Quadrant3,
-                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4
+                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4,
+                    _ => throw new Exception("Failed to find segment")
                 };
 
                 Segment.Add(leftSeg);
