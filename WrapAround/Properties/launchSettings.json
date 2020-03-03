@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/WrapAround",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:1234",
       "sslPort": 44366
@@ -13,7 +17,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "use64Bit": true
     },
     "WrapAround": {
       "commandName": "Project",

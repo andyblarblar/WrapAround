@@ -53,7 +53,7 @@ namespace WrapAround.Logic
 
                 var playerStartingPosition = isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
 
-                var newPlayer = new Paddle(gameId: Id, playerId: Players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);
+                var newPlayer = new Paddle(gameId: Id, playerId: Players.Count + 1, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);//TODO create better Id derivation
                 Players.Add(newPlayer);
 
                 Players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
@@ -71,7 +71,7 @@ namespace WrapAround.Logic
         {
             await Task.Run(() =>
             {
-                Players.Remove(Players.AsParallel().Single(paddle => paddle.Id == player.Id && paddle.Hash == player.Hash));
+                Players.Remove(Players.Single(paddle => paddle.Id == player.Id));
 
                 var playersOnSide = Players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
                 Players.ForEach(paddle => paddle.AdjustSize(playersOnSide));//readjust sizes

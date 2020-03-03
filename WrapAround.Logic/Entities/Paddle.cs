@@ -13,11 +13,11 @@ namespace WrapAround.Logic.Entities
     /// </summary>
     public class Paddle : IQuadrantHitbox, ICollidable
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
         public bool IsOnRight { get; set; }
 
-        public int GameId { get; }
+        public int GameId { get; set; }
 
         public Hitbox Hitbox { get; set; }
 

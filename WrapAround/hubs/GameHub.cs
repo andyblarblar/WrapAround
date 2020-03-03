@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
 
@@ -42,7 +43,16 @@ namespace WrapAround.hubs
             if (id != -1)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{gameId}");
-                userGameRepository.UserDictionary.Add(Context.ConnectionId, $"lobby{gameId}");
+
+                try
+                {
+                    userGameRepository.UserDictionary.Add(Context.ConnectionId, $"lobby{gameId}");
+                }
+                catch (Exception e)
+                {
+                   //Will error here if same person connects twice, we need this for debugging
+                }
+
             }
 
         }
@@ -52,9 +62,9 @@ namespace WrapAround.hubs
         /// </summary>
         /// <param name="player">a complete representation of the players state, as reported by the client.</param>
         /// <returns></returns>
-        public async Task UpdatePlayerPosition(Paddle player)
+        public async Task UpdatePlayerPosition(string hash, Vector2 position, int gameId, int Id)
         {
-            await serverLoop.UpdatePlayerPosition(player);
+            await serverLoop.UpdatePlayerPosition(new Paddle(){GameId = gameId, Position = position, Hash = hash, Id = Id});
         }
 
         /// <summary>
