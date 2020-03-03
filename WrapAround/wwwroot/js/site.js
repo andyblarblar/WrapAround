@@ -14,7 +14,7 @@ const userHash = genHash("Pl@ceh01d&r");
 var userId;
 var _context = null;
 var playerPaddle = {
-    Id: 0, IsOnRight: true, GameId: 0, Hitbox: { TopLeft: { X: 0, Y: 0 }, BottomRight: { X: 0, Y: 0 } }, Height: 0.0, Hash: userHash, MAX_SIZE: 300, Position: { X: 0, Y: 0 }
+    Id: 0, IsOnRight: false, GameId: 0, Hitbox: { TopLeft: { X: 20, Y: 0 }, BottomRight: { X: 20, Y: 0 } }, Height: 0.0, Hash: userHash, MAX_SIZE: 300, Position: { X: 20, Y: 0 }
 };
 var playerStateFetched = false;
 var gameLoaded = false;
@@ -22,8 +22,6 @@ var paddleR = Math.floor(Math.random() * 256).toString();
 var paddleG = Math.floor(Math.random() * 256).toString();
 var paddleB = Math.floor(Math.random() * 256).toString();
 const scnHeight = 703;
-
-
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
@@ -46,6 +44,10 @@ function genHash(seed) {
 
 connection.start().then(function () {
     console.log("connection initialized ;)");
+    for(var i = 0; i < 4; ++i) {
+        lobs[i].addEventListener("mouseover", () => { connection.invoke("GetLobbyPlayerCounts"); });
+    }
+
 })
 
 connection.invoke("GetLobbyPlayerCounts");
@@ -60,16 +62,16 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 
 connection.on("ReceiveContextUpdate", (context) => {
     _context = context;
-    if (!playerStateFetched) {
-        context.players.forEach((item) => {
-            if (item.Id === playerPaddle.Id)
-                playerPaddle.Hitbox = item.Hitbox;
-        });
-        if (playerPaddle != null)
-            playerStateFetched = true;
-        //else
-        //console.log("Player not found in context");
-    }
+    context.players.forEach((item) => {
+        if (item.Id === playerPaddle.Id) {
+            playerPaddle.Hitbox.TopLeft.Y = item.Hitbox.TopLeft.Y;
+            playerPaddle.Hitbox.BottomRight.Y = item.Hitbox.BottomRight.Y;
+            playerPaddle.Height = item.Height;
+            playerPaddle.Position.Y = item.Position.Y;
+        }
+    });
+    //else
+    //console.log("Player not found in context");
     render(context);
 });
 
