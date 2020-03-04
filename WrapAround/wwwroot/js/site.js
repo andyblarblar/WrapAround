@@ -14,7 +14,7 @@ const userHash = genHash("Pl@ceh01d&r");
 var userId;
 var _context = null;
 var playerPaddle = {
-    Id: 0, IsOnRight: false, GameId: 0, Hitbox: { TopLeft: { X: 20, Y: 0 }, BottomRight: { X: 20, Y: 0 } }, Height: 0.0, Hash: userHash, MAX_SIZE: 300, Position: { X: 20, Y: 0 }
+    id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 }
 };
 var playerStateFetched = false;
 var gameLoaded = false;
@@ -39,7 +39,7 @@ function genHash(seed) {
         hash = ((hash << 5) - hash) + chr;
         hash |= 0;
     }
-    return Math.abs(hash).toString();
+    return Math.abs(hash).toString().slice(0,7); 
 };
 
 connection.start().then(function () {
@@ -62,13 +62,17 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 
 connection.on("ReceiveContextUpdate", (context) => {
     _context = context;
+    console.log(playerPaddle);
     context.players.forEach((item) => {
-        if (item.Id === playerPaddle.Id) {
-            playerPaddle.Hitbox.TopLeft.Y = item.Hitbox.TopLeft.Y;
-            playerPaddle.Hitbox.BottomRight.Y = item.Hitbox.BottomRight.Y;
-            playerPaddle.Height = item.Height;
-            playerPaddle.Position.Y = item.Position.Y;
+        console.log(item);
+        if (item.id == playerPaddle.id) {
+            playerPaddle.hitbox.TopLeft.Y = item.hitbox.TopLeft.Y;
+            playerPaddle.hitbox.BottomRight.Y = item.hitbox.BottomRight.Y;
+            playerPaddle.height = item.height;
+            playerPaddle.position.Y = item.position.Y;
+            console.log(playerPaddle);
         }
+        
     });
     //else
     //console.log("Player not found in context");
@@ -121,11 +125,11 @@ function render(context) {
 
 // Called when a lobby box is clicked by the user, sends an addplayer request to the hub
 function joinLobby(lobbyId) {
-    connection.invoke("AddPlayer", lobbyId, true, userHash);
+    connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
     connection.on("ReceiveId", (id) => {
         userId = id;
-        playerPaddle.Id = userId;
-        playerPaddle.GameId = lobbyId;
+        playerPaddle.id = userId;
+        playerPaddle.gameId = lobbyId;
     });
 }
 
@@ -139,19 +143,21 @@ function leaveLobby() {
 document.addEventListener("keydown", event => {
     if (gameLoaded) {
         console.log(event.code);
-        if (event.code === "ArrowUp" && playerPaddle.Hitbox.TopLeft.Y < 0) {
+        console.log(playerPaddle.position.Y);
+        console.log(playerPaddle.position.X);
+        if (event.code === "ArrowUp" && playerPaddle.hitbox.topLeft.Y < 0) {
             console.log("UP");
-            playerPaddle.Hitbox.TopLeft.Y -= 1;
-            playerPaddle.Hitbox.BottomRight.Y -= 1;
-            playerPaddle.Position.Y -= 1;
-        } else if (event.code === "ArrowDown" && playerPaddle.Hitbox.BottomRight.Y > scnHeight) {
-            playerPaddle.Hitbox.TopLeft.Y += 1;
-            playerPaddle.Hitbox.BottomRight.Y += 1;
-            playerPaddle.Position.Y += 1;
+            playerPaddle.hitbox.topLeft.Y -= 1;
+            playerPaddle.hitbox.bottomRight.Y -= 1;
+            playerPaddle.position.Y -= 1;
+        } else if (event.code === "ArrowDown" && playerPaddle.hitbox.bottomRight.Y > scnHeight) {
+            playerPaddle.hitbox.topLeft.Y += 1;
+            playerPaddle.hitbox.bottomRight.Y += 1;
+            playerPaddle.position.Y += 1;
             console.log("DOWN");
         }
         if (event.code === "ArrowUp" || event.code === "ArrowDown") {
-            connection.invoke("UpdatePlayerPosition", playerPaddle.Hash, playerPaddle.Position, playerPaddle.GameId, playerPaddle.Id);
+            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position, playerPaddle.gameId, playerPaddle.id);
             console.log("MOVE SENT");
         }
     }
