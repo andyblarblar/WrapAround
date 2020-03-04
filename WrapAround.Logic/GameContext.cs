@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -49,17 +50,35 @@ namespace WrapAround.Logic
             {
                 if (IsLobbyFull()) return -1;
 
+                var ran = new Random();
+
                 var numOnSide = Players.Count(player => player.IsOnRight == isRightSide) + 1;
 
-                var playerStartingPosition = isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
+                var playerStartingPosition =
+                    isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
 
-                var newPlayer = new Paddle(gameId: Id, playerId: Players.Count + 1, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);//TODO create better Id derivation
-                Players.Add(newPlayer);
+                try
+                {
+                    var newPlayer = new Paddle(
+                        gameId: Id, 
+                        playerId: int.Parse(hash, NumberStyles.Any) ^ ran.Next(),//we should prob fix this lol 
+                        isOnRight: isRightSide,
+                        playerTotalOnSide: numOnSide, 
+                        hash: hash,
+                        startingPosition: playerStartingPosition); 
 
-                Players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
+                    Players.Add(newPlayer);
 
-                return newPlayer.Id;
-            }).ConfigureAwait(true);
+                    Players.ForEach((paddle => paddle.AdjustSize(numOnSide))); //adjust player sizes
+
+                    return newPlayer.Id;
+                }
+                catch (Exception)//if something goes wrong in parsing
+                {
+                    return -1;
+                }
+
+            });
         }
 
         /// <summary>
@@ -74,10 +93,10 @@ namespace WrapAround.Logic
                 Players.Remove(Players.Single(paddle => paddle.Id == player.Id));
 
                 var playersOnSide = Players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
-                Players.ForEach(paddle => paddle.AdjustSize(playersOnSide));//readjust sizes
+                Players.ForEach(paddle => paddle.AdjustSize(playersOnSide)); //readjust sizes
 
 
-            }).ConfigureAwait(true);
+            });
         }
 
         /// <summary>
