@@ -2,7 +2,6 @@
 <head>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,400&display=swap" rel="stylesheet"> <!-- Import Roboto -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Import Material Icons -->
-    
     <link href="/css/site.css" rel="stylesheet">
 </head>
 <body>
@@ -36,26 +35,24 @@
         </a>
     </div>
     <!-- Game Window Modal -->
-<div id="game-modal">
-    <div id="game-window">
-        <canvas id="render-window" width="1250" height="700"></canvas>
-        <!-- <div id="chat-window">
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-        </div> -->
-        <a id="close-modal" href="#" onmousedown="leaveLobby()"><i class="material-icons">close</i></a>
+    <div id="game-modal">
+        <div id="game-window">
+            <canvas id="render-window" width="1250" height="700"></canvas>
+            <!-- <div id="chat-window">
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            </div> -->
+            <a id="close-modal" href="#main-page" ><i class="material-icons">close</i></a>
+            <a id="lights-out"  href="#game-modal" onmousedown="lightsOut()"><i class="material-icons">highlight</i></a>
+        </div>
     </div>
-</div>
 
-
-    
-
-<!-- im sorry for the script gore lol -->
+<!-- Load Scripts after HTML is loaded -->
 <script src="/js/signalr/dist/browser/signalr.min.js"></script>
 <script src="/js/site.js"></script>
-    
-    
+<script src="/js/indexScript.js"></script>
+
 </body>
 </html>
