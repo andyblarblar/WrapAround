@@ -19,6 +19,7 @@ var playerPaddle = {
 var playerStateFetched = false;
 var gameLoaded = false;
 var paddleR = Math.floor(Math.random() * 256).toString();
+
 var paddleG = Math.floor(Math.random() * 256).toString();
 var paddleB = Math.floor(Math.random() * 256).toString();
 const scnHeight = 703;
@@ -26,7 +27,6 @@ const scnHeight = 703;
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
     .withAutomaticReconnect()
-    .configureLogging(signalR.LogLevel.Trace)
     .build();
 
 // Generates a unique hash based on the input string and the current time
@@ -62,15 +62,15 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 
 connection.on("ReceiveContextUpdate", (context) => {
     _context = context;
-    console.log(playerPaddle);
+    //console.log(playerPaddle);
     context.players.forEach((item) => {
         console.log(item);
         if (item.id == playerPaddle.id) {
-            playerPaddle.hitbox.TopLeft.Y = item.hitbox.TopLeft.Y;
-            playerPaddle.hitbox.BottomRight.Y = item.hitbox.BottomRight.Y;
+            playerPaddle.hitbox.topLeft.Y = item.hitbox.topLeft.Y;
+            playerPaddle.hitbox.bottomRight.Y = item.hitbox.bottomRight.Y;
             playerPaddle.height = item.height;
-            playerPaddle.position.Y = item.position.Y;
-            console.log(playerPaddle);
+            playerPaddle.position.Y = item.hitbox.topLeft.Y;
+            //console.log(playerPaddle);
         }
         
     });
