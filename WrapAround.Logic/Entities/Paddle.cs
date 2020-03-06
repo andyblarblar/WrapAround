@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
@@ -11,30 +13,35 @@ namespace WrapAround.Logic.Entities
     /// </summary>
     public class Paddle : IQuadrantHitbox, ICollidable
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
         public bool IsOnRight { get; set; }
 
-        public int GameId { get; }
+        public int GameId { get; set; }
+
         public Hitbox Hitbox { get; set; }
 
-        public QuadrantController SegmentController { get; set; } = new QuadrantController();
+        [JsonIgnore]
+        public QuadrantController SegmentController { get; set; } 
 
+        [JsonIgnore]
         public Vector2 Position { get; set; }
 
         private Vector2 StartingPosition { get; }
 
-        public float Height { get; set; } 
+        public float Height { get; set; }
 
         /// <summary>
         /// A unique id assigned to the player
         /// </summary>
+        [JsonIgnore]
         public string Hash { get; set; }
 
         private const float MAX_SIZE = 300;
 
         public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash, Vector2 startingPosition)
         {
+            SegmentController = new QuadrantController();
             Id = playerId;
             GameId = gameId;
             IsOnRight = isOnRight;
@@ -45,9 +52,13 @@ namespace WrapAround.Logic.Entities
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + Height));
         }
 
+        public Paddle() {
+
+        }
+
         public void ResetLocation()
         {
-           Update(StartingPosition);
+            Update(StartingPosition);
         }
 
         public void AdjustSize(int numberOfPlayersOnSide)
@@ -61,6 +72,7 @@ namespace WrapAround.Logic.Entities
         /// <param name="playerPosition"></param>
         public void Update(Vector2 playerPosition)
         {
+            Console.WriteLine(playerPosition);
             Position = playerPosition;
             Hitbox = new Hitbox(playerPosition, new Vector2(Position.X + 10, Position.Y + Height));
 

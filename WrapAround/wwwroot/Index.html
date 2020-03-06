@@ -14,39 +14,37 @@
     <!-- Lobby Select -->
     <div id="lobby-select">
         <!-- Lobby 1 -->
-        <a class="lobby-box" id="lobby-1" href="#game-modal">
+        <a class="lobby-box" id="lobby-1" href="#game-modal" onmousedown="joinLobby(0)">
             <div class="lobby-title">Lobby 1</div>
-            <div class="lobby-playernum">0/16 Players</div>
+            <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
         <!-- Lobby 2 -->
-        <a class="lobby-box" id="lobby-2" href="#game-modal">
+        <a class="lobby-box" id="lobby-2" href="#game-modal" onmousedown="joinLobby(1)">
             <div class="lobby-title">Lobby 2</div>
-            <div class="lobby-playernum">0/16 Players</div>
+            <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
         <!-- Lobby 3 -->
-        <a class="lobby-box" id="lobby-3" href="#game-modal">
+        <a class="lobby-box" id="lobby-3" href="#game-modal" onmousedown="joinLobby(2)">
             <div class="lobby-title">Lobby 3</div>
-            <div class="lobby-playernum">0/16 Players</div>
+            <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
         <!-- Lobby 4 -->
-        <a class="lobby-box" id="lobby-4" href="#game-modal">
+        <a class="lobby-box" id="lobby-4" href="#game-modal" onmousedown="joinLobby(3)">
             <div class="lobby-title">Lobby 4</div>
-            <div class="lobby-playernum">0/16 Players</div>
+            <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
     </div>
     <!-- Game Window Modal -->
-    <div id="game-modal">
-        <div id="game-window">
-            <canvas id="render-window" width="1250" height="700"></canvas>
-            <!-- <div id="chat-window">
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            </div> -->
-            <a id="close-modal" href="#main-page" ><i class="material-icons">close</i></a>
-            <a id="lights-out"  href="#game-modal" onmousedown="lightsOut()"><i class="material-icons">highlight</i></a>
-        </div>
+<div id="game-modal">
+    <div id="game-window">
+        <canvas id="render-window" width="1250" height="700"></canvas>
+        <!-- <div id="chat-window">
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+        </div> -->
+        <a id="close-modal" href="#" onmousedown="leaveLobby()"><i class="material-icons">close</i></a>
     </div>
 
 <!-- Load Scripts after HTML is loaded -->

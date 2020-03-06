@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using WrapAround.Logic.Entities;
 
@@ -11,17 +10,16 @@ namespace WrapAround.Logic
     public class GameMap
     {
 
-        public List<Block> Blocks { get; } 
+        public List<Block> Blocks { get; }
         public (int, int) CanvasSize { get; set; } = (1250, 703);
         public GoalZone LeftGoal;
         public GoalZone RightGoal;
 
-        public GameMap(List<Block> blocks = default, (int x, int y) canvasSize = default)
+        public GameMap(List<Block> blocks = default)
         {
-            if (blocks is null) blocks = new List<Block>();
-            
+            if(blocks == null) blocks = new List<Block>();
             LeftGoal = new GoalZone(new Vector2(0, 0));
-            RightGoal = new GoalZone(new Vector2(canvasSize.x - 10, 0));
+            RightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 20, 0));
             Blocks = blocks;
         }
 

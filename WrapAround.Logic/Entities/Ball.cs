@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
@@ -15,31 +16,33 @@ namespace WrapAround.Logic.Entities
         /// <summary>
         /// the position of the ball on the canvas
         /// </summary>
-        public Vector2 position;
+        public Vector2 Position;
 
         /// <summary>
         /// the position vector of the ball relative to the field "position". Velocity in pixels/ms
         /// </summary>
-        private Vector2 rate;
+        private Vector2 _rate;
 
-        private const int SPEED = 1;
+        private const int Speed = 1;
 
-        private const float MAX_ANGLE = (float) (Math.PI * 5 / 12);// ~75 degrees
+        private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
 
-        private const float UPDATE_RATE = 16;//16ms update rate
-        public Hitbox Hitbox { get; set; } 
+        private const float UpdateRate = 1.6f;//16ms update rate
 
-        /// <inheritdoc />
-        public QuadrantController SegmentController { get; set; } = new QuadrantController();
+        public Hitbox Hitbox { get; set; }
 
-        private readonly Vector2 startingPosition;
+        [JsonIgnore]
+        public QuadrantController SegmentController { get; set; } 
+
+        private readonly Vector2 _startingPosition;
 
         public Ball(Vector2 startingPosition, Vector2 rate)
         {
-            position = startingPosition;
-            this.startingPosition = startingPosition;
-            this.rate = rate;
-            Hitbox = new Hitbox(position, new Vector2(position.X + 10,position.Y + 10));
+            SegmentController = new QuadrantController();
+            Position = startingPosition;
+            _startingPosition = startingPosition;
+            _rate = rate;
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 10));
         }
 
         /// <summary>
@@ -47,16 +50,16 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         public void Update()
         {
-            position.X += rate.X * UPDATE_RATE;
-            position.Y += rate.Y * UPDATE_RATE;
-            Hitbox = new Hitbox(position, new Vector2(position.X + 10, position.Y + 10));
-            
+            Position.X += _rate.X * UpdateRate;
+            Position.Y += _rate.Y * UpdateRate;
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 10));
+
         }
 
         public void Reset()
         {
-            position = startingPosition;
-            rate = new Vector2(-1,0);
+            Position = _startingPosition;
+            _rate = new Vector2(-1, 0);
         }
 
 
@@ -85,9 +88,9 @@ namespace WrapAround.Logic.Entities
         /// <returns></returns>
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
-            Paddle p  => new CollisionHandler(HandlePaddleCollision),
-            Block b when b.health != 0 => new CollisionHandler(HandleBlockCollision),
-            _ => new CollisionHandler(_ => {})
+            Paddle p => HandlePaddleCollision,
+            Block b when b.health != 0 => HandleBlockCollision,
+            _ => (CollisionHandler)(_ => { })
 
         };
 
@@ -95,12 +98,12 @@ namespace WrapAround.Logic.Entities
         {
             var realPaddle = paddle as Paddle;
 
-            var relativeIntersectY = (realPaddle.Position.Y + (realPaddle.Height / 2)) - position.Y;//assuming ball Y is accurate to the collision
+            var relativeIntersectY = (realPaddle.Position.Y + (realPaddle.Height / 2)) - Position.Y;//assuming ball Y is accurate to the collision
             var normalizedRelativeIntersectionY = relativeIntersectY / (realPaddle.Height / 2);
-            var bounceAngle = normalizedRelativeIntersectionY * MAX_ANGLE;
+            var bounceAngle = normalizedRelativeIntersectionY * MaxAngle;
             //look ma, i'm actually using math!
-            rate.X = (float) (SPEED * Math.Cos(bounceAngle));
-            rate.Y = (float) (SPEED * -Math.Sin(bounceAngle));
+            _rate.X = Speed * MathF.Cos(bounceAngle);
+            _rate.Y = Speed * -MathF.Sin(bounceAngle);
 
             Update();//update to avoid getting stuck
         }
@@ -111,7 +114,7 @@ namespace WrapAround.Logic.Entities
 
             realBlock.Damage();
 
-            rate.Y *= -1;
+            _rate.Y *= -1;
 
             Update();//update to avoid getting stuck
         }
@@ -119,10 +122,10 @@ namespace WrapAround.Logic.Entities
         #endregion
 
 
-        
+
     }
 
 
 
 }
-    
+

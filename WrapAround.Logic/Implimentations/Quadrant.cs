@@ -3,7 +3,7 @@
     /// <summary>
     /// an enum that references what quadrant of the screen an entity is in
     /// </summary>
-    public enum Quadrant 
+    public enum Quadrant
     {
         Quadrant1,
         Quadrant2,

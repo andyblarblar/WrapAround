@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
@@ -37,20 +36,23 @@ namespace WrapAround.Logic.Implimentations
                 var resultantL = centerCorrs + hitbox.TopLeft;
                 var resultantR = centerCorrs + hitbox.BottomRight;
 
-                var leftSeg = (centerCorrs,resultantL) switch
+
+                var leftSeg = (centerCorrs, resultantL) switch
                 {
-                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
-                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrant2,
-                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrant3,
-                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrant4
+                    var (center, res) when res.X >= center.X && res.Y >= center.Y => Quadrant.Quadrant1,
+                    var (center, res) when res.X <= center.X && res.Y >= center.Y => Quadrant.Quadrant2,
+                    var (center, res) when res.X <= center.X && res.Y <= center.Y => Quadrant.Quadrant3,
+                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4,
+                    _ => throw new Exception("Failed to find segment")
                 };
 
                 var rightSeg = (centerCorrs, resultantR) switch
                 {
-                    var (center, res) when res.X > center.X && res.Y >= center.Y => Quadrant.Quadrant1,
-                    var (center, res) when res.X < center.X && res.Y >= center.Y => Quadrant.Quadrant2,
-                    var (center, res) when res.X < center.X && res.Y <= center.Y => Quadrant.Quadrant3,
-                    var (center, res) when res.X > center.X && res.Y <= center.Y => Quadrant.Quadrant4
+                    var (center, res) when res.X >= center.X && res.Y >= center.Y => Quadrant.Quadrant1,
+                    var (center, res) when res.X <= center.X && res.Y >= center.Y => Quadrant.Quadrant2,
+                    var (center, res) when res.X <= center.X && res.Y <= center.Y => Quadrant.Quadrant3,
+                    var (center, res) when res.X >= center.X && res.Y <= center.Y => Quadrant.Quadrant4,
+                    _ => throw new Exception("Failed to find segment")
                 };
 
                 Segment.Add(leftSeg);

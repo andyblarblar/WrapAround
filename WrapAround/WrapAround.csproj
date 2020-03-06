@@ -9,16 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="wwwroot\Index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
   </ItemGroup>
 
 

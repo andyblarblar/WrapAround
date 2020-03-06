@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
-using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
 
@@ -13,31 +12,31 @@ namespace WrapAround.Logic
 {
     public class GameContext
     {
-        public readonly int id;
+        public readonly int Id;
 
-        public const int MAX_PLAYERS = 16;
+        public const int MaxPlayers = 16;
 
-        private readonly List<GameMap> maps;
+        private readonly List<GameMap> _maps;
 
-        public List<Paddle> players { get; }
+        public List<Paddle> Players { get; }
 
-        private readonly Ball ball;
+        public Ball Ball { get; }
 
-        private GameMap currentMap { get; set; }
+        public GameMap CurrentMap { get; set; }
 
-        private readonly ScoreBoard scoreBoard;
+        public ScoreBoard ScoreBoard { get; }
 
-        public LobbyStates LobbyState;
+        public LobbyStates LobbyState { get; set; }
 
-        public GameContext(int id, List<GameMap> maps)//TODO make sure all fields are initialized
+        public GameContext(int id, List<GameMap> maps)
         {
-            players = new List<Paddle>();
-            currentMap = maps.Count == 1 ? maps[0] : maps[new Random().Next(0, maps.Count)];
-            this.id = id;
-            this.maps = maps;
-            ball = new Ball(new Vector2(currentMap.CanvasSize.Item1 / 2, currentMap.CanvasSize.Item2 / 2),
+            Players = new List<Paddle>();
+            CurrentMap = maps.Count == 1 ? maps[0] : maps[new Random().Next(0, maps.Count)];
+            this.Id = id;
+            this._maps = maps;
+            Ball = new Ball(new Vector2(CurrentMap.CanvasSize.Item1 / 2, CurrentMap.CanvasSize.Item2 / 2),
                 new Vector2(-1, 0));
-            scoreBoard = new ScoreBoard();
+            ScoreBoard = new ScoreBoard();
             LobbyState = LobbyStates.WaitingForPlayers;
         }
 
@@ -46,22 +45,40 @@ namespace WrapAround.Logic
         /// </summary>
         /// <returns>the id of the player, -1 if lobby is full.</returns>
         public async Task<int> AddPlayer(bool isRightSide, string hash)
-        { 
+        {
             return await Task.Run(() =>
             {
                 if (IsLobbyFull()) return -1;
 
-                var numOnSide = players.Count(player => player.IsOnRight == isRightSide) + 1;
+                var ran = new Random();
 
-                var playerStartingPosition = isRightSide ? new Vector2(currentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
+                var numOnSide = Players.Count(player => player.IsOnRight == isRightSide) + 1;
 
-                var newPlayer = new Paddle(gameId: id, playerId: players.Count, isRightSide, playerTotalOnSide: numOnSide, hash: hash, startingPosition: playerStartingPosition);
-                players.Add(newPlayer); 
+                var playerStartingPosition =
+                    isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
 
-                players.ForEach((paddle => paddle.AdjustSize(numOnSide)));//adjust player sizes
+                try
+                {
+                    var newPlayer = new Paddle(
+                        gameId: Id, 
+                        playerId: int.Parse(hash, NumberStyles.Any) ^ ran.Next(),//we should prob fix this lol 
+                        isOnRight: isRightSide,
+                        playerTotalOnSide: numOnSide, 
+                        hash: hash,
+                        startingPosition: playerStartingPosition); 
 
-                return newPlayer.Id;
-            }).ConfigureAwait(true);
+                    Players.Add(newPlayer);
+
+                    Players.ForEach((paddle => paddle.AdjustSize(numOnSide))); //adjust player sizes
+
+                    return newPlayer.Id;
+                }
+                catch (Exception)//if something goes wrong in parsing
+                {
+                    return -1;
+                }
+
+            });
         }
 
         /// <summary>
@@ -73,13 +90,13 @@ namespace WrapAround.Logic
         {
             await Task.Run(() =>
             {
-                players.Remove(players.AsParallel().Single(paddle => paddle.Id == player.Id && paddle.Hash == player.Hash));
+                Players.Remove(Players.Single(paddle => paddle.Id == player.Id));
 
-                var playersOnSide = players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
-                players.ForEach(paddle => paddle.AdjustSize(playersOnSide));//readjust sizes
+                var playersOnSide = Players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
+                Players.ForEach(paddle => paddle.AdjustSize(playersOnSide)); //readjust sizes
 
 
-            }).ConfigureAwait(true);
+            });
         }
 
         /// <summary>
@@ -99,53 +116,51 @@ namespace WrapAround.Logic
                 if (LobbyState == LobbyStates.WaitingForPlayers) return; //do nothing if the lobby is still waiting
 
                 //update segments
-                ball.Update();
-                await ball.SegmentController.UpdateSegment(ball.Hitbox);
-                players.AsParallel().ForAll(async paddle => await paddle.SegmentController.UpdateSegment(paddle.Hitbox));
+                Ball.Update();
+                await Ball.SegmentController.UpdateSegment(Ball.Hitbox);
+                Players.AsParallel().ForAll(async paddle => await paddle.SegmentController.UpdateSegment(paddle.Hitbox));
 
                 //Collision handle
-                players.AsParallel()
-                    .Where(player => player.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))//all paddles in same segment as ball
-                    .Where(paddle => paddle.Hitbox.IsCollidingWith(ball.Hitbox))//check for collision
-                    .ForAll(async paddle => await CollideAsync(paddle, ball));//Handle Collisions 
+                Players.AsParallel()
+                    .Where(player => player.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First()))//all paddles in same segment as ball
+                    .Where(paddle => paddle.Hitbox.IsCollidingWith(Ball.Hitbox))//check for collision
+                    .ForAll(async paddle => await CollideAsync(paddle, Ball));//Handle Collisions 
 
-                currentMap.Blocks.AsParallel()
-                    .Where(block => block.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))
-                    .Where(block => block.Hitbox.IsCollidingWith(ball.Hitbox))
-                    .ForAll(async block => await CollideAsync(block,ball));
+                CurrentMap?.Blocks.AsParallel()
+                    .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
+                    .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
+                    .ForAll(async block => await CollideAsync(block, Ball));
 
                 //Goal scoring
-                if (currentMap.LeftGoal.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))
+                if (CurrentMap.LeftGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
                 {
-                    if (currentMap.LeftGoal.Hitbox.IsCollidingWith(ball.Hitbox))
-                    {
-                        scoreBoard.ScoreLeft();
-                        ball.Reset();
-                    }
-                }
-                else if (currentMap.RightGoal.SegmentController.Segment.Contains(ball.SegmentController.Segment[0]))
-                {
-                    if (currentMap.RightGoal.Hitbox.IsCollidingWith(ball.Hitbox))
-                    {
-                        scoreBoard.ScoreRight();
-                        ball.Reset();
-                    }
+                    ScoreBoard.ScoreLeft();
+                    Ball.Reset();
                 }
 
-                //WrapAround!
-                ball.position.Y = ball.position.Y switch
+                else if (CurrentMap.RightGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
                 {
-                    var pos when pos < 0 => currentMap.CanvasSize.Item2,
-                    var pos when pos > currentMap.CanvasSize.Item2 => 1,
-                    _ => ball.position.Y
+                    ScoreBoard.ScoreRight();
+                    Ball.Reset();
+                }
+                
+
+                //WrapAround!
+                Ball.Position.Y = Ball.Position.Y switch
+                {
+                    var pos when pos < 0 => CurrentMap.CanvasSize.Item2,
+                    var pos when pos > CurrentMap.CanvasSize.Item2 => 1,
+                    _ => Ball.Position.Y
                 };
 
                 //check for wins
-                var actionIfWon = scoreBoard.IsWon() switch
+                var actionIfWon = ScoreBoard.IsWon() switch
                 {
-                    var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; },
-                    var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; },
-                    _ => (Action) (() => { })
+                    var (leftWon, _) when leftWon => () => { LobbyState = LobbyStates.WonByLeft; }
+                    ,
+                    var (_, rightWon) when rightWon => () => { LobbyState = LobbyStates.WonByRight; }
+                    ,
+                    _ => (Action)(() => { })
 
                 };
                 actionIfWon.Invoke();
@@ -161,7 +176,7 @@ namespace WrapAround.Logic
         /// <param name="obj2"></param>
         /// <returns></returns>
         public static async Task CollideAsync(ICollidable obj1, ICollidable obj2)
-        { 
+        {
             await obj1.Collide(obj2);
             await obj2.Collide(obj1);
 
@@ -173,15 +188,15 @@ namespace WrapAround.Logic
         /// </summary>
         public void Reset()
         {
-            players.ForEach(paddle => paddle.ResetLocation());
-            ball.Reset();
-            currentMap = maps[new Random().Next(0, maps.Count)];
+            Players.ForEach(paddle => paddle.ResetLocation());
+            Ball.Reset();
+            CurrentMap = _maps[new Random().Next(0, _maps.Count)];
 
             //update segment property
-            ball.SegmentController.CanvasSize = currentMap.CanvasSize;
-            players.ForEach(player => player.SegmentController.CanvasSize = currentMap.CanvasSize);
+            Ball.SegmentController.CanvasSize = CurrentMap.CanvasSize;
+            Players.ForEach(player => player.SegmentController.CanvasSize = CurrentMap.CanvasSize);
 
-            scoreBoard.Reset();
+            ScoreBoard.Reset();
             LobbyState = IsLobbyFull() ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
 
         }
@@ -189,7 +204,7 @@ namespace WrapAround.Logic
 
         public bool IsLobbyFull()
         {
-            return players.Count !> MAX_PLAYERS;//TODO change counting mech, I belive the list is always the same as max players because we max the list at that lol arrow used to be !< for refrence
+            return Players.Count == MaxPlayers;
         }
 
 

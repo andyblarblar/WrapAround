@@ -4,7 +4,7 @@ namespace WrapAround
 {
     public interface IUserGameRepository
     {
-        Dictionary<string,string> UserDictionary { get; set; }
+        Dictionary<string, string> UserDictionary { get; set; }
 
 
     }

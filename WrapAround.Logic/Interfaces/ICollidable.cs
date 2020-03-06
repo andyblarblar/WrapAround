@@ -12,7 +12,7 @@ namespace WrapAround.Logic.Interfaces
         /// </summary>
         /// <param name="collided">The other entity that was collided</param>
         Task Collide(object collided);
-        
+
 
     }
 

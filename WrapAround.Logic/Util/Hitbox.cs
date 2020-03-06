@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace WrapAround.Logic.Util
 {
@@ -7,7 +9,11 @@ namespace WrapAround.Logic.Util
     /// </summary>
     public struct Hitbox
     {
-        public Vector2 TopLeft, BottomRight;
+        [JsonConverter(typeof(Vector2Converter))]
+        public Vector2 TopLeft { get; set; }
+
+        [JsonConverter(typeof(Vector2Converter))]
+        public Vector2 BottomRight { get; set; }
 
         public Hitbox(Vector2 topLeft, Vector2 bottomRight)
         {
@@ -20,16 +26,16 @@ namespace WrapAround.Logic.Util
         /// or to the left of the other rectangle.
         /// </summary>
         /// <param name="hitbox">other hitbox</param>
-        public bool IsCollidingWith(Hitbox hitbox)
+        public bool IsCollidingWith(in Hitbox hitbox)
         {
-            //if one rectangle is to the left of the other
-            if (TopLeft.X > hitbox.BottomRight.X || hitbox.TopLeft.X > BottomRight.X)
+            //if one rectangle is to the right of the other (one rectangles point is to the right of both points of the other rectangle)
+            if (TopLeft.X > hitbox.BottomRight.X && TopLeft.X > hitbox.TopLeft.X || hitbox.TopLeft.X > BottomRight.X && hitbox.TopLeft.X > TopLeft.X)
             {
                 return false;
             }
 
-            //if one rectangle is above the other
-            if (TopLeft.Y < hitbox.BottomRight.Y || hitbox.TopLeft.Y < BottomRight.Y)
+            //if one rectangle is above the other (one rectangles top left point is above both points of the other rectangle)
+            if (TopLeft.Y < hitbox.TopLeft.Y && BottomRight.Y < hitbox.TopLeft.Y || hitbox.TopLeft.Y < TopLeft.Y && hitbox.BottomRight.Y < TopLeft.Y)
             {
                 return false;
             }
@@ -39,6 +45,46 @@ namespace WrapAround.Logic.Util
 
         }
 
+        /// <summary>
+        /// Checks if the hitbox is a valid rectangle, IE: the top left point is the top left and the
+        /// bottom right point is bottom right. Collision does not work if invalid rectangles are used.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return TopLeft.X > BottomRight.X && TopLeft.Y > BottomRight.Y;
+        }
 
+        public override bool Equals(object obj)
+        {
+            Hitbox hb;
+
+            try
+            {
+                hb = (Hitbox)obj;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return hb.TopLeft == this.TopLeft && hb.BottomRight == this.BottomRight;
+
+        }
+
+        public override int GetHashCode()
+        {
+            return TopLeft.GetHashCode() ^ BottomRight.GetHashCode();
+        }
+
+        public static bool operator ==(Hitbox left, Hitbox right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Hitbox left, Hitbox right)
+        {
+            return !(left == right);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
@@ -14,6 +15,7 @@ namespace WrapAround.Logic.Entities
     {
         public int health { get; set; }
 
+        [JsonIgnore]
         public Vector2 Position { get; set; }
 
         public Hitbox Hitbox { get; set; }
@@ -26,7 +28,7 @@ namespace WrapAround.Logic.Entities
         {
             health = 5;
             Position = position;
-            Hitbox = new Hitbox(Position, new Vector2(Position.X + 40,Position.Y + 20));
+            Hitbox = new Hitbox(Position, new Vector2(Position.X + 40, Position.Y + 20));
 
         }
 
@@ -36,7 +38,7 @@ namespace WrapAround.Logic.Entities
         public virtual void Damage()
         {
             health--;
-            
+
             Color = health switch
             {
                 1 => Color.Red,
