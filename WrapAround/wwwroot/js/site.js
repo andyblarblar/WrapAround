@@ -19,11 +19,10 @@ var playerPaddle = {
 var playerStateFetched = false;
 var gameLoaded = false;
 var paddleR = Math.floor(Math.random() * 256).toString();
-
 var paddleG = Math.floor(Math.random() * 256).toString();
 var paddleB = Math.floor(Math.random() * 256).toString();
 const scnHeight = 703;
-
+var padSpeed;
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
     .withAutomaticReconnect()
@@ -76,6 +75,7 @@ connection.on("ReceiveContextUpdate", (context) => {
     });
     //else
     //console.log("Player not found in context");
+    padSpeed = 300.0 / Math.pow(playerPaddle.height,0.75);
     render(context);
 });
 
@@ -142,22 +142,23 @@ function leaveLobby() {
 // Added to document because that's what worked *shrug*
 document.addEventListener("keydown", event => {
     if (gameLoaded) {
+        
         console.log(event.code);
         console.log(playerPaddle.position.Y);
         console.log(playerPaddle.position.X);
-        if (event.code === "ArrowUp" && playerPaddle.hitbox.topLeft.Y < 0) {
+        if (event.code === "ArrowUp" && playerPaddle.hitbox.topLeft.Y > 0) {
             console.log("UP");
-            playerPaddle.hitbox.topLeft.Y -= 1;
-            playerPaddle.hitbox.bottomRight.Y -= 1;
-            playerPaddle.position.Y -= 1;
-        } else if (event.code === "ArrowDown" && playerPaddle.hitbox.bottomRight.Y > scnHeight) {
-            playerPaddle.hitbox.topLeft.Y += 1;
-            playerPaddle.hitbox.bottomRight.Y += 1;
-            playerPaddle.position.Y += 1;
+            playerPaddle.hitbox.topLeft.Y -= padSpeed;
+            playerPaddle.hitbox.bottomRight.Y -= padSpeed;
+            playerPaddle.position.Y -= padSpeed;
+        } else if (event.code === "ArrowDown" && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
+            playerPaddle.hitbox.topLeft.Y += padSpeed;
+            playerPaddle.hitbox.bottomRight.Y += padSpeed;
+            playerPaddle.position.Y += padSpeed;
             console.log("DOWN");
         }
         if (event.code === "ArrowUp" || event.code === "ArrowDown") {
-            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position, playerPaddle.gameId, playerPaddle.id);
+            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
             console.log("MOVE SENT");
         }
     }
