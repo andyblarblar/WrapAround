@@ -24,12 +24,19 @@ var team1B = Math.floor(Math.random() * 256).toString();
 var team2R = 255 - team1R;
 var team2G = 255 - team1G;
 var team2B = 255 - team1B;
+var team1Color = "rgb(" + team1R + ", " + team1G + ", " + team1B + ")";
+var team2Color = "rgb(" + team2R + ", " + team2G + ", " + team2B + ")";
 const scnHeight = 703;
 var padSpeed;
+document.documentElement.style
+    .setProperty('--team-1-color', team1Color);
+document.documentElement.style
+    .setProperty('--team-2-color', team2Color);
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
     .withAutomaticReconnect()
     .build();
+
 
 // Generates a unique hash based on the input string and the current time
 function genHash(seed) {
@@ -118,7 +125,7 @@ function render(context) {
     // Render Paddles (Just rectangles right now, change to texture when available)
     let paddleList = context.players;
     paddleList.forEach((item) => {
-        ctx.fillStyle = "rgb(" + paddleR + ", " + paddleG + ", " + paddleB + ")";
+        ctx.fillStyle = team1Color;
         ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 10, item.height);
     });
 

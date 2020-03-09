@@ -8,6 +8,9 @@
 	--lobby-box-color-bg: #252526;
 	--lobby-box-color-fg: #333333;
 	--lobby-box-color-a1: #0C7D9D;
+	/* These change to random complements when site.js runs */
+	--team-1-color: #FFFFFF;
+	--team-2-color: #FFFFFF;
 
 	--animation-speed: 0.1s;
 
