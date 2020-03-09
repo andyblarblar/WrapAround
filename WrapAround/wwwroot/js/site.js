@@ -18,9 +18,12 @@ var playerPaddle = {
 };
 var playerStateFetched = false;
 var gameLoaded = false;
-var paddleR = Math.floor(Math.random() * 256).toString();
-var paddleG = Math.floor(Math.random() * 256).toString();
-var paddleB = Math.floor(Math.random() * 256).toString();
+var team1R = Math.floor(Math.random() * 256).toString();
+var team1G = Math.floor(Math.random() * 256).toString();
+var team1B = Math.floor(Math.random() * 256).toString();
+var team2R = 255 - team1R;
+var team2G = 255 - team1G;
+var team2B = 255 - team1B;
 const scnHeight = 703;
 var padSpeed;
 const connection = new signalR.HubConnectionBuilder()
