@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WrapAround.Logic.Entities;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.hubs
 {
