@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using WrapAround.hubs;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround
 {
@@ -21,10 +22,8 @@ namespace WrapAround
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalR(hubOption =>
-            {
-                hubOption.EnableDetailedErrors = true;
-            });
+            services.AddSignalR(hubOption => { hubOption.EnableDetailedErrors = true; })
+                .AddJsonProtocol(op => { op.PayloadSerializerOptions.Converters.Add(new Vector2Converter());});
 
             services.AddSingleton<IServerLoop, ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
