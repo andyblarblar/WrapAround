@@ -95,7 +95,8 @@ connection.on("ReceiveContextUpdate", (context) => {
     });
     //else
     //console.log("Player not found in context");
-    padSpeed = 300.0 / Math.pow(playerPaddle.height,0.75);
+    // Update paddle speed based on inverse of height
+    padSpeed = 300.0 / Math.pow(playerPaddle.height,0.85);
     render(context);
 });
 
