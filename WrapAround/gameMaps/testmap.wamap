@@ -1,7 +1,0 @@
-{Blocks:[
-{health:1,{TopLeft:{X:40,Y:40},BottomRight:{X:60,Y:50}},SegmentController:NULL,Color:{R:255,G:0,B:0}},
-{health:1,{TopLeft:{X:60,Y:40},BottomRight:{X:80,Y:50}},SegmentController:NULL,Color:{R:255,G:0,B:0}},
-{health:1,{TopLeft:{X:80,Y:40},BottomRight:{X:100,Y:50}},SegmentController:NULL,Color:{R:255,G:0,B:0}},
-{health:1,{TopLeft:{X:40,Y:200},BottomRight:{X:60,Y:210}},SegmentController:NULL,Color:{R:255,G:0,B:0}},
-{health:1,{TopLeft:{X:60,Y:200},BottomRight:{X:60,Y:210}},SegmentController:NULL,Color:{R:255,G:0,B:0}}
-],CanvasSize:NULL,LeftGoal:NULL,RightGoal:NULL}

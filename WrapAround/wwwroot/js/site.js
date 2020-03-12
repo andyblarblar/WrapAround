@@ -1,6 +1,8 @@
 ﻿"use strict";
 const scn = document.getElementById("render-window");
 const exit = document.getElementById("close-modal");
+const C_DISTINCTNESS = 20;
+const MAX_PLAYERS = 16;
 
 const lobs = [
     document.getElementById("lobby-1"),
@@ -12,33 +14,41 @@ const lobs = [
 var _lobbyCounts = [];
 const userHash = genHash("Pl@ceh01d&r");
 var userId;
-var _context = null;
+var _context;
 var playerPaddle = {
     id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 }
 };
 var playerStateFetched = false;
 var gameLoaded = false;
-var team1R = Math.floor(Math.random() * 256).toString();
-var team1G = Math.floor(Math.random() * 256).toString();
-var team1B = Math.floor(Math.random() * 256).toString();
-var team2R = 255 - team1R;
-var team2G = 255 - team1G;
-var team2B = 255 - team1B;
-var team1Color = "rgb(" + team1R + ", " + team1G + ", " + team1B + ")";
-var team2Color = "rgb(" + team2R + ", " + team2G + ", " + team2B + ")";
 const scnHeight = 703;
 var padSpeed;
 document.documentElement.style
     .setProperty('--team-1-color', team1Color);
 document.documentElement.style
     .setProperty('--team-2-color', team2Color);
+var team1R = Math.floor(Math.random() * 256);
+while (true) {
+    var team1G = Math.floor(Math.random() * 256);
+    if (Math.abs(team1G - team1R) > C_DISTINCTNESS)
+        break;
+}
+while (true) {
+    var team1B = Math.floor(Math.random() * 256);
+    if (Math.abs(team1B - team1R) > C_DISTINCTNESS && Math.abs(team1B - team1G) > C_DISTINCTNESS)
+        break;
+}
+var team2R = 255 - team1R;
+var team2G = 255 - team1G;
+var team2B = 255 - team1B;
+var team1Color = formatColorString(team1R, team1G, team1B);
+var team2Color = formatColorString(team2R, team2G, team2B);
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
     .withAutomaticReconnect()
     .build();
 
-
-// Generates a unique hash based on the input string and the current time
+// Generates a hash based on the input string and the current time (miniscule change of non-unique hash)
 function genHash(seed) {
     var hash = 0, i, chr, time = new Date();
     seed += (time.getTime() % 999997).toString();
@@ -56,10 +66,10 @@ connection.start().then(function () {
     for(var i = 0; i < 4; ++i) {
         lobs[i].addEventListener("mouseover", () => { connection.invoke("GetLobbyPlayerCounts"); });
     }
-
+    connection.invoke("GetLobbyPlayerCounts");
 })
 
-connection.invoke("GetLobbyPlayerCounts");
+
 
 connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
     _lobbyCounts = lobbyCounts;
@@ -89,14 +99,9 @@ connection.on("ReceiveContextUpdate", (context) => {
     render(context);
 });
 
-//Global function loop
-function loop() {
-
-}
-
 // Returns a css string of the Color passed in
-function formatColorString(color) {
-    return "rgb(" + color.R.toString() + ", " + color.G.toString() + ", " + color.B.toString() + ")";
+function formatColorString(r, g, b) {
+    return "rgb(" + r + ", " + g + ", " + b + ")";
 }
 
 // Called after each context update, renders that info to the scn canvas
@@ -111,9 +116,9 @@ function render(context) {
 
     // Render Blocks
     let blockList = context.currentMap.blocks;
-    if (blockList != null) {
+    if (typeof blockList !== undefined) {
         blockList.forEach((item) => {
-            ctx.fillStyle = formatColorString(item.color);
+            ctx.fillStyle = formatColorString(item.color.R,item.color.G,item.color.B);
             ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 40, 20);
         });
     }
@@ -136,12 +141,13 @@ function render(context) {
 // Called when a lobby box is clicked by the user, sends an addplayer request to the hub
 function joinLobby(lobbyId) {
     connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
-    connection.on("ReceiveId", (id) => {
-        userId = id;
-        playerPaddle.id = userId;
-        playerPaddle.gameId = lobbyId;
-    });
 }
+
+connection.on("ReceiveId", (id) => {
+    userId = id;
+    playerPaddle.id = userId;
+    playerPaddle.gameId = lobbyId;
+});
 
 // Called when the X is clicked in the modal
 function leaveLobby() {
