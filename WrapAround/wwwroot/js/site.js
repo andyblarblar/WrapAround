@@ -2,7 +2,9 @@
 const scn = document.getElementById("render-window");
 const exit = document.getElementById("close-modal");
 const C_DISTINCTNESS = 20;
+const C_SCALE = 15;
 const MAX_PLAYERS = 16;
+const R = 0, G = 1, B = 2, TEAM1 = 0, TEAM2 = 1;
 
 const lobs = [
     document.getElementById("lobby-1"),
@@ -22,10 +24,8 @@ var playerStateFetched = false;
 var gameLoaded = false;
 const scnHeight = 703;
 var padSpeed;
-document.documentElement.style
-    .setProperty('--team-1-color', team1Color);
-document.documentElement.style
-    .setProperty('--team-2-color', team2Color);
+
+// Color stuff
 var team1R = Math.floor(Math.random() * 256);
 while (true) {
     var team1G = Math.floor(Math.random() * 256);
@@ -42,6 +42,71 @@ var team2G = 255 - team1G;
 var team2B = 255 - team1B;
 var team1Color = formatColorString(team1R, team1G, team1B);
 var team2Color = formatColorString(team2R, team2G, team2B);
+document.documentElement.style
+    .setProperty('--team-1-color', team1Color);
+document.documentElement.style
+    .setProperty('--team-2-color', team2Color);
+// Hue stuff
+console.log(team1Color);
+console.log(team2Color);
+var colorHues = [
+    [
+        [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ], [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ], [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ]
+    ], [
+        [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ], [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ], [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ]
+    ]
+];
+colorHues[TEAM1][R][0] = team1R;
+colorHues[TEAM1][G][0] = team1G;
+colorHues[TEAM1][B][0] = team1B;
+colorHues[TEAM2][R][0] = team2R;
+colorHues[TEAM2][G][0] = team2G;
+colorHues[TEAM2][B][0] = team2B;
+
+// Checks the entire colorHues for specified @team to make sure color @index is unique and a real color
+function ensureValidity(team,index) {
+    let i;
+    if (colorHues[team][R][index] < 0
+     || colorHues[team][G][index] < 0
+     || colorHues[team][B][index] < 0
+     || colorHues[team][R][index] > 255
+     || colorHues[team][G][index] > 255
+     || colorHues[team][B][index] > 255) return false;
+    for (i = 0; i < colorHues.length; ++i) {
+        if (i == index) continue;
+        if (colorHues[team][R][i] == colorHues[team][R][index]
+         && colorHues[team][G][i] == colorHues[team][G][index]
+         && colorHues[team][B][i] == colorHues[team][B][index]) return false;
+    }
+    return true;
+}
+
+function setUpColors() {
+    let i, j;
+    for (i = 0; i < 2; ++i) {
+        for (j = 1; j < 16; ++j) {
+            colorHues[i][R][j] = colorHues[i][R][0] + (getRndInteger(-2, 3) * C_SCALE);
+            colorHues[i][G][j] = colorHues[i][G][0] + (getRndInteger(-2, 3) * C_SCALE);
+            colorHues[i][B][j] = colorHues[i][B][0] + (getRndInteger(-2, 3) * C_SCALE);
+            if (!ensureValidity(i, j))--j;
+            console.log(colorHues);
+        }
+    }
+}
+
+setUpColors();
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
@@ -50,7 +115,7 @@ const connection = new signalR.HubConnectionBuilder()
 
 // Generates a hash based on the input string and the current time (miniscule change of non-unique hash)
 function genHash(seed) {
-    var hash = 0, i, chr, time = new Date();
+    let hash = 0, i, chr, time = new Date();
     seed += (time.getTime() % 999997).toString();
     if (seed.length === 0) return hash;
     for (i = 0; i < seed.length; i++) {
@@ -59,15 +124,15 @@ function genHash(seed) {
         hash |= 0;
     }
     return Math.abs(hash).toString().slice(0,7); 
-};
+}
 
 connection.start().then(function () {
     console.log("connection initialized ;)");
-    for(var i = 0; i < 4; ++i) {
+    for (var i = 0; i < 4; ++i) {
         lobs[i].addEventListener("mouseover", () => { connection.invoke("GetLobbyPlayerCounts"); });
     }
     connection.invoke("GetLobbyPlayerCounts");
-})
+});
 
 
 
@@ -105,6 +170,11 @@ function formatColorString(r, g, b) {
     return "rgb(" + r + ", " + g + ", " + b + ")";
 }
 
+// Get random int between min (inc) and max (exc)
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 // Called after each context update, renders that info to the scn canvas
 function render(context) {
 
@@ -129,10 +199,11 @@ function render(context) {
     ctx.fillRect(context.ball.hitbox.topLeft.X, context.ball.hitbox.topLeft.Y, 10, 10);
 
     // Render Paddles (Just rectangles right now, change to texture when available)
-    let paddleList = context.players;
+    let paddleList = context.players, i = 0;
     paddleList.forEach((item) => {
-        ctx.fillStyle = team1Color;
+        ctx.fillStyle = formatColorString(colorHues[item.isOnRight ? 1 : 0][R][i], colorHues[item.isOnRight ? 1 : 0][G][i], colorHues[item.isOnRight ? 1 : 0][B][i]);
         ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 10, item.height);
+        ++i;
     });
 
    // console.log(context.ball.hitbox.topLeft.X)
