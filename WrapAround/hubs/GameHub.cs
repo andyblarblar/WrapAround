@@ -64,8 +64,9 @@ namespace WrapAround.hubs
         /// </summary>
         /// <param name="player">a complete representation of the players state, as reported by the client.</param>
         /// <returns></returns>
-        public async Task UpdatePlayerPosition(string hash, Vector2 position, int gameId, int Id)
+        public async Task UpdatePlayerPosition(string hash, float posX,float posY, int gameId, int Id)
         {
+            var position = new Vector2(posX,posY);
             await serverLoop.UpdatePlayerPosition(new Paddle(){GameId = gameId, Position = position, Hash = hash, Id = Id});
         }
 
