@@ -11,3 +11,9 @@ function lightsOut() {
         modalBGOpaque = true;
     }
 }
+
+function changeSide() {
+    playerPaddle.isOnRight = !playerPaddle.isOnRight;
+    document.getElementById("side-active").setAttribute("id", "side-inactive");
+    document.getElementById("side-inactive").setAttribute("id", "side-active");
+}

@@ -17,16 +17,18 @@ namespace WrapAround.Logic.Entities
 
         public void ScoreLeft()
         {
-            var (leftScore, rightScore) = Score;
+            var x = Score.X;
+            var y = Score.Y;
 
-            Score = new Vector2(++leftScore, rightScore);
+            Score = new Vector2(++x, y);
         }
 
         public void ScoreRight()
         {
-            var (leftScore, rightScore) = Score;
+            var x = Score.X;
+            var y = Score.Y;
 
-            Score = new Vector2(leftScore, ++rightScore);
+            Score = new Vector2(x, ++y);
         }
 
 
@@ -36,7 +38,7 @@ namespace WrapAround.Logic.Entities
         /// <returns>A tuple of (bool,bool) where the side of the bool corresponds to the side of the player.</returns>
         public (bool, bool) IsWon()
         {
-            return Score switch
+            return (Score.X,Score.Y) switch
             {
                 var (left, _) when left >= 10 => (true, false),
                 var (_, right) when right >= 10 => (false, true),
@@ -46,6 +48,7 @@ namespace WrapAround.Logic.Entities
 
         }
 
-    }
 
+
+    }
 }
