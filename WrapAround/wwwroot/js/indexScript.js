@@ -13,9 +13,14 @@ function lightsOut() {
 }
 
 function changeSide() {
+    // Change actual player paddle variable
     playerPaddle.isOnRight = !playerPaddle.isOnRight;
+    // Store elements for swapping
     var activeElement   = document.getElementById("side-active");
-    var inactiveElement = document.getElementById("side-active");
-    activeElement.id = "side-inactive";
-    inactiveElement.id = "side-active";
+    var inactiveElement = document.getElementById("side-inactive");
+    // Swap attributes
+    activeElement.setAttribute("id", "side-inactive");
+    inactiveElement.setAttribute("id", "side-active");
+    activeElement.setAttribute("onmousedown", "changeSide()");
+    inactiveElement.removeAttribute("onmousedown")
 }
