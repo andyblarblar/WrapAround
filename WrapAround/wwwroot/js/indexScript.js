@@ -14,6 +14,8 @@ function lightsOut() {
 
 function changeSide() {
     playerPaddle.isOnRight = !playerPaddle.isOnRight;
-    document.getElementById("side-active").setAttribute("id", "side-inactive");
-    document.getElementById("side-inactive").setAttribute("id", "side-active");
+    var activeElement   = document.getElementById("side-active");
+    var inactiveElement = document.getElementById("side-active");
+    activeElement.id = "side-inactive";
+    inactiveElement.id = "side-active";
 }
