@@ -26,9 +26,9 @@ var userId;
 // Context object given by server
 var _context;
 // JSON representation of this player's paddle
-var playerPaddle = {
-    id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 }
-};
+var playerPaddle =
+{ id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 } }
+
 // Flag is on when in a lobby -- used to toggle keyevents
 var gameLoaded = false;
 const scnHeight = 703;

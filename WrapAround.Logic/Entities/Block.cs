@@ -20,12 +20,14 @@ namespace WrapAround.Logic.Entities
 
         public Hitbox Hitbox { get; set; }
 
-        public QuadrantController SegmentController { get; set; } = new QuadrantController();
+        public QuadrantController SegmentController { get; set; } 
 
         public Color Color { get; set; }
 
         public Block(Vector2 position)
         {
+            SegmentController = new QuadrantController();
+
             health = 5;
             Position = position;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 40, Position.Y + 20));
@@ -52,7 +54,7 @@ namespace WrapAround.Logic.Entities
         }
 
 
-        public async Task Collide(object collided)
+        public async Task Collide(object _)
         {
             await Task.Run(Damage);
         }
