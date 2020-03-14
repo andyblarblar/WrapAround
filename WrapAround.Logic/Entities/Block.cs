@@ -20,6 +20,7 @@ namespace WrapAround.Logic.Entities
 
         public Hitbox Hitbox { get; set; }
 
+        [JsonIgnore]
         public QuadrantController SegmentController { get; set; } 
 
         public Color Color { get; set; }

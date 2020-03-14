@@ -89,7 +89,7 @@ namespace WrapAround.Logic.Entities
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
             Paddle p => HandlePaddleCollision,
-            Block b when b.health != 0 => HandleBlockCollision,
+            Block b when b.health > 0 => HandleBlockCollision,
             _ => (CollisionHandler)(_ => { })
 
         };
@@ -115,6 +115,7 @@ namespace WrapAround.Logic.Entities
             realBlock.Damage();
 
             _rate.Y *= -1;
+            _rate.X *= -1;
 
             Update();//update to avoid getting stuck
         }

@@ -109,7 +109,6 @@ namespace WrapAround.Logic
                 var playersOnSide = Players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
                 Players.ForEach(paddle => paddle.AdjustSize(playersOnSide)); //readjust sizes
 
-
             });
         }
 
@@ -141,7 +140,7 @@ namespace WrapAround.Logic
                     .ForAll(async paddle => await CollideAsync(paddle, Ball));//Handle Collisions 
 
                 CurrentMap?.Blocks.AsParallel()
-                    .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First()))
+                    .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First()) || block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[1])) 
                     .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
                     .ForAll(async block => await CollideAsync(block, Ball));
 

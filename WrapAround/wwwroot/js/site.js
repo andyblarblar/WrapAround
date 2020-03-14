@@ -213,10 +213,15 @@ function render(context) {
 
     // Render Blocks
     let blockList = context.currentMap.blocks;
+
     if (typeof blockList !== undefined) {
         blockList.forEach((item) => {
-            ctx.fillStyle = formatColorString(item.color.R,item.color.G,item.color.B);
-            ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 40, 20);
+            //if block is not destroyed
+            if (item.health > 0) {
+                ctx.fillStyle = formatColorString(item.color.r, item.color.g, item.color.b);
+                ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 40, 20);
+            }
+
         });
     }
 
