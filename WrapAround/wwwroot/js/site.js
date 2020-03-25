@@ -10,6 +10,8 @@ const C_SCALE = 15;
 const MAX_PLAYERS = 16;
 // Consts for indexing colorHues array
 const R = 0, G = 1, B = 2, TEAM1 = 0, TEAM2 = 1;
+// Determines how often the position of the paddle is updated when a key is pressed (Every [updateTicks] ms, update the paddle)
+const updateTicks = 10;
 
 // Array of lobby button-div elements
 const lobs = [
@@ -31,6 +33,8 @@ var playerPaddle = {
 };
 // Flag is on when in a lobby -- used to toggle keyevents
 var gameLoaded = false;
+// Flags for movement -- Up flag toggles movement up, Down flag does the opposite
+var up = false, down = false;
 const scnHeight = 703;
 // Number of pixels each paddle moves in one keystroke
 var padSpeed;
@@ -116,7 +120,7 @@ function setUpColors() {
             colorHues[i][G][j] = colorHues[i][G][0] + (getRndInteger(-2, 3) * C_SCALE);
             colorHues[i][B][j] = colorHues[i][B][0] + (getRndInteger(-2, 3) * C_SCALE);
             if (!ensureValidity(i, j))--j;
-            console.log(colorHues);
+            //console.log(colorHues);
         }
     }
 }
@@ -260,27 +264,59 @@ function leaveLobby() {
 // Event listener on document tracks key input
 document.addEventListener("keydown", event => {
     // Ignore events if game is not loaded
+    console.log("KEYDOWN");
     if (gameLoaded) {
-        
         //console.log(event.code);
         //console.log(playerPaddle.position.Y);
         //console.log(playerPaddle.position.X);
         // Move up/down if the move can be made in-bounds
-        if (event.code === "ArrowUp" && playerPaddle.hitbox.topLeft.Y > 0) {
-            //console.log("UP");
-            playerPaddle.hitbox.topLeft.Y -= padSpeed;
-            playerPaddle.hitbox.bottomRight.Y -= padSpeed;
-            playerPaddle.position.Y -= padSpeed;
-        } else if (event.code === "ArrowDown" && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
-            playerPaddle.hitbox.topLeft.Y += padSpeed;
-            playerPaddle.hitbox.bottomRight.Y += padSpeed;
-            playerPaddle.position.Y += padSpeed;
-            //console.log("DOWN");
+        if (event.code === "ArrowUp"/* && playerPaddle.hitbox.topLeft.Y > 0*/) {
+            console.log("UP set");
+            up = true;
+            
+        } else if (event.code === "ArrowDown"/* && playerPaddle.hitbox.bottomRight.Y < scnHeight*/) {
+            down = true;
+            
+            console.log("DOWN set");
         }
         // Send the new position if an up/down event occured
-        if (event.code === "ArrowUp" || event.code === "ArrowDown") {
-            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
-            //console.log("MOVE SENT");
+        /*if (event.code === "ArrowUp" || event.code === "ArrowDown") {
+            
+        }*/
+    }
+});
+
+document.addEventListener("keyup", event => {
+    console.log("KEYUP");
+    if (gameLoaded) {
+        if (event.code === "ArrowUp") {
+            up = false;
+            console.log("UP reset");
+        } else if (event.code === "ArrowDown") {
+            down = false;
+            console.log("DOWN reset");
         }
     }
 });
+
+function updatePlayerPaddle() {
+    if (gameLoaded && (up ^ down)) {
+        console.log("Starting move");
+        if (up && (playerPaddle.position.Y - (padSpeed * updateTicks) >= 0)) {
+            console.log("Move up");
+            playerPaddle.hitbox.topLeft.Y -= padSpeed * updateTicks;
+            playerPaddle.hitbox.bottomRight.Y -= padSpeed * updateTicks;
+            playerPaddle.position.Y -= padSpeed * updateTicks;
+        } else if (down && (playerPaddle.position.Y + (padSpeed * updateTicks) <= 703)) {
+            console.log("Move down");
+            playerPaddle.hitbox.topLeft.Y += padSpeed * updateTicks;
+            playerPaddle.hitbox.bottomRight.Y += padSpeed * updateTicks;
+            playerPaddle.position.Y += padSpeed * updateTicks;
+        }
+        console.log("Update position");
+        connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
+        console.log("MOVE SENT");
+    }
+}
+
+//setInterval(updatePlayerPaddle, updateTicks);
