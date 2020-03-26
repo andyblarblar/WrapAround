@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="levelEditorLib\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
