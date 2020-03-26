@@ -5,11 +5,16 @@
     <link href="/css/site.css" rel="stylesheet">
 </head>
 <body>
+    
     <!-- Header -->
     <div id="header">
         <h2>Wrap<span>Ar&infin;und</span></h2>
         <!-- Settings Menu Activator -->
         <i class="material-icons" id="settings">settings</i>
+    </div>
+    <div id="side-select">
+        <a class="lobby-box side" id="side-active"   onmousedown="changeSide()">Left Side</a>
+        <a class="lobby-box side" id="side-inactive" onmousedown="changeSide()">Right Side</a>
     </div>
     <!-- Lobby Select -->
     <div id="lobby-select">

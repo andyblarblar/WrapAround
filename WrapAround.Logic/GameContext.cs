@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Timers;
 using WrapAround.Logic.Entities;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
@@ -28,6 +30,8 @@ namespace WrapAround.Logic
 
         public LobbyStates LobbyState { get; set; }
 
+        private Timer UpdateTimer { get; }
+
         public GameContext(int id, List<GameMap> maps)
         {
             Players = new List<Paddle>();
@@ -35,9 +39,19 @@ namespace WrapAround.Logic
             this.Id = id;
             this._maps = maps;
             Ball = new Ball(new Vector2(CurrentMap.CanvasSize.Item1 / 2, CurrentMap.CanvasSize.Item2 / 2),
-                new Vector2(-1, 0));
+                new Vector2(3, 0));
             ScoreBoard = new ScoreBoard();
             LobbyState = LobbyStates.WaitingForPlayers;
+
+            UpdateTimer = new Timer
+            {
+                AutoReset = true,
+                Enabled = true,
+                Interval = 20000
+            };
+
+            //start the game if you have at least 2 players after 20 seconds
+            UpdateTimer.Elapsed += (sender, args) => LobbyState = Players.Count > 1 ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
         }
 
         /// <summary>
@@ -95,7 +109,6 @@ namespace WrapAround.Logic
                 var playersOnSide = Players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
                 Players.ForEach(paddle => paddle.AdjustSize(playersOnSide)); //readjust sizes
 
-
             });
         }
 
@@ -127,7 +140,7 @@ namespace WrapAround.Logic
                     .ForAll(async paddle => await CollideAsync(paddle, Ball));//Handle Collisions 
 
                 CurrentMap?.Blocks.AsParallel()
-                    .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[0]))
+                    .Where(block => block.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First()) || block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[1])) 
                     .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
                     .ForAll(async block => await CollideAsync(block, Ball));
 

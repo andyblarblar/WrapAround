@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 // Get canvas element
 const scn = document.getElementById("render-window");
 // Get rendering context from canvas element
@@ -28,9 +28,9 @@ var userId;
 // Context object given by server
 var _context;
 // JSON representation of this player's paddle
-var playerPaddle = {
-    id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 }
-};
+var playerPaddle =
+{ id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 } }
+
 // Flag is on when in a lobby -- used to toggle keyevents
 var gameLoaded = false;
 // Flags for movement -- Up flag toggles movement up, Down flag does the opposite
@@ -217,10 +217,15 @@ function render(context) {
 
     // Render Blocks
     let blockList = context.currentMap.blocks;
+
     if (typeof blockList !== undefined) {
         blockList.forEach((item) => {
-            ctx.fillStyle = formatColorString(item.color.R,item.color.G,item.color.B);
-            ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 40, 20);
+            //if block is not destroyed
+            if (item.health > 0) {
+                ctx.fillStyle = formatColorString(item.color.r, item.color.g, item.color.b);
+                ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 40, 20);
+            }
+
         });
     }
 

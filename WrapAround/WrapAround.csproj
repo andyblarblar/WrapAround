@@ -6,6 +6,7 @@
     <ApplicationIcon />
     <Win32Resource />
     <SignAssembly>false</SignAssembly>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

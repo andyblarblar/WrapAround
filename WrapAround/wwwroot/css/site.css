@@ -8,14 +8,14 @@
 	--lobby-box-color-bg: #252526;
 	--lobby-box-color-fg: #333333;
 	--lobby-box-color-a1: #0C7D9D;
-	/* These change to random complements when site.js runs */
-	--team-1-color: #FFFFFF;
-	--team-2-color: #FFFFFF;
 
 	--animation-speed: 0.1s;
 
 	--game-canvas-width	: 1250px;
 	--game-canvas-height: calc(--game-canvas-width * (9/16))
+
+	--team-1-color: var(--lobby-box-color-bg);
+	--team-2-color: var(--lobby-box-color-fg);
 }
 
 /*================
@@ -26,6 +26,7 @@ html {
 	font-family: Roboto, sans-serif;
 	font-size: var(--root-font-size);
 	color: var(--root-color-fg);
+	overflow: hidden;
 }
 
 body {
@@ -35,7 +36,6 @@ body {
 	align-items: center;
 	margin: 0px;
 	height: 100%;
-	overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -58,6 +58,7 @@ h1, h2, h3, h4, h5, h6 {
 	align-items: center;
 	padding: 0.5rem;
 	width: 100%;
+	overflow: hidden;
 }
 
 #header > h2 {
@@ -76,6 +77,30 @@ h1, h2, h3, h4, h5, h6 {
 #header #settings:hover, #header #settings:focus {
 	transform: rotate(90deg);
 }
+/*=========================
+  Lobby Selection Styling
+=========================*/
+
+#side-select {
+	display: flex;
+	position: fixed;
+	justify-content: center;
+	align-items: center;
+	top: calc(50% - 192px); left: 0; right: 0; bottom: 50%;
+}
+
+.side {
+	background-color: var(--lobby-box-color-bg);
+	font-size: 0.5rem;
+	width: fit-content;
+	padding: 0.75rem;
+	margin: 0 !important;
+}
+
+#side-active {
+	background-color: var(--lobby-box-color-fg);
+	box-shadow: none !important;
+}
 
 /*=========================
   Lobby Selection Styling
@@ -86,7 +111,7 @@ h1, h2, h3, h4, h5, h6 {
 	position: fixed;
 	justify-content: center;
 	align-items: center;
-	top: 50%; left: 0; right: 0; bottom: 50%;
+	top: calc(50% + 64px); left: 0; right: 0; bottom: 50%;
 }
 
 a.lobby-box {

@@ -23,7 +23,7 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         private Vector2 _rate;
 
-        private const int Speed = 1;
+        private const int Speed = 3;
 
         private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
 
@@ -59,7 +59,7 @@ namespace WrapAround.Logic.Entities
         public void Reset()
         {
             Position = _startingPosition;
-            _rate = new Vector2(-1, 0);
+            _rate = new Vector2(3, 0);
         }
 
 
@@ -89,7 +89,7 @@ namespace WrapAround.Logic.Entities
         private CollisionHandler FindCollisionHandler(object collidedWith) => collidedWith switch
         {
             Paddle p => HandlePaddleCollision,
-            Block b when b.health != 0 => HandleBlockCollision,
+            Block b when b.health > 0 => HandleBlockCollision,
             _ => (CollisionHandler)(_ => { })
 
         };
@@ -102,7 +102,7 @@ namespace WrapAround.Logic.Entities
             var normalizedRelativeIntersectionY = relativeIntersectY / (realPaddle.Height / 2);
             var bounceAngle = normalizedRelativeIntersectionY * MaxAngle;
             //look ma, i'm actually using math!
-            _rate.X = Speed * MathF.Cos(bounceAngle);
+            _rate.X = realPaddle.IsOnRight ? Speed * -MathF.Cos(bounceAngle) : Speed * MathF.Cos(bounceAngle);
             _rate.Y = Speed * -MathF.Sin(bounceAngle);
 
             Update();//update to avoid getting stuck
@@ -115,6 +115,7 @@ namespace WrapAround.Logic.Entities
             realBlock.Damage();
 
             _rate.Y *= -1;
+            _rate.X *= -1;
 
             Update();//update to avoid getting stuck
         }

@@ -11,3 +11,18 @@ function lightsOut() {
         modalBGOpaque = true;
     }
 }
+
+function changeSide() {
+    // Change actual player paddle variable
+    playerPaddle.isOnRight = !playerPaddle.isOnRight;
+    // Changes the position of the paddle to match the side
+    playerPaddle.position.X = playerPaddle.isOnRight ? 1220 : 20;
+    // Store elements for swapping
+    var activeElement   = document.getElementById("side-active");
+    var inactiveElement = document.getElementById("side-inactive");
+    // Swap attributes
+    activeElement.setAttribute("id", "side-inactive");
+    inactiveElement.setAttribute("id", "side-active");
+    activeElement.setAttribute("onmousedown", "changeSide()");
+    inactiveElement.removeAttribute("onmousedown")
+}
