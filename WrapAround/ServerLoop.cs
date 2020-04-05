@@ -52,7 +52,7 @@ namespace WrapAround
 
             };
 
-            broadCastLoop.AutoReset = true;
+            broadCastLoop.AutoReset = true;//TODO this might not be working as intended, might be sending wayyyy to much.
             broadCastLoop.Start();
 
         }

@@ -25,6 +25,10 @@ namespace WrapAround.Logic.Entities
 
         public Color Color { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="position">The top left position of the block</param>
         public Block(Vector2 position)
         {
             SegmentController = new QuadrantController();
@@ -32,6 +36,9 @@ namespace WrapAround.Logic.Entities
             health = 5;
             Position = position;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 40, Position.Y + 20));
+
+            //initialise position
+            _ = SegmentController.UpdateSegment(Hitbox);
 
         }
 

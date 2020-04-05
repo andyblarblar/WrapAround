@@ -20,8 +20,8 @@ namespace WrapAround.Logic
             if (blocks == null)
             {
                 blocks = new List<Block> {new Block(new Vector2(500, 300))};
-                _ = blocks[0].SegmentController.UpdateSegment(blocks[0].Hitbox);
             }
+
             LeftGoal = new GoalZone(new Vector2(0, 0));
             RightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 20, 0));
             Blocks = blocks;

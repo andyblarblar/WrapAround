@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WrapAround.Tests", "WrapAround.Tests\WrapAround.Tests.csproj", "{CD64C551-3B51-40AA-B1BA-584BAC3A2598}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WrapAround.LevelEditor", "WrapAround.LevelEditor\WrapAround.LevelEditor.csproj", "{CF244F28-F78B-4B8A-BACB-EF5E1784FAD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{CD64C551-3B51-40AA-B1BA-584BAC3A2598}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD64C551-3B51-40AA-B1BA-584BAC3A2598}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD64C551-3B51-40AA-B1BA-584BAC3A2598}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF244F28-F78B-4B8A-BACB-EF5E1784FAD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF244F28-F78B-4B8A-BACB-EF5E1784FAD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF244F28-F78B-4B8A-BACB-EF5E1784FAD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF244F28-F78B-4B8A-BACB-EF5E1784FAD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

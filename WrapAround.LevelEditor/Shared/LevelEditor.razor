@@ -1,0 +1,170 @@
+﻿@using System.Numerics
+@using System.Text.Json.Serialization
+@using Blazor.Extensions
+@using Blazor.Extensions.Canvas.Canvas2D
+@using WrapAround.Logic
+
+<style>
+    #render-window canvas {
+        background-color: #EEEEEE;
+    }
+
+</style>
+
+<div id="game-modal">
+    <div id="render-window" @onmousedown="@(MouseDown)" @onmousemove="@(MouseMove)" @onclick="@(MouseClick)" @onmouseup="@(MouseUp)" @onmouseout="@(MouseUp)" @onmousedown:preventDefault @onmousemove:preventDefault @onclick:preventDefault @onmouseup:preventDefault @onmouseout:preventDefault>
+        <BECanvas Width="1250" Height="700" @ref="_canvasReference"></BECanvas>
+    </div>
+
+    @if (debug)
+    {
+        <button @onclick="@Redraw">redraw</button>
+        <br/>
+        <p style="color: red">number of blocks: @blocks.Count</p>
+        <br/>
+        <p style="color: red">IsDragging @_isDragging</p>
+    }
+    
+    <button @onclick="@JsonifyMap">print map</button>
+    <br/>
+    <p>@JsonMap</p>
+
+</div>
+
+
+
+@code
+{
+    [Parameter]
+    public bool debug { get; set; }
+
+
+    //###########ACTUAL CODE###############
+
+    private Canvas2DContext _context;
+
+    private List<Hitbox> blocks = new List<Hitbox>();
+
+    protected BECanvasComponent _canvasReference;
+
+    private bool _isDragging;
+
+    private int _draggingIndex;
+
+    private GameMap map;
+
+    private string JsonMap;
+
+    #region canvas
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _context = await _canvasReference.CreateCanvas2DAsync();
+        await _context.SetFillStyleAsync("red");
+    }
+
+    private void MouseDown(MouseEventArgs e)
+    {
+        for (var index = 0; index < blocks.Count; index++)
+        {
+            //if mouse is inside a hitbox, mark as being clicked
+            if (blocks[index].IsCollidingWith(new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX, (float)e.ClientY))))
+            {
+                Console.WriteLine("beginning drag");
+                _isDragging = true;
+                _draggingIndex = index;
+            }
+        }
+    }
+
+    /// <summary>
+    /// move the current dragging rect to the mouse and redraw
+    /// </summary>
+    /// <param name="e"></param>
+    private async Task MouseMove(MouseEventArgs e)
+    {
+        if (!_isDragging) return;
+
+        Console.WriteLine("moving drag");
+        blocks[_draggingIndex] = new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX + 40, (float)e.ClientY + 20));
+
+        await Redraw();
+    }
+
+    /// <summary>
+    /// Mouse clicks will handle creations and deletions
+    /// </summary>
+    /// <param name="e"></param>
+    private async Task MouseClick(MouseEventArgs e)
+    {
+        if (_isDragging) return;
+
+        //if ctrl is pressed, then delete any rectangles under mouse
+        if (e.CtrlKey)
+        {
+            for (var i = 0; i < blocks.Count; i++)
+            {
+                if (blocks[i].IsCollidingWith(new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX, (float)e.ClientY))))
+                {
+                    blocks.RemoveAt(i);
+
+                    await Redraw();
+                }
+            }
+        }
+
+        //if shift clicking, create a new rectangle under mouse
+        else if (e.ShiftKey)
+        {
+            blocks.Add(new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX + 40, (float)e.ClientY + 20)));
+
+            await Redraw();
+        }
+    }
+
+    private async Task MouseUp(MouseEventArgs e)
+    {
+        _isDragging = false;
+
+        _draggingIndex = -1;
+
+        await Redraw();
+
+    }
+
+    /// <summary>
+    /// clears the canvas and redraw all rectangles
+    /// </summary>
+    private async Task Redraw()
+    {
+        Console.WriteLine("Redrawing");
+
+        await _context.ClearRectAsync(0, 0, _canvasReference.Width, _canvasReference.Height);
+
+        //begin batch
+        await _context.BeginBatchAsync();
+
+        for (var index = 0; index < blocks.Count; index++)
+        {
+            await _context.FillRectAsync(blocks[index].TopLeft.X, blocks[index].TopLeft.Y, 40, 20);
+        }
+
+        //end batch
+        await _context.EndBatchAsync();
+
+    }
+
+    #endregion
+
+    private void JsonifyMap()
+    {
+        map = new GameMap(blocks.Select(hit => new Block(hit.TopLeft)).ToList());
+
+        //add custom vector2 converter
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new Vector2Converter());
+
+        JsonMap = JsonSerializer.Serialize(map, options);//TODO test deserialization, perhaps just use .NET deserial
+
+    }
+}
