@@ -29,6 +29,11 @@ namespace WrapAround.Logic.Entities
 
         private const float UpdateRate = 1.6f;//16ms update rate
 
+        /// <summary>
+        /// The last frames Position vector
+        /// </summary>
+        private Vector2 _physicsHistory;
+
         public Hitbox Hitbox { get; set; }
 
         [JsonIgnore]
@@ -50,6 +55,8 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         public void Update()
         {
+            _physicsHistory = Position;
+
             Position.X += _rate.X * UpdateRate;
             Position.Y += _rate.Y * UpdateRate;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 10));
@@ -114,8 +121,15 @@ namespace WrapAround.Logic.Entities
 
             realBlock.Damage();
 
-            _rate.Y *= -1;
-            _rate.X *= -1;
+            if (Hitbox.IsOnTopOf(new Hitbox(_physicsHistory, new Vector2(_physicsHistory.X + 10, _physicsHistory.Y + 10)), realBlock.Hitbox))
+            {
+                _rate.Y *= -1;
+            }
+
+            if (Hitbox.IsToSideOf(new Hitbox(_physicsHistory, new Vector2(_physicsHistory.X+10,_physicsHistory.Y+10)), realBlock.Hitbox))
+            {
+                _rate.X *= -1;
+            }
 
             Update();//update to avoid getting stuck
         }
