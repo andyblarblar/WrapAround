@@ -1,14 +1,19 @@
-﻿@using System.Numerics
+﻿@using System.IO
+@using System.Numerics
+@using System.Runtime.Serialization.Formatters.Binary
 @using System.Text.Json.Serialization
 @using Blazor.Extensions
 @using Blazor.Extensions.Canvas.Canvas2D
+@using Blazor.FileReader
 @using WrapAround.Logic
+
+@inject IJSRuntime JsRuntime
+@inject IFileReaderService fileReaderService
 
 <style>
     #render-window canvas {
         background-color: #EEEEEE;
     }
-
 </style>
 
 <div id="game-modal">
@@ -19,15 +24,16 @@
     @if (debug)
     {
         <button @onclick="@Redraw">redraw</button>
-        <br/>
-        <p style="color: red">number of blocks: @blocks.Count</p>
-        <br/>
+        <br />
+        <p style="color: red">number of blocks: @_blocks.Count</p>
+        <br />
         <p style="color: red">IsDragging @_isDragging</p>
     }
-    
-    <button @onclick="@JsonifyMap">print map</button>
-    <br/>
-    <p>@JsonMap</p>
+
+    <button @onclick="@DownloadMap">download map</button>
+    <br />
+    <input style="color: #eeeeee" type="file" @ref=inputTypeFileElement /><button @onclick=ReadFile>Read file</button>
+
 
 </div>
 
@@ -43,7 +49,7 @@
 
     private Canvas2DContext _context;
 
-    private List<Hitbox> blocks = new List<Hitbox>();
+    private List<Hitbox> _blocks = new List<Hitbox>();
 
     protected BECanvasComponent _canvasReference;
 
@@ -51,9 +57,9 @@
 
     private int _draggingIndex;
 
-    private GameMap map;
+    private GameMap _map;
 
-    private string JsonMap;
+    private ElementReference inputTypeFileElement;
 
     #region canvas
 
@@ -63,14 +69,26 @@
         await _context.SetFillStyleAsync("red");
     }
 
-    private void MouseDown(MouseEventArgs e)
+    private async Task<float> GetRealMouseX(MouseEventArgs e)
     {
-        for (var index = 0; index < blocks.Count; index++)
+        var canvasX = await JsRuntime.InvokeAsync<float>("GetRealCanvasX", "render-window");
+        return (float) (e.ClientX - canvasX);
+    }
+    
+    private async Task<float> GetRealMouseY(MouseEventArgs e)
+    {
+        var canvasY = await JsRuntime.InvokeAsync<float>("GetRealCanvasY", "render-window");
+        return (float) (e.ClientY - canvasY);
+    }
+
+    private async Task MouseDown(MouseEventArgs e)
+    {
+        for (var index = 0; index < _blocks.Count; index++)
         {
             //if mouse is inside a hitbox, mark as being clicked
-            if (blocks[index].IsCollidingWith(new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX, (float)e.ClientY))))
+            if (_blocks[index].IsCollidingWith(new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)))))
             {
-                Console.WriteLine("beginning drag");
+                
                 _isDragging = true;
                 _draggingIndex = index;
             }
@@ -85,8 +103,7 @@
     {
         if (!_isDragging) return;
 
-        Console.WriteLine("moving drag");
-        blocks[_draggingIndex] = new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX + 40, (float)e.ClientY + 20));
+        _blocks[_draggingIndex] = new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20));
 
         await Redraw();
     }
@@ -102,11 +119,11 @@
         //if ctrl is pressed, then delete any rectangles under mouse
         if (e.CtrlKey)
         {
-            for (var i = 0; i < blocks.Count; i++)
+            for (var i = 0; i < _blocks.Count; i++)
             {
-                if (blocks[i].IsCollidingWith(new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX, (float)e.ClientY))))
+                if (_blocks[i].IsCollidingWith(new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)))))
                 {
-                    blocks.RemoveAt(i);
+                    _blocks.RemoveAt(i);
 
                     await Redraw();
                 }
@@ -116,7 +133,7 @@
         //if shift clicking, create a new rectangle under mouse
         else if (e.ShiftKey)
         {
-            blocks.Add(new Hitbox(new Vector2((float)e.ClientX, (float)e.ClientY), new Vector2((float)e.ClientX + 40, (float)e.ClientY + 20)));
+            _blocks.Add(new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20)));
 
             await Redraw();
         }
@@ -137,16 +154,15 @@
     /// </summary>
     private async Task Redraw()
     {
-        Console.WriteLine("Redrawing");
 
         await _context.ClearRectAsync(0, 0, _canvasReference.Width, _canvasReference.Height);
 
         //begin batch
         await _context.BeginBatchAsync();
 
-        for (var index = 0; index < blocks.Count; index++)
+        for (var index = 0; index < _blocks.Count; index++)
         {
-            await _context.FillRectAsync(blocks[index].TopLeft.X, blocks[index].TopLeft.Y, 40, 20);
+            await _context.FillRectAsync(_blocks[index].TopLeft.X, _blocks[index].TopLeft.Y, 40, 20);
         }
 
         //end batch
@@ -156,15 +172,38 @@
 
     #endregion
 
-    private void JsonifyMap()
+    private async void DownloadMap()
     {
-        map = new GameMap(blocks.Select(hit => new Block(hit.TopLeft)).ToList());
+        _map = new GameMap(_blocks.Select(hit => new Block(hit.TopLeft)).ToList());
 
-        //add custom vector2 converter
-        var options = new JsonSerializerOptions();
-        options.Converters.Add(new Vector2Converter());
+        //add custom converter
+        var opt = new JsonSerializerOptions();
+        opt.Converters.Add(new Vector2Converter());
 
-        JsonMap = JsonSerializer.Serialize(map, options);//TODO test deserialization, perhaps just use .NET deserial
+        //download to client by invoking JS
+        await JsRuntime.InvokeAsync<object>("FileSaveAs", "level.wamap", JsonSerializer.Serialize(_map,opt));
 
     }
+
+    private async Task ReadFile()
+    {
+        //add custom converter
+        var opt = new JsonSerializerOptions();
+        opt.Converters.Add(new Vector2Converter());
+
+        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+        {
+            // Read into buffer and act (uses less memory)
+            await using Stream stream = await file.OpenReadAsync();
+            _map = await JsonSerializer.DeserializeAsync<GameMap>(stream, opt);
+
+            //refill block array
+            _blocks.Clear();
+            _blocks = _map.Blocks.ConvertAll(input => input.Hitbox);
+
+        }
+    }
+
+
+}
 }

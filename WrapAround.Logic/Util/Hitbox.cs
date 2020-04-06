@@ -7,6 +7,7 @@ namespace WrapAround.Logic.Util
     /// <summary>
     /// A rectangle representing a hitbox
     /// </summary>
+    [Serializable]
     public struct Hitbox
     {
         [JsonConverter(typeof(Vector2Converter))]
