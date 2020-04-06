@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,4 +18,5 @@
   <ItemGroup>
     <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
   </ItemGroup>
+
 </Project>

@@ -10,13 +10,97 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="levelEditorLib\" />
+    <Compile Remove="levelEditorLib\**" />
+    <Content Remove="levelEditorLib\**" />
+    <EmbeddedResource Remove="levelEditorLib\**" />
+    <None Remove="levelEditorLib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\README.md" />
     <None Include="wwwroot\Index.html" />
+    <None Include="wwwroot\js\indexScript.js" />
+    <None Include="wwwroot\js\saveFile.js" />
+    <None Include="wwwroot\js\signalr\dist\browser\signalr.js" />
+    <None Include="wwwroot\js\signalr\dist\browser\signalr.min.js" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\_content\Blazor.Extensions.Canvas\blazor.extensions.canvas.js" />
+    <None Include="wwwroot\_content\Tewr.Blazor.FileReader\FileReaderComponent.js" />
+    <None Include="wwwroot\_content\Tewr.Blazor.FileReader\FileReaderComponent.js.map" />
+    <None Include="wwwroot\_framework\blazor.boot.json.gz" />
+    <None Include="wwwroot\_framework\blazor.webassembly.js" />
+    <None Include="wwwroot\_framework\blazor.webassembly.js.gz" />
+    <None Include="wwwroot\_framework\wasm\dotnet.3.2.0-preview3.20168.1.js" />
+    <None Include="wwwroot\_framework\wasm\dotnet.3.2.0-preview3.20168.1.js.gz" />
+    <None Include="wwwroot\_framework\wasm\dotnet.wasm" />
+    <None Include="wwwroot\_framework\wasm\dotnet.wasm.gz" />
+    <None Include="wwwroot\_framework\_bin\Blazor.Extensions.Canvas.dll" />
+    <None Include="wwwroot\_framework\_bin\Blazor.Extensions.Canvas.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Blazor.Extensions.Canvas.JS.dll" />
+    <None Include="wwwroot\_framework\_bin\Blazor.Extensions.Canvas.JS.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Blazor.FileReader.dll" />
+    <None Include="wwwroot\_framework\_bin\Blazor.FileReader.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.AspNetCore.Components.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.AspNetCore.Components.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.AspNetCore.Components.Web.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.AspNetCore.Components.Web.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.AspNetCore.Components.WebAssembly.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.AspNetCore.Components.WebAssembly.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Bcl.AsyncInterfaces.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Configuration.Abstractions.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Configuration.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Configuration.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Configuration.Json.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Configuration.Json.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.DependencyInjection.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.DependencyInjection.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Logging.Abstractions.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Logging.Abstractions.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Primitives.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.Extensions.Primitives.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.JSInterop.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.JSInterop.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.JSInterop.WebAssembly.dll" />
+    <None Include="wwwroot\_framework\_bin\Microsoft.JSInterop.WebAssembly.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\mscorlib.dll" />
+    <None Include="wwwroot\_framework\_bin\mscorlib.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Core.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Core.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.dll" />
+    <None Include="wwwroot\_framework\_bin\System.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Drawing.Common.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Drawing.Common.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Net.Http.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Net.Http.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Numerics.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Numerics.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Runtime.CompilerServices.Unsafe.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Runtime.CompilerServices.Unsafe.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Text.Encodings.Web.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Text.Encodings.Web.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\System.Text.Json.dll" />
+    <None Include="wwwroot\_framework\_bin\System.Text.Json.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\WebAssembly.Bindings.dll" />
+    <None Include="wwwroot\_framework\_bin\WebAssembly.Bindings.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\WebAssembly.Net.Http.dll" />
+    <None Include="wwwroot\_framework\_bin\WebAssembly.Net.Http.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\WrapAround.LevelEditor.dll" />
+    <None Include="wwwroot\_framework\_bin\WrapAround.LevelEditor.dll.gz" />
+    <None Include="wwwroot\_framework\_bin\WrapAround.Logic.dll" />
+    <None Include="wwwroot\_framework\_bin\WrapAround.Logic.dll.gz" />
   </ItemGroup>
 
   <ItemGroup>

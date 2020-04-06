@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using WrapAround.Logic.Entities;
 
 namespace WrapAround.Logic
@@ -12,6 +13,7 @@ namespace WrapAround.Logic
     public class GameMap
     {
         public List<Block> Blocks { get; set; }
+        [JsonIgnore]
         public (int, int) CanvasSize { get; set; } = (1250, 703);
         public GoalZone LeftGoal;
         public GoalZone RightGoal;
@@ -21,6 +23,11 @@ namespace WrapAround.Logic
         /// </summary>
         public GameMap()
         {
+            if (Blocks == null)
+            {
+                Blocks = new List<Block>();
+            }
+
             CanvasSize = (1250, 703);
             LeftGoal = new GoalZone(new Vector2(0, 0));
             RightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 20, 0));
