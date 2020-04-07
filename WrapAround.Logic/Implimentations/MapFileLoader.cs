@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Implimentations
 {
     /// <summary>
-    /// A simple map loader that just reads from a Json rep on disk
+    /// A simple map loader that just reads from a JSON serialized rep on disk
     /// </summary>
     public class MapFileLoader : Interfaces.IMapLoader
     {
@@ -18,7 +20,7 @@ namespace WrapAround.Logic.Implimentations
         public List<GameMap> LoadMaps(string dirPath = @".\gameMaps\")
         {
             //if no map files, return blank map
-            if (!Directory.GetFiles(dirPath).Any(name => name.EndsWith(".wamap", StringComparison.CurrentCulture)))
+            if (!Directory.GetFiles(dirPath).Any(name => name.EndsWith(".wamap", StringComparison.InvariantCulture)))
             {
                 return new List<GameMap>
                 {
@@ -26,13 +28,19 @@ namespace WrapAround.Logic.Implimentations
                 };
             }
 
+            //add custom converters
+            var opt = new JsonSerializerOptions();
+            opt.Converters.Add(new Vector2Converter());
+
             var dir = Directory.GetFiles(dirPath);
 
             var maps = from file in dir.AsParallel()
-                       where file.EndsWith(".wamap", StringComparison.CurrentCulture)
+                       where file.EndsWith(".wamap", StringComparison.InvariantCulture)
                        select JsonSerializer.Deserialize<GameMap>(File.ReadAllText(file));
 
-            return maps.ToList();
+            var mapList = maps.ToList();
+
+            return mapList;
         }
     }
 }

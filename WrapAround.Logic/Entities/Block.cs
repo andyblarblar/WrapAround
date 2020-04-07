@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -11,12 +12,10 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A 40 px by 20 px breakable breakout-esk block
     /// </summary>
+    [Serializable]
     public class Block : IDestructable, IQuadrantHitbox, ICollidable
     {
         public int health { get; set; }
-
-        [JsonIgnore]
-        public Vector2 Position { get; set; }
 
         public Hitbox Hitbox { get; set; }
 
@@ -34,12 +33,22 @@ namespace WrapAround.Logic.Entities
             SegmentController = new QuadrantController();
 
             health = 5;
-            Position = position;
-            Hitbox = new Hitbox(Position, new Vector2(Position.X + 40, Position.Y + 20));
+            Hitbox = new Hitbox(position, new Vector2(position.X + 40, position.Y + 20));
 
             //initialise position
             _ = SegmentController.UpdateSegment(Hitbox);
+        }
 
+        /// <summary>
+        /// For serialization support
+        /// </summary>
+        public Block()
+        {
+            Color = Color.Azure;
+            SegmentController = new QuadrantController();
+
+            //initialise position
+            _ = SegmentController.UpdateSegment(Hitbox);
         }
 
         /// <summary>

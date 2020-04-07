@@ -7,6 +7,7 @@ namespace WrapAround.Logic.Util
     /// <summary>
     /// A rectangle representing a hitbox
     /// </summary>
+    [Serializable]
     public struct Hitbox
     {
         [JsonConverter(typeof(Vector2Converter))]
@@ -86,5 +87,31 @@ namespace WrapAround.Logic.Util
         {
             return !(left == right);
         }
+
+        /// <summary>
+        /// returns true if either rectangle is to the side of the other
+        /// </summary>
+        /// <param name="hitbox1"></param>
+        /// <param name="hitbox2"></param>
+        /// <returns></returns>
+        public static bool IsToSideOf(in Hitbox hitbox1, in Hitbox hitbox2)
+        {
+            //if one rectangle is to the right of the other (one rectangles point is to the right of both points of the other rectangle)
+            return hitbox1.TopLeft.X > hitbox2.BottomRight.X && hitbox1.TopLeft.X > hitbox2.TopLeft.X || hitbox2.TopLeft.X > hitbox1.BottomRight.X && hitbox2.TopLeft.X > hitbox1.TopLeft.X;
+        }
+        
+        /// <summary>
+        /// returns true if either rectangle is on top of the other
+        /// </summary>
+        /// <param name="hitbox1"></param>
+        /// <param name="hitbox2"></param>
+        /// <returns></returns>
+        public static bool IsOnTopOf(in Hitbox hitbox1, in Hitbox hitbox2)
+        {
+            //if one rectangle is above the other (one rectangles top left point is above both points of the other rectangle)
+            return hitbox1.TopLeft.Y < hitbox2.TopLeft.Y && hitbox1.BottomRight.Y < hitbox2.TopLeft.Y || hitbox2.TopLeft.Y < hitbox1.TopLeft.Y && hitbox2.BottomRight.Y < hitbox1.TopLeft.Y;
+        }
+
+
     }
 }

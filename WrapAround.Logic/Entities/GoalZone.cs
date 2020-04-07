@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Util;
 
@@ -7,6 +8,7 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// Represents the area that counts as a goal. 
     /// </summary>
+    [Serializable]
     public class GoalZone : IQuadrantHitbox
     {
         public Vector2 Position { get; set; }
