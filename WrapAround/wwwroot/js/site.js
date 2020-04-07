@@ -18,6 +18,17 @@ const lobs = [
     document.getElementById("lobby-3"),
     document.getElementById("lobby-4")
 ];
+
+for (let i=0; i < lobs.length; i++) {
+    lobs[i].addEventListener("mousedown", e => {
+        //add player if left clicking
+        if (e.button === 0) {
+            const i2 = i;
+            joinLobby(i2);
+        }
+    });
+}
+
 var _lobbyCounts = [];
 // 'Unique' user hash (unlikely to intersect) for this player
 const userHash = genHash("Pl@ceh01d&r");
@@ -247,9 +258,8 @@ function render(context) {
 
 // Called when a lobby box is clicked by the user, sends an addplayer request to the hub
 function joinLobby(lobbyId) {
-    //update lobby ID to the lobby clicked
     playerPaddle.gameId = lobbyId;
-    connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
+        connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
 }
 
 // Callback from AddPlayer, saves the server-given ID for later
@@ -266,30 +276,55 @@ function leaveLobby() {
     gameLoaded = false;
 }
 
-// Event listener on document tracks key input
-document.addEventListener("keydown", event => {
+//leave lobby when window is closed
+window.onunload = e => leaveLobby();
+
+
+//#########Key Handles##############
+
+//helper object that fires keypress events to allow for smoother game play
+var Key = {
+    _pressed: {},
+
+    UP: 38,
+    DOWN: 40,
+
+    isDown: function (keyCode) {
+        return this._pressed[keyCode];
+    },
+
+    onKeydown: function (event) {
+        this._pressed[event.keyCode] = true;
+    },
+
+    onKeyup: function (event) {
+        delete this._pressed[event.keyCode];
+    }
+};
+
+window.addEventListener("keyup", function (event) { Key.onKeyup(event); }, false);
+window.addEventListener("keydown", function (event) { Key.onKeydown(event); }, false);
+
+//Timer that ticks at 60Hz to check for keypresses to make things super quick
+setInterval(event => {
     // Ignore events if game is not loaded
     if (gameLoaded) {
-        
-        //console.log(event.code);
-        //console.log(playerPaddle.position.Y);
-        //console.log(playerPaddle.position.X);
+
         // Move up/down if the move can be made in-bounds
-        if (event.code === "ArrowUp" && playerPaddle.hitbox.topLeft.Y > 0) {
-            //console.log("UP");
+        if (Key.isDown(Key.UP) && playerPaddle.hitbox.topLeft.Y > 0) {
+
             playerPaddle.hitbox.topLeft.Y -= padSpeed;
             playerPaddle.hitbox.bottomRight.Y -= padSpeed;
             playerPaddle.position.Y -= padSpeed;
-        } else if (event.code === "ArrowDown" && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
+            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
+        }
+        else if (Key.isDown(Key.DOWN) && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
+
             playerPaddle.hitbox.topLeft.Y += padSpeed;
             playerPaddle.hitbox.bottomRight.Y += padSpeed;
             playerPaddle.position.Y += padSpeed;
-            //console.log("DOWN");
-        }
-        // Send the new position if an up/down event occured
-        if (event.code === "ArrowUp" || event.code === "ArrowDown") {
             connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
-            //console.log("MOVE SENT");
         }
+        
     }
-});
+},16);
