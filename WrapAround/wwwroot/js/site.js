@@ -35,6 +35,8 @@ const scnHeight = 703;
 // Number of pixels each paddle moves in one keystroke
 var padSpeed;
 
+//################################Colors######################################
+
 // Randomly determine the team colors for this client (each client will have different team colors)
 var team1R = Math.floor(Math.random() * 256);
 // 'Distinctness' check
@@ -245,6 +247,8 @@ function render(context) {
 
 // Called when a lobby box is clicked by the user, sends an addplayer request to the hub
 function joinLobby(lobbyId) {
+    //update lobby ID to the lobby clicked
+    playerPaddle.gameId = lobbyId;
     connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
 }
 
