@@ -10,13 +10,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="levelEditorLib\" />
+    <Compile Remove="levelEditorLib\**" />
+    <Content Remove="levelEditorLib\**" />
+    <EmbeddedResource Remove="levelEditorLib\**" />
+    <None Remove="levelEditorLib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="gameMaps\level %282%29.wamap" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="gameMaps\level (2).wamap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
-    <None Include="wwwroot\Index.html" />
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\js\indexScript.js" />
+    <None Include="wwwroot\js\signalr\dist\browser\signalr.js" />
+    <None Include="wwwroot\js\signalr\dist\browser\signalr.min.js" />
+    <None Include="wwwroot\js\site.js" />
   </ItemGroup>
 
   <ItemGroup>

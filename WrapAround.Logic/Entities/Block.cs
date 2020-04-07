@@ -45,7 +45,10 @@ namespace WrapAround.Logic.Entities
         public Block()
         {
             Color = Color.Azure;
+            SegmentController = new QuadrantController();
 
+            //initialise position
+            _ = SegmentController.UpdateSegment(Hitbox);
         }
 
         /// <summary>

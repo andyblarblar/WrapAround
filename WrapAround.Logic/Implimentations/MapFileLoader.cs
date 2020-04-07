@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
+using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Implimentations
 {
@@ -27,15 +28,19 @@ namespace WrapAround.Logic.Implimentations
                 };
             }
 
-            var serializer = new BinaryFormatter();
+            //add custom converters
+            var opt = new JsonSerializerOptions();
+            opt.Converters.Add(new Vector2Converter());
 
             var dir = Directory.GetFiles(dirPath);
 
-            var maps = from file in dir
+            var maps = from file in dir.AsParallel()
                        where file.EndsWith(".wamap", StringComparison.InvariantCulture)
                        select JsonSerializer.Deserialize<GameMap>(File.ReadAllText(file));
 
-            return maps.ToList();
+            var mapList = maps.ToList();
+
+            return mapList;
         }
     }
 }
