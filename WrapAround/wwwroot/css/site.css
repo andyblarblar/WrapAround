@@ -39,9 +39,16 @@ h1, h2, h3, h4, h5, h6 {
     margin-inline-end: 0;
 }
 
-#lobby-select ::selection, #header .material-icons ::selection {
+#lobby-select ::selection, #side-select ::selection, #header .material-icons::selection {
     opacity: 0;
 }
+
+i#level-editor.material-icons {
+    transition: opacity var(--animation-speed);
+}
+    #level-editor:hover {
+        opacity: 0.4;
+    }
 
 /*================
   Header Styling
@@ -58,7 +65,6 @@ h1, h2, h3, h4, h5, h6 {
     #header > h2 {
         font-weight: 500;
     }
-
         #header > h2 > span {
             font-weight: 100;
         }
@@ -71,9 +77,6 @@ h1, h2, h3, h4, h5, h6 {
         color: var(--root-color-fg);
     }
 
-    #header #settings:hover, #header #settings:focus {
-        transform: rotate(90deg);
-    }
 /*=========================
   Lobby Selection Styling
 =========================*/
