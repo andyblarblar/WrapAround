@@ -16,17 +16,14 @@ namespace WrapAround.hubs
         /// </summary>
         private readonly IServerLoop serverLoop;
 
-        /// <summary>
-        /// To fix a circular ascendancy
-        /// </summary>
-        private readonly IUserGameRepository userGameRepository;
+       
 
         private readonly ILogger<GameHub> logger;
 
-        public GameHub(IServerLoop serverLoop, IUserGameRepository userGameRepository, ILogger<GameHub> logger)
+        public GameHub(IServerLoop serverLoop, ILogger<GameHub> logger)
         {
             this.serverLoop = serverLoop;
-            this.userGameRepository = userGameRepository;
+            
             this.logger = logger;
         }
 
@@ -45,15 +42,7 @@ namespace WrapAround.hubs
             if (id != -1)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{gameId}");
-
-                try
-                {
-                    userGameRepository.UserDictionary.Add(Context.ConnectionId, $"lobby{gameId}");
-                }
-                catch (Exception e)
-                {
-                   //Will error here if same person connects twice, we need this for debugging
-                }
+                
 
             }
 
@@ -93,28 +82,6 @@ namespace WrapAround.hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.GameId}");
         }
 
-
-
-        /// <summary>
-        /// Hot disconnects a user
-        /// </summary>
-        /// <param name="exception"></param>
-        /// <returns></returns>
-        public override Task OnDisconnectedAsync(Exception exception)
-        {
-            try
-            {
-                Groups.RemoveFromGroupAsync(Context.ConnectionId, userGameRepository.UserDictionary[Context.ConnectionId]);
-                userGameRepository.UserDictionary.Remove(Context.ConnectionId);
-            }
-            catch (Exception e)
-            {
-                // ignored
-            }
-
-
-            return base.OnDisconnectedAsync(exception);
-        }
 
         public async Task Ping()
         {

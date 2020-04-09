@@ -27,7 +27,6 @@ namespace WrapAround
 
             services.AddSingleton<IServerLoop, ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
-            services.AddSingleton<IUserGameRepository, UserDataRepo>();//injects user repo
             services.AddLogging();
         }
 

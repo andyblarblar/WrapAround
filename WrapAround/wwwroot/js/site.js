@@ -38,7 +38,7 @@ var userId;
 var _context;
 // JSON representation of this player's paddle
 var playerPaddle =
-{ id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 30, Y: 0} }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 } }
+{ id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 30, Y: 300} }, height: 0.0, hash: userHash, MAX_SIZE: 300 }
 
 // Flag is on when in a lobby -- used to toggle keyevents
 var gameLoaded = false;
@@ -185,10 +185,11 @@ connection.on("ReceiveContextUpdate", (context) => {
     
     // Search for this player's paddle by ID
     context.players.forEach((item) => {
-        //console.log(item);
+
+        //change paddle height if others have joined or left
         if (item.id === playerPaddle.id && item.height !== null && playerPaddle.height !== item.height) {
             playerPaddle.height = item.height;
-            //playerPaddle.hitbox = item.hitbox;
+            playerPaddle.hitbox.bottomRight = {X: 0, Y: playerPaddle.hitbox.topLeft.Y + playerPaddle.height}
         }
         
     });
@@ -279,6 +280,7 @@ function leaveLobby() {
     connection.invoke("RemovePlayerFromLobby", playerPaddle);
     // Disable keyevents
     gameLoaded = false;
+    resetPaddle();
 }
 
 //leave lobby when window is closed
@@ -316,8 +318,8 @@ setInterval(() => {
         if (gameLoaded) {
             connection.invoke("UpdatePlayerPosition",
                 playerPaddle.hash,
-                playerPaddle.position.X,
-                playerPaddle.position.Y,
+                playerPaddle.hitbox.topLeft.X,
+                playerPaddle.hitbox.topLeft.Y,
                 playerPaddle.gameId,
                 playerPaddle.id);
         }
@@ -335,13 +337,11 @@ setInterval((e) => {
 
                 playerPaddle.hitbox.topLeft.Y -= padSpeed;
                 playerPaddle.hitbox.bottomRight.Y -= padSpeed;
-                playerPaddle.position.Y -= padSpeed;
 
             } else if (Key.isDown(Key.DOWN) && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
 
                 playerPaddle.hitbox.topLeft.Y += padSpeed;
                 playerPaddle.hitbox.bottomRight.Y += padSpeed;
-                playerPaddle.position.Y += padSpeed;
             }
             //re-render
             render(_context);
@@ -350,4 +350,13 @@ setInterval((e) => {
     },
     5);
 
+//resets the defaults of a paddle for its side. Does not effect ids.
+function resetPaddle() {
+    playerPaddle.height = playerPaddle.MAX_SIZE;
+    //reset hitbox
+    playerPaddle.hitbox.topLeft = playerPaddle.isOnRight ? { X: 1250 - 20, Y: 0 } : { X: 20, Y: 0 };
+    playerPaddle.hitbox.bottomRight = { X: 30, Y: playerPaddle.hitbox.topLeft.Y + playerPaddle.MAX_SIZE }
+
+
+}
 

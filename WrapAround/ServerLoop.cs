@@ -21,11 +21,6 @@ namespace WrapAround
         private const int BroadcastInterval = 17;
 
         /// <summary>
-        /// The rate at which the update loop steps forward.
-        /// </summary>
-        private const int UpdateInterval = 17;
-
-        /// <summary>
         /// Holds the states of Contexts.
         /// </summary>
         private readonly List<GameContext> _gameContextList;
@@ -44,17 +39,6 @@ namespace WrapAround
 
             var broadCastLoop = new Timer(BroadcastInterval);
 
-            // seprete update loop for experiments
-            // var updateLoop = new Timer(UpdateInterval);
-            //
-            // //Every set interval, update every lobby and step forward state
-            // updateLoop.Elapsed += (sender, args) =>
-            // {
-            //     Parallel.ForEach(_gameContextList, async context =>
-            //     {
-            //         await context.Update();
-            //     });
-            // };
 
             //Every set interval, send lobbies to clients
             broadCastLoop.Elapsed += (sender, args) =>
@@ -68,9 +52,9 @@ namespace WrapAround
 
             };
 
-            //note that state and network updates are separated
+            
             broadCastLoop.Start();
-            //updateLoop.Start();
+           
         }
 
 

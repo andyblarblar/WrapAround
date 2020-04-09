@@ -75,5 +75,12 @@ namespace WrapAround.Logic.Entities
         {
             await Task.Run(Damage);
         }
+
+
+        public void Reset()
+        {
+            health = 5;
+            Color = Color.Black;
+        }
     }
 }

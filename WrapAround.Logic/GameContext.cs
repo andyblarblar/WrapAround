@@ -69,7 +69,7 @@ namespace WrapAround.Logic
                 var numOnSide = Players.Count(player => player.IsOnRight == isRightSide) + 1;
 
                 var playerStartingPosition =
-                    isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(0, 0);
+                    isRightSide ? new Vector2(CurrentMap.CanvasSize.Item1 - 20, 0) : new Vector2(20, 0);
 
                 try
                 {
@@ -215,6 +215,9 @@ namespace WrapAround.Logic
         {
             Players.ForEach(paddle => paddle.ResetLocation());
             Ball.Reset();
+
+            //reset for the future
+            CurrentMap.Reset();
             CurrentMap = _maps[new Random().Next(0, _maps.Count)];
 
             //update segment property

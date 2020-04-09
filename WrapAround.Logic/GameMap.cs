@@ -45,5 +45,11 @@ namespace WrapAround.Logic
             Blocks = blocks;
         }
 
+        public void Reset()
+        {
+            //reset health of all blocks
+            Blocks.ForEach(block => block.Reset());
+        }
+
     }
 }
