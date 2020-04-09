@@ -16,9 +16,14 @@ namespace WrapAround
     public class ServerLoop : IServerLoop
     {
         /// <summary>
-        /// The speed at which the server will send updates to clients. ~60fps
+        /// The speed at which the server will send updates to clients. 
         /// </summary>
         private const int BroadcastInterval = 17;
+
+        /// <summary>
+        /// The rate at which the update loop steps forward.
+        /// </summary>
+        private const int UpdateInterval = 17;
 
         /// <summary>
         /// Holds the states of Contexts.
@@ -39,22 +44,33 @@ namespace WrapAround
 
             var broadCastLoop = new Timer(BroadcastInterval);
 
-            //Every 17ms, update all lobbies in parallel and then send to clients.
+            // seprete update loop for experiments
+            // var updateLoop = new Timer(UpdateInterval);
+            //
+            // //Every set interval, update every lobby and step forward state
+            // updateLoop.Elapsed += (sender, args) =>
+            // {
+            //     Parallel.ForEach(_gameContextList, async context =>
+            //     {
+            //         await context.Update();
+            //     });
+            // };
+
+            //Every set interval, send lobbies to clients
             broadCastLoop.Elapsed += (sender, args) =>
             {
                 Parallel.ForEach(_gameContextList, async context =>
                 {
                     await context.Update();
-
                     await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate", context);//send to frontend
 
                 });
 
             };
 
-            broadCastLoop.AutoReset = true;//TODO this might not be working as intended, might be sending wayyyy to much.
+            //note that state and network updates are separated
             broadCastLoop.Start();
-
+            //updateLoop.Start();
         }
 
 

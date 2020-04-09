@@ -38,7 +38,7 @@ var userId;
 var _context;
 // JSON representation of this player's paddle
 var playerPaddle =
-{ id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 20, Y: 0 } }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 } }
+{ id: 0, isOnRight: false, gameId: 0, hitbox: { topLeft: { X: 20, Y: 0 }, bottomRight: { X: 30, Y: 0} }, height: 0.0, hash: userHash, MAX_SIZE: 300, position: { X: 20, Y: 0 } }
 
 // Flag is on when in a lobby -- used to toggle keyevents
 var gameLoaded = false;
@@ -182,17 +182,13 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 connection.on("ReceiveContextUpdate", (context) => {
     // Store the context
     _context = context;
-    //console.log(playerPaddle);
+    
     // Search for this player's paddle by ID
     context.players.forEach((item) => {
         //console.log(item);
-        if (item.id == playerPaddle.id) {
-            // And save the state of the player paddle
-            playerPaddle.hitbox.topLeft.Y = item.hitbox.topLeft.Y;
-            playerPaddle.hitbox.bottomRight.Y = item.hitbox.bottomRight.Y;
+        if (item.id === playerPaddle.id && item.height !== null && playerPaddle.height !== item.height) {
             playerPaddle.height = item.height;
-            playerPaddle.position.Y = item.hitbox.topLeft.Y;
-            //console.log(playerPaddle);
+            //playerPaddle.hitbox = item.hitbox;
         }
         
     });
@@ -200,8 +196,7 @@ connection.on("ReceiveContextUpdate", (context) => {
     //console.log("Player not found in context");
     // Update paddle speed based on inverse of height
     padSpeed = 300.0 / Math.pow(playerPaddle.height, 0.85);
-    // And render the scene based on this new context
-    render(context);
+
 });
 
 // Returns a css string of the Color passed in
@@ -217,8 +212,7 @@ function getRndInteger(min, max) {
 // Called after each context update, renders that info to the scn canvas
 function render(context) {
 
-    // First call sets the gameLoaded flag, enabling keyevents
-    gameLoaded = true;
+    //ctx.clearRect(0, 0, ctx.width, ctx.height);
 
     // Render Background and clear previous frame
     ctx.fillStyle = "rgb(255,255,255)";
@@ -246,12 +240,20 @@ function render(context) {
     let paddleList = context.players, i = 0;
     paddleList.forEach((item) => {
         // Fill the rects with the appropriate hue from colorHues
-        ctx.fillStyle = formatColorString(colorHues[item.isOnRight ? 1 : 0][R][i], colorHues[item.isOnRight ? 1 : 0][G][i], colorHues[item.isOnRight ? 1 : 0][B][i]);
-        ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 10, item.height);
+        if (item.id !== playerPaddle.id) {
+            ctx.fillStyle = formatColorString(colorHues[item.isOnRight ? 1 : 0][R][i],
+                colorHues[item.isOnRight ? 1 : 0][G][i],
+                colorHues[item.isOnRight ? 1 : 0][B][i]);
+            ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 10, item.height);
+        }
         // And index the next color after drawing
         ++i;
     });
 
+    //render self using local data to decouple from server updates
+    ctx.fillRect(playerPaddle.hitbox.topLeft.X, playerPaddle.hitbox.topLeft.Y, 10, playerPaddle.height);
+
+    
    // console.log(context.ball.hitbox.topLeft.X)
 
 }
@@ -259,7 +261,10 @@ function render(context) {
 // Called when a lobby box is clicked by the user, sends an addplayer request to the hub
 function joinLobby(lobbyId) {
     playerPaddle.gameId = lobbyId;
-        connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
+    connection.invoke("AddPlayer", lobbyId, playerPaddle.isOnRight, userHash);
+    gameLoaded = true;
+    //position player paddle
+    playerPaddle.hitbox.topLeft = playerPaddle.isOnRight ? { X: 1250 - 20, Y: 0 } : { X: 20, Y: 0 };
 }
 
 // Callback from AddPlayer, saves the server-given ID for later
@@ -305,26 +310,44 @@ var Key = {
 window.addEventListener("keyup", function (event) { Key.onKeyup(event); }, false);
 window.addEventListener("keydown", function (event) { Key.onKeydown(event); }, false);
 
-//Timer that ticks at 60Hz to check for keypresses to make things super quick
-setInterval(event => {
-    // Ignore events if game is not loaded
-    if (gameLoaded) {
 
-        // Move up/down if the move can be made in-bounds
-        if (Key.isDown(Key.UP) && playerPaddle.hitbox.topLeft.Y > 0) {
-
-            playerPaddle.hitbox.topLeft.Y -= padSpeed;
-            playerPaddle.hitbox.bottomRight.Y -= padSpeed;
-            playerPaddle.position.Y -= padSpeed;
-            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
+//send location every 30ms to server to avoid spam
+setInterval(() => {
+        if (gameLoaded) {
+            connection.invoke("UpdatePlayerPosition",
+                playerPaddle.hash,
+                playerPaddle.position.X,
+                playerPaddle.position.Y,
+                playerPaddle.gameId,
+                playerPaddle.id);
         }
-        else if (Key.isDown(Key.DOWN) && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
+    },
+    30);
 
-            playerPaddle.hitbox.topLeft.Y += padSpeed;
-            playerPaddle.hitbox.bottomRight.Y += padSpeed;
-            playerPaddle.position.Y += padSpeed;
-            connection.invoke("UpdatePlayerPosition", playerPaddle.hash, playerPaddle.position.X, playerPaddle.position.Y, playerPaddle.gameId, playerPaddle.id);
+//update loop. Changes and renders your paddle regardless of server updates
+setInterval((e) => {
+
+        // Ignore events if game is not loaded
+        if (gameLoaded) {
+
+            // Move up/down if the move can be made in-bounds
+            if (Key.isDown(Key.UP) && playerPaddle.hitbox.topLeft.Y > 0) {
+
+                playerPaddle.hitbox.topLeft.Y -= padSpeed;
+                playerPaddle.hitbox.bottomRight.Y -= padSpeed;
+                playerPaddle.position.Y -= padSpeed;
+
+            } else if (Key.isDown(Key.DOWN) && playerPaddle.hitbox.bottomRight.Y < scnHeight) {
+
+                playerPaddle.hitbox.topLeft.Y += padSpeed;
+                playerPaddle.hitbox.bottomRight.Y += padSpeed;
+                playerPaddle.position.Y += padSpeed;
+            }
+            //re-render
+            render(_context);
+
         }
-        
-    }
-},16);
+    },
+    5);
+
+
