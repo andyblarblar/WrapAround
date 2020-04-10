@@ -39,13 +39,53 @@ namespace WrapAround.Logic.Util
 
         public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
         {
-
+            
             writer.WriteStartObject();
-            writer.WriteNumber(stackalloc char[] { 'X' }, value.X);
-            writer.WriteNumber(stackalloc char[] { 'Y' }, value.Y);
+
+            switch (value.X)
+            {
+                //write null for incompatible values
+                case float.PositiveInfinity:
+                    writer.WriteNull(stackalloc char[] { 'X' });
+                    break;
+
+                case float.NegativeInfinity:
+                    writer.WriteNull(stackalloc char[] { 'X' });
+                    break;
+
+                case float.NaN:
+                    writer.WriteNull(stackalloc char[] { 'X' });
+                    break;
+                
+                default:
+                    writer.WriteNumber(stackalloc char[] { 'X' }, value.X);
+                    break;
+            } 
+            
+            switch (value.Y)
+            {
+                //write null for incompatible values
+                case float.PositiveInfinity:
+                    writer.WriteNull(stackalloc char[] { 'Y' });
+                    break;
+
+                case float.NegativeInfinity:
+                    writer.WriteNull(stackalloc char[] { 'Y' });
+                    break;
+
+                case float.NaN:
+                    writer.WriteNull(stackalloc char[] { 'Y' });
+                    break;
+                
+                default:
+                    writer.WriteNumber(stackalloc char[] { 'Y' }, value.Y);
+                    break;
+            }
+
             writer.WriteEndObject();
 
             writer.Flush();
+           
 
         }
     }

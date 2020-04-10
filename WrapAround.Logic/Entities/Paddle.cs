@@ -72,6 +72,7 @@ namespace WrapAround.Logic.Entities
         /// <param name="playerPosition"></param>
         public void Update(Vector2 playerPosition)
         {
+            
             Console.WriteLine(playerPosition);
             Position = playerPosition;
             Hitbox = new Hitbox(playerPosition, new Vector2(Position.X + 10, Position.Y + Height));
@@ -82,6 +83,13 @@ namespace WrapAround.Logic.Entities
         public Task Collide(object collided)
         {
             return Task.CompletedTask;//purposely empty, for future use
+        }
+
+        public override string ToString()
+        {
+            return $"{Hitbox}";
+
+
         }
     }
 }

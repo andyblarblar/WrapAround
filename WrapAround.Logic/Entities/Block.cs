@@ -21,7 +21,7 @@ namespace WrapAround.Logic.Entities
 
         [JsonIgnore]
         public QuadrantController SegmentController { get; set; } 
-
+        
         public Color Color { get; set; }
 
         /// <summary>

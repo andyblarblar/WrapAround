@@ -107,7 +107,13 @@ namespace WrapAround.Logic
                 Players.Remove(Players.Single(paddle => paddle.Id == player.Id));
 
                 var playersOnSide = Players.Count(paddle => paddle.IsOnRight == player.IsOnRight);
-                Players.ForEach(paddle => paddle.AdjustSize(playersOnSide)); //readjust sizes
+                Players.ForEach(paddle =>
+                {
+                    if (paddle.IsOnRight == player.IsOnRight)
+                    {
+                        paddle.AdjustSize(playersOnSide);
+                    }
+                }); //ajust sizes of paddles on the same size
 
             });
         }

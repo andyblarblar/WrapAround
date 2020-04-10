@@ -7,7 +7,6 @@ namespace WrapAround.Logic.Util
     /// <summary>
     /// A rectangle representing a hitbox
     /// </summary>
-    [Serializable]
     public struct Hitbox
     {
         [JsonConverter(typeof(Vector2Converter))]
@@ -78,12 +77,12 @@ namespace WrapAround.Logic.Util
             return TopLeft.GetHashCode() ^ BottomRight.GetHashCode();
         }
 
-        public static bool operator ==(Hitbox left, Hitbox right)
+        public static bool operator == (Hitbox left, Hitbox right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(Hitbox left, Hitbox right)
+        public static bool operator != (Hitbox left, Hitbox right)
         {
             return !(left == right);
         }
@@ -112,6 +111,9 @@ namespace WrapAround.Logic.Util
             return hitbox1.TopLeft.Y < hitbox2.TopLeft.Y && hitbox1.BottomRight.Y < hitbox2.TopLeft.Y || hitbox2.TopLeft.Y < hitbox1.TopLeft.Y && hitbox2.BottomRight.Y < hitbox1.TopLeft.Y;
         }
 
-
+        public override string ToString()
+        {
+            return $"TL:{TopLeft}, BR:{BottomRight}";
+        }
     }
 }

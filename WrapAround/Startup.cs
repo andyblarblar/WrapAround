@@ -23,7 +23,10 @@ namespace WrapAround
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR(hubOption => { hubOption.EnableDetailedErrors = true; })
-                .AddJsonProtocol(op => { op.PayloadSerializerOptions.Converters.Add(new Vector2Converter());});
+                .AddJsonProtocol(op =>
+                {
+                    op.PayloadSerializerOptions.Converters.Add(new Vector2Converter());
+                });
 
             services.AddSingleton<IServerLoop, ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader
