@@ -83,7 +83,14 @@ namespace WrapAround.Logic
 
                     Players.Add(newPlayer);
 
-                    Players.ForEach((paddle => paddle.AdjustSize(numOnSide))); //adjust player sizes
+                    //adjust player sizes on the same side
+                    Players.ForEach(paddle =>
+                    {
+                        if (paddle.IsOnRight == isRightSide)
+                        {
+                            paddle.AdjustSize(numOnSide);
+                        }
+                    });
 
                     return newPlayer.Id;
                 }
