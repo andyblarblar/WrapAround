@@ -8,11 +8,18 @@
 @using WrapAround.Logic
 
 @inject IJSRuntime JsRuntime
-@inject IFileReaderService fileReaderService
+@inject IFileReaderService FileReaderService
 
 <style>
     #render-window canvas {
         background-color: #EEEEEE;
+    }
+
+    span {
+        color: #eeeeee;
+    }
+    p {
+        color: #eeeeee;
     }
 </style>
 
@@ -30,11 +37,26 @@
         <p style="color: red">IsDragging @_isDragging</p>
     }
 
-    <button @onclick="@DownloadMap">download map</button>
+    <input type="checkbox" @bind="@_isUsingGrid" />
+    <span>Snap to grid</span>
+    <input type="range" min="1" max="200" @bind="@_grid" @bind:event="oninput" /> <span>@_grid</span> <input type="checkbox" @bind="@_isDrawingGrid"/> <span>draw grid</span>
     <br />
-    <input style="color: #eeeeee" type="file" @ref=inputTypeFileElement /><button @onclick=ReadFile>Read file</button>
 
+    <button @onclick="@DownloadMap">download map</button>
+    <input style="color: #eeeeee" type="file" @ref=inputTypeFileElement /><button @onclick="ReadFile">Load Map</button>
 
+</div>
+
+<br/>
+
+<div id="instructions">
+    <p>
+        Controls:
+        <br/>
+        Shift + Mouse1 = place block   
+        <br/>
+        Ctr + Mouse1 = delete block
+    </p>
 </div>
 
 
@@ -61,6 +83,12 @@
 
     private ElementReference inputTypeFileElement;
 
+    private bool _isUsingGrid;
+
+    private float _grid = 20;
+
+    private bool _isDrawingGrid = true;
+
     #region canvas
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -74,7 +102,7 @@
         var canvasX = await JsRuntime.InvokeAsync<float>("GetRealCanvasX", "render-window");
         return (float) (e.ClientX - canvasX);
     }
-    
+
     private async Task<float> GetRealMouseY(MouseEventArgs e)
     {
         var canvasY = await JsRuntime.InvokeAsync<float>("GetRealCanvasY", "render-window");
@@ -88,7 +116,7 @@
             //if mouse is inside a hitbox, mark as being clicked
             if (_blocks[index].IsCollidingWith(new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)))))
             {
-                
+
                 _isDragging = true;
                 _draggingIndex = index;
             }
@@ -103,7 +131,23 @@
     {
         if (!_isDragging) return;
 
-        _blocks[_draggingIndex] = new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20));
+        if (_isUsingGrid)
+        {
+            //first move the block to mouse
+            _blocks[_draggingIndex] = new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20));
+
+            //then snap to grid
+            var topLeft = new Vector2(
+            (float) Math.Round(_blocks[_draggingIndex].TopLeft.X / _grid) * _grid,
+            (float) Math.Round(_blocks[_draggingIndex].TopLeft.Y / _grid) * _grid);
+
+            _blocks[_draggingIndex] = new Hitbox(topLeft,new Vector2(topLeft.X+40,topLeft.Y+20));
+        }
+        else
+        {
+            _blocks[_draggingIndex] = new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20));
+        }
+
 
         await Redraw();
     }
@@ -160,6 +204,35 @@
         //begin batch
         await _context.BeginBatchAsync();
 
+        //draw grid
+        if (_isUsingGrid && _isDrawingGrid)
+        {
+            await _context.SetFillStyleAsync("blue");
+
+            //draw vertical lines
+            for (var i = 0; i < 1250; i += (int)_grid)
+            {
+                await _context.BeginPathAsync();
+                await _context.MoveToAsync(i, 0);
+                await _context.LineToAsync(i, 700);
+                await _context.StrokeAsync();
+            }
+
+            //draw horizontal lines
+            for (var i = 0; i < 700; i += (int)_grid)
+            {
+                await _context.BeginPathAsync();
+                await _context.MoveToAsync(0, i);
+                await _context.LineToAsync(1250, i);
+                await _context.StrokeAsync();
+            }
+
+        }
+
+        //reset color
+        await _context.SetFillStyleAsync("red");
+
+        //draw blocks
         for (var index = 0; index < _blocks.Count; index++)
         {
             await _context.FillRectAsync(_blocks[index].TopLeft.X, _blocks[index].TopLeft.Y, 40, 20);
@@ -191,7 +264,7 @@
         var opt = new JsonSerializerOptions();
         opt.Converters.Add(new Vector2Converter());
 
-        foreach (var file in await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
+        foreach (var file in await FileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync())
         {
             // Read into buffer and act (uses less memory)
             await using Stream stream = await file.OpenReadAsync();
