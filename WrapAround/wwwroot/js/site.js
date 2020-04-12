@@ -141,6 +141,7 @@ setUpColors();
 // Connect to server
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/game")
+    .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
     .withAutomaticReconnect()
     .build();
 
@@ -226,7 +227,7 @@ function render(context) {
         blockList.forEach((item) => {
             //if block is not destroyed
             if (item.health > 0) {
-                ctx.fillStyle = formatColorString(item.color.r, item.color.g, item.color.b);
+                ctx.fillStyle = item.color;
                 ctx.fillRect(item.hitbox.topLeft.X, item.hitbox.topLeft.Y, 40, 20);
             }
 

@@ -5,40 +5,42 @@ using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
+using MessagePack;
 
 namespace WrapAround.Logic.Entities
 {
     /// <summary>
     /// A 10 Px by 10 Px ball (well, square) that bounces around
     /// </summary>
+    [MessagePackObject]
     public class Ball : ICollidable, IQuadrantHitbox
     {
-        /// <summary>
-        /// the position of the ball on the canvas
-        /// </summary>
+        [IgnoreMember]
         public Vector2 Position;
 
-        /// <summary>
-        /// the position vector of the ball relative to the field "position". Velocity in pixels/ms
-        /// </summary>
+        [IgnoreMember]
         private Vector2 _rate;
 
+        [IgnoreMember]
         private const int Speed = 3;
 
+        [IgnoreMember]
         private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
 
+        [IgnoreMember]
         private const float UpdateRate = 1.6f;//16ms update rate
 
-        /// <summary>
-        /// The last frames Position vector
-        /// </summary>
+        [IgnoreMember]
         private Vector2 _physicsHistory;
 
+        [Key("hitbox")]
         public Hitbox Hitbox { get; set; }
 
         [JsonIgnore]
-        public QuadrantController SegmentController { get; set; } 
+        [IgnoreMember]
+        public QuadrantController SegmentController { get; set; }
 
+        [IgnoreMember]
         private readonly Vector2 _startingPosition;
 
         public Ball(Vector2 startingPosition, Vector2 rate)
@@ -48,6 +50,12 @@ namespace WrapAround.Logic.Entities
             _startingPosition = startingPosition;
             _rate = rate;
             Hitbox = new Hitbox(Position, new Vector2(Position.X + 10, Position.Y + 10));
+        }
+
+        [SerializationConstructor]
+        public Ball(Hitbox hitbox)
+        {
+            Hitbox = hitbox;
         }
 
         /// <summary>

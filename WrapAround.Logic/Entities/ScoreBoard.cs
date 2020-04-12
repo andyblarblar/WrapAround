@@ -2,12 +2,15 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 using WrapAround.Logic.Util;
+using MessagePack;
 
 namespace WrapAround.Logic.Entities
 {
+    [MessagePackObject]
     public class ScoreBoard
     {
         [JsonConverter(typeof(Vector2Converter))]
+        [Key("score")]
         public Vector2 Score { get; set; }
 
         public void Reset()

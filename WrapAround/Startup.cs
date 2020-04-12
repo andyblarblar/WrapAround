@@ -26,7 +26,8 @@ namespace WrapAround
                 .AddJsonProtocol(op =>
                 {
                     op.PayloadSerializerOptions.Converters.Add(new Vector2Converter());
-                });
+                })
+                .AddMessagePackProtocol();
 
             services.AddSingleton<IServerLoop, ServerLoop>();//injects server loop
             services.AddTransient<IMapLoader, MapFileLoader>();//injects preferred map loader

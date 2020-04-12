@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WrapAround.Logic.Implimentations;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
+using MessagePack;
 
 namespace WrapAround.Logic.Entities
 {
@@ -13,16 +14,22 @@ namespace WrapAround.Logic.Entities
     /// A 40 px by 20 px breakable breakout-esk block
     /// </summary>
     [Serializable]
+    [MessagePackObject]
     public class Block : IDestructable, IQuadrantHitbox, ICollidable
     {
+        [Key("health")]
         public int health { get; set; }
 
+        [Key("hitbox")]
         public Hitbox Hitbox { get; set; }
 
         [JsonIgnore]
-        public QuadrantController SegmentController { get; set; } 
-        
-        public Color Color { get; set; }
+        [IgnoreMember]
+        public QuadrantController SegmentController { get; set; }
+
+        [Key("color")]
+        [JsonIgnore]
+        public string Color { get; set; }
 
         /// <summary>
         /// 
@@ -44,11 +51,22 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         public Block()
         {
-            Color = Color.Azure;
+            Color = "rgb(0,0,0)";
             SegmentController = new QuadrantController();
 
             //initialise position
             _ = SegmentController.UpdateSegment(Hitbox);
+        }
+
+        /// <summary>
+        /// For MessagePack
+        /// </summary>
+        [SerializationConstructor]
+        public Block(int health, Hitbox hitbox, string color)
+        {
+            this.health = health;
+            Hitbox = hitbox;
+            Color = color;
         }
 
         /// <summary>
@@ -60,12 +78,12 @@ namespace WrapAround.Logic.Entities
 
             Color = health switch
             {
-                1 => Color.Red,
-                2 => Color.Orange,
-                3 => Color.Yellow,
-                4 => Color.Green,
-                5 => Color.Azure,
-                _ => Color.Empty
+                1 => "rgb(255,0,0)",
+                2 => "rgb(255,111,0)",
+                3 => "rgb(255,255,0)",
+                4 => "rgb(121,120,95)",
+                5 => "rgb(0,0,0)",
+                _ => "rgb(255,255,255)"
             };
 
         }
@@ -80,7 +98,7 @@ namespace WrapAround.Logic.Entities
         public void Reset()
         {
             health = 5;
-            Color = Color.Black;
+            Color = "rgb(0,0,0)";
         }
     }
 }

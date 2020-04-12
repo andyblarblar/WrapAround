@@ -5,7 +5,7 @@
     <link href="css/site.css" rel="stylesheet">
 </head>
 <body>
-    
+
     <!-- Header -->
     <div id="header">
         <h2>Wrap<span>Ar&infin;und</span></h2>
@@ -13,51 +13,53 @@
         <a href="/level/"><i title="Level Editor" class="material-icons" id="level-editor">format_paint</i></a>
     </div>
     <div id="side-select">
-        <a class="lobby-box side" id="side-active"   onmousedown="changeSide()">Left Side</a>
+        <a class="lobby-box side" id="side-active" onmousedown="changeSide()">Left Side</a>
         <a class="lobby-box side" id="side-inactive" onmousedown="changeSide()">Right Side</a>
     </div>
     <!-- Lobby Select -->
     <div id="lobby-select">
         <!-- Lobby 1 -->
-        <a class="lobby-box" id="lobby-1" href="#game-modal" >
+        <a class="lobby-box" id="lobby-1" href="#game-modal">
             <div class="lobby-title">Lobby 1</div>
             <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
         <!-- Lobby 2 -->
-        <a class="lobby-box" id="lobby-2" href="#game-modal" >
+        <a class="lobby-box" id="lobby-2" href="#game-modal">
             <div class="lobby-title">Lobby 2</div>
             <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
         <!-- Lobby 3 -->
-        <a class="lobby-box" id="lobby-3" href="#game-modal" >
+        <a class="lobby-box" id="lobby-3" href="#game-modal">
             <div class="lobby-title">Lobby 3</div>
             <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
         <!-- Lobby 4 -->
-        <a class="lobby-box" id="lobby-4" href="#game-modal" >
+        <a class="lobby-box" id="lobby-4" href="#game-modal">
             <div class="lobby-title">Lobby 4</div>
             <div class="lobby-playernum"><span class="player-count-span">0</span>/16 Players</div>
         </a>
     </div>
     <!-- Game Window Modal -->
-<div id="game-modal">
-    <div id="game-window">
-        <canvas id="render-window" width="1250" height="700"></canvas>
-        <!-- <div id="chat-window">
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-            <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
-        </div> -->
-        <a id="close-modal" href="#main-page" onmousedown="leaveLobby()"><i class="material-icons">close</i></a>
-        <a id="lights-out"  href="#game-modal" onmousedown="lightsOut()"><i class="material-icons">highlight</i></a>
+    <div id="game-modal">
+        <div id="game-window">
+            <canvas id="render-window" width="1250" height="700"></canvas>
+            <!-- <div id="chat-window">
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+                <p class="chat-message"><span class="username">Dummy:</span>This is a test</p>
+            </div> -->
+            <a id="close-modal" href="#main-page" onmousedown="leaveLobby()"><i class="material-icons">close</i></a>
+            <a id="lights-out" href="#game-modal" onmousedown="lightsOut()"><i class="material-icons">highlight</i></a>
+        </div>
     </div>
-</div>
 
-<!-- Load Scripts after HTML is loaded -->
-<script src="/js/signalr/dist/browser/signalr.min.js"></script>
-<script src="/js/site.js"></script>
-<script src="/js/indexScript.js"></script>
+    <!-- Load Scripts after HTML is loaded -->
+    <script src="/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="/lib/msgpack5/msgpack5.min.js"></script>
+    <script src="/lib/@microsoft/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.min.js"></script>
+    <script src="/js/site.js"></script>
+    <script src="/js/indexScript.js"></script>
 
 </body>
 </html>
