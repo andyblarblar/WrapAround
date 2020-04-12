@@ -37,9 +37,8 @@
         <p style="color: red">IsDragging @_isDragging</p>
     }
 
-    <input type="checkbox" @bind="@_isUsingGrid" />
-    <span>Snap to grid</span>
-    <input type="range" min="1" max="200" @bind="@_grid" @bind:event="oninput" /> <span>@_grid</span> <input type="checkbox" @bind="@_isDrawingGrid"/> <span>draw grid</span>
+    <input type="checkbox" id="grid-draw-toggle" @bind="@_isUsingGrid" @oninput="@(async args =>{ await Redraw(); await OnGridChange(); })"/> <span>Snap to grid</span>
+    <input type="range" min="1" max="200" @bind="@_grid" @bind:event="oninput" @onchange="@OnGridChange"/> <span>@_grid</span> <input type="checkbox" @bind="@_isDrawingGrid"/> <span>draw grid</span>
     <br />
 
     <button @onclick="@DownloadMap">download map</button>
@@ -177,7 +176,19 @@
         //if shift clicking, create a new rectangle under mouse
         else if (e.ShiftKey)
         {
-            _blocks.Add(new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20)));
+            //snap on creation
+            if (_isUsingGrid)
+            {
+                var topLeft = new Vector2(
+                    (float) Math.Round(await GetRealMouseX(e) / _grid) * _grid,
+                    (float) Math.Round(await GetRealMouseY(e) / _grid) * _grid);
+
+                _blocks.Add(new Hitbox(topLeft,new Vector2(topLeft.X+40,topLeft.Y+20)));
+            }
+            else
+            {
+                _blocks.Add(new Hitbox(new Vector2(await GetRealMouseX(e), await GetRealMouseY(e)), new Vector2(await GetRealMouseX(e) + 40, await GetRealMouseY(e) + 20)));
+            }
 
             await Redraw();
         }
@@ -277,6 +288,24 @@
         }
     }
 
+    /// <summary>
+    /// adjust all blocks to new grid size
+    /// </summary>
+    private async Task OnGridChange()
+    {
 
+        _blocks = _blocks.Select(block =>
+        {
+            //Snap to grid
+            var topLeft = new Vector2(
+                (float) Math.Round(block.TopLeft.X / _grid) * _grid,
+                (float) Math.Round(block.TopLeft.Y / _grid) * _grid);
+
+            return new Hitbox(topLeft, new Vector2(topLeft.X + 40, topLeft.Y + 20));
+        }).ToList();
+
+        //redraw
+        await Redraw();
+    }
 }
 }
