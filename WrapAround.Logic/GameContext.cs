@@ -9,27 +9,38 @@ using System.Timers;
 using WrapAround.Logic.Entities;
 using WrapAround.Logic.Interfaces;
 using WrapAround.Logic.Util;
+using MessagePack;
 
 namespace WrapAround.Logic
 {
+    [MessagePackObject]
     public class GameContext
     {
+        [IgnoreMember]
         public readonly int Id;
 
+        [IgnoreMember]
         public const int MaxPlayers = 16;
 
+        [IgnoreMember]
         private readonly List<GameMap> _maps;
 
+        [Key("players")]
         public List<Paddle> Players { get; }
 
+        [Key("ball")]
         public Ball Ball { get; }
 
+        [Key("currentMap")]
         public GameMap CurrentMap { get; set; }
 
+        [Key("scoreBoard")]
         public ScoreBoard ScoreBoard { get; }
 
+        [Key("lobbyState")]
         public LobbyStates LobbyState { get; set; }
 
+        [IgnoreMember]
         private Timer UpdateTimer { get; }
 
         public GameContext(int id, List<GameMap> maps)
@@ -52,6 +63,20 @@ namespace WrapAround.Logic
 
             //start the game if you have at least 2 players after 20 seconds
             UpdateTimer.Elapsed += (sender, args) => LobbyState = Players.Count > 1 ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
+        }
+
+        /// <summary>
+        /// for messagepack serialization
+        /// </summary>
+        [SerializationConstructor]
+        public GameContext(List<Paddle> players, Ball ball, GameMap currentMap, ScoreBoard scoreBoard, LobbyStates lobbyState)
+        {
+            Players = players;
+            Ball = ball;
+            CurrentMap = currentMap;
+            ScoreBoard = scoreBoard;
+            LobbyState = lobbyState;
+
         }
 
         /// <summary>

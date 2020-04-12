@@ -17,16 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="gameMaps\level %282%29.wamap" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="gameMaps\level (2).wamap">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
@@ -40,7 +30,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="3.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WrapAround.Logic\WrapAround.Logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\lib\%40microsoft\signalr-protocol-msgpack\dist\browser\signalr-protocol-msgpack.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\msgpack5\msgpack5.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

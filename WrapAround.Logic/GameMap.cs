@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text.Json.Serialization;
 using WrapAround.Logic.Entities;
+using MessagePack;
 
 namespace WrapAround.Logic
 {
@@ -10,15 +11,20 @@ namespace WrapAround.Logic
     /// Represents the layout of a map.
     /// </summary>
     [Serializable]
+    [MessagePackObject]
     public class GameMap
     {
+        [Key("blocks")]
         public List<Block> Blocks { get; set; }
 
         [JsonIgnore]
+        [IgnoreMember]
         public (int, int) CanvasSize { get; set; } = (1250, 703);
 
+        [IgnoreMember]
         public GoalZone LeftGoal;
 
+        [IgnoreMember]
         public GoalZone RightGoal;
 
         /// <summary>

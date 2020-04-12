@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Numerics;
 using System.Text.Json.Serialization;
+using MessagePack;
 
 namespace WrapAround.Logic.Util
 {
     /// <summary>
     /// A rectangle representing a hitbox
     /// </summary>
+    [MessagePackObject]
     public struct Hitbox
     {
         [JsonConverter(typeof(Vector2Converter))]
+        [Key("topLeft")]
         public Vector2 TopLeft { get; set; }
 
         [JsonConverter(typeof(Vector2Converter))]
+        [Key("bottomRight")]
         public Vector2 BottomRight { get; set; }
 
         public Hitbox(Vector2 topLeft, Vector2 bottomRight)
