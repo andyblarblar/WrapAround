@@ -1,16 +1,16 @@
 ﻿html {
-    --root-font-size: 2.5rem;
-    --root-corner-radius: 0rem;
-    --root-color-bg: #1E1E1E;
-    --root-color-fg: #EEEEEE;
-    --lobby-box-color-bg: #252526;
-    --lobby-box-color-fg: #333333;
-    --lobby-box-color-a1: #0C7D9D;
-    --animation-speed: 0.1s;
-    --game-canvas-width: 1250px;
-    --game-canvas-height: calc(--game-canvas-width * (9/16));
-    --team-1-color: var(--lobby-box-color-bg);
-    --team-2-color: var(--lobby-box-color-fg);
+	--root-font-size: 2.5rem;
+	--root-corner-radius: 0rem;
+	--root-color-bg: #1E1E1E;
+	--root-color-fg: #EEEEEE;
+	--lobby-box-color-bg: #252526;
+	--lobby-box-color-fg: #333333;
+	--lobby-box-color-a1: #0C7D9D;
+	--animation-speed: 0.1s;
+	--game-canvas-width: 1250px;
+	--game-canvas-height: calc(--game-canvas-width * (9/16));
+	--team-1-color: var(--lobby-box-color-bg);
+	--team-2-color: var(--lobby-box-color-fg);
 }
 
 /*================
@@ -18,92 +18,114 @@
 ================*/
 
 html {
-    font-family: 'Roboto', sans-serif;
-    font-size: var(--root-font-size);
-    color: var(--root-color-fg);
-    overflow: hidden;
+	font-family: 'Roboto', sans-serif;
+	font-size: var(--root-font-size);
+	color: var(--root-color-fg);
+	overflow: hidden;
 }
 
 body {
-    background: var(--root-color-bg);
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    margin: 0px;
-    height: 100%;
+	background: var(--root-color-bg);
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	margin: 0px;
+	height: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    margin-block-start: 0;
-    margin-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
+	margin-block-start: 0;
+	margin-block-end: 0;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
 }
 
 #lobby-select ::selection, #side-select ::selection, #header .material-icons::selection {
-    opacity: 0;
+	opacity: 0;
 }
 
 i#level-editor.material-icons {
-    transition: opacity var(--animation-speed);
+	transition: opacity var(--animation-speed);
 }
-    #level-editor:hover {
-        opacity: 0.4;
-    }
+	#level-editor:hover {
+		opacity: 0.4;
+	}
+
+#github-logo {
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	height: 0.5rem;
+	width: 0.5rem;
+	transform: scale(1.5);
+	fill: var(--root-color-fg);
+	transition: opacity var(--animation-speed);
+}
+	#github-logo svg, #github-logo svg path {
+		height: 0.5rem;
+		width: 0.5rem;
+	}
+
+	#github-logo svg path {
+		transform: translate(-2px, -2px);
+	}
+
+	#github-logo:hover {
+		opacity: 0.4;
+	}
 
 /*================
   Header Styling
 ================*/
 
 #header {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    width: 100%;
-    overflow: hidden;
+	display: flex;
+	align-items: center;
+	padding: 0.5rem;
+	width: 100%;
+	overflow: hidden;
 }
 
-    #header > h2 {
-        font-weight: 500;
-    }
-        #header > h2 > span {
-            font-weight: 100;
-        }
+	#header > h2 {
+		font-weight: 500;
+	}
+		#header > h2 > span {
+			font-weight: 100;
+		}
 
-    #header .material-icons {
-        transition: transform var(--animation-speed);
-        position: absolute;
-        font-size: 0.75rem;
-        right: 1.25rem;
-        color: var(--root-color-fg);
-    }
+	#header .material-icons {
+		position: absolute;
+		font-size: 0.75rem;
+		right: 1.25rem;
+		color: var(--root-color-fg);
+	}
 
 /*=========================
   Lobby Selection Styling
 =========================*/
 
 #side-select {
-    display: flex;
-    position: fixed;
-    justify-content: center;
-    align-items: center;
-    top: calc(50% - 192px);
-    left: 0;
-    right: 0;
-    bottom: 50%;
+	display: flex;
+	position: fixed;
+	justify-content: center;
+	align-items: center;
+	top: calc(50% - 192px);
+	left: 0;
+	right: 0;
+	bottom: 50%;
 }
 
 .side {
-    background-color: var(--lobby-box-color-bg);
-    font-size: 0.5rem;
-    width: fit-content;
-    padding: 0.75rem;
-    margin: 0 !important;
+	background-color: var(--lobby-box-color-bg);
+	font-size: 0.5rem;
+	width: fit-content;
+	padding: 0.75rem;
+	margin: 0 !important;
 }
 
 #side-active {
-    background-color: var(--lobby-box-color-fg);
-    box-shadow: none !important;
+	background-color: var(--lobby-box-color-fg);
+	box-shadow: none !important;
 }
 
 /*=========================
@@ -111,134 +133,134 @@ i#level-editor.material-icons {
 =========================*/
 
 #lobby-select {
-    display: flex;
-    position: fixed;
-    justify-content: center;
-    align-items: center;
-    top: calc(50% + 64px);
-    left: 0;
-    right: 0;
-    bottom: 50%;
+	display: flex;
+	position: fixed;
+	justify-content: center;
+	align-items: center;
+	top: calc(50% + 64px);
+	left: 0;
+	right: 0;
+	bottom: 50%;
 }
 
 a.lobby-box {
-    display: block;
-    transition: all var(--animation-speed);
-    background: var(--lobby-box-color-bg);
-    border-radius: var(--root-corner-radius);
-    margin: 1rem;
-    /* Remove link styling */
-    text-decoration: none;
-    color: var(--root-color-fg);
-    /* Box highlight */
-    box-shadow: 0 0 0 2px var(--lobby-box-color-fg) inset;
+	display: block;
+	transition: all var(--animation-speed);
+	background: var(--lobby-box-color-bg);
+	border-radius: var(--root-corner-radius);
+	margin: 1rem;
+	/* Remove link styling */
+	text-decoration: none;
+	color: var(--root-color-fg);
+	/* Box highlight */
+	box-shadow: 0 0 0 2px var(--lobby-box-color-fg) inset;
 }
 
-    a.lobby-box > .lobby-title {
-        font-size: 1rem;
-        font-weight: 700;
-        font-family: monospace;
-        /* Box highlight */
-        margin: 1rem 1rem 0.125rem 1rem;
-    }
+	a.lobby-box > .lobby-title {
+		font-size: 1rem;
+		font-weight: 700;
+		font-family: monospace;
+		/* Box highlight */
+		margin: 1rem 1rem 0.125rem 1rem;
+	}
 
-    a.lobby-box > .lobby-playernum {
-        background: var(--lobby-box-color-fg);
-        font-size: 0.5rem;
-        /* Box highlight */
-        transition: all var(--animation-speed);
-        padding: 0.25rem 0.25rem 0.25rem 1rem;
-        margin: 2px 0 1rem 0;
-    }
+	a.lobby-box > .lobby-playernum {
+		background: var(--lobby-box-color-fg);
+		font-size: 0.5rem;
+		/* Box highlight */
+		transition: all var(--animation-speed);
+		padding: 0.25rem 0.25rem 0.25rem 1rem;
+		margin: 2px 0 1rem 0;
+	}
 
-    /* Box highlight hover */
-    a.lobby-box:hover {
-        box-shadow: 0 0 0 3px var(--lobby-box-color-a1) inset;
-    }
+	/* Box highlight hover */
+	a.lobby-box:hover {
+		box-shadow: 0 0 0 3px var(--lobby-box-color-a1) inset;
+	}
 
-        a.lobby-box:hover > .lobby-playernum {
-            margin: 0 3px 1rem 3px;
-            padding-left: calc(1rem - 3px);
-        }
+		a.lobby-box:hover > .lobby-playernum {
+			margin: 0 3px 1rem 3px;
+			padding-left: calc(1rem - 3px);
+		}
 
 /*====================
   Game Modal Styling
 ====================*/
 
 #game-modal {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    /* Transition properties */
-    transition: all calc(var(--animation-speed) * 2);
-    pointer-events: none;
-    visibility: hidden;
-    opacity: 0;
-    /* Remove link styling */
-    text-decoration: none;
-    color: var(--root-color-fg);
+	display: flex;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.5);
+	/* Transition properties */
+	transition: all calc(var(--animation-speed) * 2);
+	pointer-events: none;
+	visibility: hidden;
+	opacity: 0;
+	/* Remove link styling */
+	text-decoration: none;
+	color: var(--root-color-fg);
 }
 
-    #game-modal:target {
-        visibility: visible;
-        opacity: 1;
-        pointer-events: auto;
-    }
+	#game-modal:target {
+		visibility: visible;
+		opacity: 1;
+		pointer-events: auto;
+	}
 
-    #game-modal > #modal-layout {
-        display: flex;
-        flex-direction: column;
-        background: var(--lobby-box-color-bg);
-        width: calc(var(--game-canvas-width) + 3rem);
-        height: calc(var(--game-canvas-height) + 2rem);
-        margin: auto;
-    }
+	#game-modal > #modal-layout {
+		display: flex;
+		flex-direction: column;
+		background: var(--lobby-box-color-bg);
+		width: calc(var(--game-canvas-width) + 3rem);
+		height: calc(var(--game-canvas-height) + 2rem);
+		margin: auto;
+	}
 
-        #game-modal > #modal-layout canvas {
-            background: #050505;
-            width: var(--game-canvas-width) !important;
-            height: var(--game-canvas-height) !important;
-            margin: 0 0 1rem 1rem;
-        }
+		#game-modal > #modal-layout canvas {
+			background: #050505;
+			width: var(--game-canvas-width) !important;
+			height: var(--game-canvas-height) !important;
+			margin: 0 0 1rem 1rem;
+		}
 
-    #game-modal #game-window {
-        display: flex;
-        flex-direction: row;
-        align-items: top;
-    }
+	#game-modal #game-window {
+		display: flex;
+		flex-direction: row;
+		align-items: top;
+	}
 
-    #game-modal #game-window #button-bar {
-        display: flex;
-        flex-direction: column;
-    }
+	#game-modal #game-window #button-bar {
+		display: flex;
+		flex-direction: column;
+	}
 
-    #game-modal #scoreboard {
-        display: flex;
-        justify-content: space-around;
-        font-family: 'Roboto Mono', monospace;
-        margin: 0.5rem 2rem 0 1rem;
-    }
-    
-    #game-modal #button-bar a {
-        transition: background var(--animation-speed);
-        border-radius: 1rem;
-        color: var(--root-color-fg);
-        padding: 12px;
-        margin-left: calc(1rem - 24px);
-    }
+	#game-modal #scoreboard {
+		display: flex;
+		justify-content: space-around;
+		font-family: 'Roboto Mono', monospace;
+		margin: 0.5rem 2rem 0 1rem;
+	}
+	
+	#game-modal #button-bar a {
+		transition: background var(--animation-speed);
+		border-radius: 1rem;
+		color: var(--root-color-fg);
+		padding: 12px;
+		margin-left: calc(1rem - 24px);
+	}
 
-        #game-modal #button-bar a:hover {
-            background: rgba(255,255,255,0.2);
-        }
+		#game-modal #button-bar a:hover {
+			background: rgba(255,255,255,0.2);
+		}
 
-    #game-modal #button-bar #close-modal {
-        color: #FF0000;
-    }
+	#game-modal #button-bar #close-modal {
+		color: #FF0000;
+	}
 
-    #game-modal #button-bar #lights-out {
-        
-    }
+	#game-modal #button-bar #lights-out {
+		
+	}
