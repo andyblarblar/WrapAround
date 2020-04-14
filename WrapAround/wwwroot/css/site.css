@@ -8,7 +8,8 @@
     --lobby-box-color-a1: #0C7D9D;
     --animation-speed: 0.1s;
     --game-canvas-width: 1250px;
-    --game-canvas-height: calc(--game-canvas-width * (9/16)) --team-1-color: var(--lobby-box-color-bg);
+    --game-canvas-height: calc(--game-canvas-width * (9/16));
+    --team-1-color: var(--lobby-box-color-bg);
     --team-2-color: var(--lobby-box-color-fg);
 }
 
@@ -17,7 +18,7 @@
 ================*/
 
 html {
-    font-family: Roboto, sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: var(--root-font-size);
     color: var(--root-color-fg);
     overflow: hidden;
@@ -190,7 +191,7 @@ a.lobby-box {
 
     #game-modal > #game-window {
         display: flex;
-        justify-content: left;
+        flex-direction: column;
         align-items: top;
         background: var(--lobby-box-color-bg);
         width: calc(var(--game-canvas-width) + 3rem);
@@ -198,13 +199,20 @@ a.lobby-box {
         margin: auto;
     }
 
-        #game-modal > #game-window > canvas {
+        #game-modal > #game-window canvas {
             background: #050505;
             width: var(--game-canvas-width) !important;
             height: var(--game-canvas-height) !important;
-            margin: 1rem;
+            margin: 0 1rem 1rem 1rem;
         }
 
+    #game-modal #scoreboard {
+        display: flex;
+        justify-content: space-around;
+        font-family: 'Roboto Mono', monospace;
+        margin: 0.5rem 2rem 0 1rem;
+    }
+    
     #game-modal a {
         position: absolute;
         right: calc((100% - (var(--game-canvas-width) + 2rem)) / 2 - 0.5rem);
@@ -222,8 +230,9 @@ a.lobby-box {
 
     #game-modal #close-modal {
         color: #FF0000;
+        top: 1.5rem;
     }
 
     #game-modal #lights-out {
-        top: 4rem;
+        top: 3rem;
     }
