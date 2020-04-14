@@ -183,7 +183,11 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 connection.on("ReceiveContextUpdate", (context) => {
     // Store the context
     _context = context;
-    
+
+    document.getElementById("left-side").textContent = _context.scoreBoard.score.X;
+    document.getElementById("right-side").textContent = _context.scoreBoard.score.Y;
+
+
     // Search for this player's paddle by ID
     context.players.forEach((item) => {
 
