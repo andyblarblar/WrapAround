@@ -17,6 +17,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="gameMaps\default.wamap" />
+    <None Remove="gameMaps\hallway.wamap" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="gameMaps\default.wamap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="gameMaps\hallway.wamap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
