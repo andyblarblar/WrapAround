@@ -184,8 +184,8 @@ connection.on("ReceiveContextUpdate", (context) => {
     // Store the context
     _context = context;
 
-    document.getElementById("left-side").textContent = _context.scoreBoard.score.X;
-    document.getElementById("right-side").textContent = _context.scoreBoard.score.Y;
+    document.getElementById("left-side").textContent = _context.scoreBoard.score.Y;
+    document.getElementById("right-side").textContent = _context.scoreBoard.score.X;
 
 
     // Search for this player's paddle by ID

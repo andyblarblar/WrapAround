@@ -58,7 +58,7 @@ namespace WrapAround.Logic
             {
                 AutoReset = true,
                 Enabled = true,
-                Interval = 20000
+                Interval = 5000
             };
 
             //start the game if you have at least 2 players after 20 seconds

@@ -22,7 +22,7 @@ namespace WrapAround.Logic.Entities
         private Vector2 _rate;
 
         [IgnoreMember]
-        private const int Speed = 3;
+        private const int Speed = 5;
 
         [IgnoreMember]
         private const float MaxAngle = MathF.PI * 5 / 12;// ~75 degrees
