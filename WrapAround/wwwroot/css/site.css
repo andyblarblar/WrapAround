@@ -189,22 +189,32 @@ a.lobby-box {
         pointer-events: auto;
     }
 
-    #game-modal > #game-window {
+    #game-modal > #modal-layout {
         display: flex;
         flex-direction: column;
-        align-items: top;
         background: var(--lobby-box-color-bg);
         width: calc(var(--game-canvas-width) + 3rem);
         height: calc(var(--game-canvas-height) + 2rem);
         margin: auto;
     }
 
-        #game-modal > #game-window canvas {
+        #game-modal > #modal-layout canvas {
             background: #050505;
             width: var(--game-canvas-width) !important;
             height: var(--game-canvas-height) !important;
-            margin: 0 1rem 1rem 1rem;
+            margin: 0 0 1rem 1rem;
         }
+
+    #game-modal #game-window {
+        display: flex;
+        flex-direction: row;
+        align-items: top;
+    }
+
+    #game-modal #game-window #button-bar {
+        display: flex;
+        flex-direction: column;
+    }
 
     #game-modal #scoreboard {
         display: flex;
@@ -213,26 +223,22 @@ a.lobby-box {
         margin: 0.5rem 2rem 0 1rem;
     }
     
-    #game-modal a {
-        position: absolute;
-        right: calc((100% - (var(--game-canvas-width) + 2rem)) / 2 - 0.5rem);
-        transform: translate(50%, -12px);
+    #game-modal #button-bar a {
         transition: background var(--animation-speed);
         border-radius: 1rem;
         color: var(--root-color-fg);
-        margin: 1rem;
         padding: 12px;
+        margin-left: calc(1rem - 24px);
     }
 
-        #game-modal a:hover {
+        #game-modal #button-bar a:hover {
             background: rgba(255,255,255,0.2);
         }
 
-    #game-modal #close-modal {
+    #game-modal #button-bar #close-modal {
         color: #FF0000;
-        top: 1.5rem;
     }
 
-    #game-modal #lights-out {
-        top: 3rem;
+    #game-modal #button-bar #lights-out {
+        
     }
