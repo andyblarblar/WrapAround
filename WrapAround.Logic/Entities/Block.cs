@@ -15,7 +15,7 @@ namespace WrapAround.Logic.Entities
     /// </summary>
     [Serializable]
     [MessagePackObject]
-    public class Block : IDestructable, IQuadrantHitbox, ICollidable
+    public class Block : IDestructable, IQuadrantHitbox, ICollidable, IEquatable<Block>
     {
         [Key("health")]
         public int health { get; set; }
@@ -99,6 +99,36 @@ namespace WrapAround.Logic.Entities
         {
             health = 5;
             Color = "rgb(0,0,0)";
+        }
+
+        public bool Equals(Block other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return health == other.health && Hitbox.Equals(other.Hitbox);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Block) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(health, Hitbox);
+        }
+
+        public static bool operator ==(Block left, Block right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Block left, Block right)
+        {
+            return !Equals(left, right);
         }
     }
 }

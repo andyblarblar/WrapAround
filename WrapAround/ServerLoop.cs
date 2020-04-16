@@ -45,8 +45,18 @@ namespace WrapAround
             {
                 Parallel.ForEach(_gameContextList, async context =>
                 {
+                    GameContext valContext = null;
+
                     await context.Update();
-                    await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate", context);//send to frontend
+
+                    //If blocks have not changed, then do not send to frontend to save bandwidth
+                    if (!context.BlocksHaveChanged)
+                    {
+                        //Create new Object to avoid mutating properties
+                        valContext = new GameContext(context.Players, context.Ball, new GameMap(), context.ScoreBoard, context.LobbyState);
+                    }
+
+                    await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate", context.BlocksHaveChanged ? context : valContext);//send to frontend
 
                 });
 

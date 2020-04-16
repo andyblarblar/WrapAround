@@ -34,6 +34,14 @@ namespace WrapAround.Logic
         [Key("currentMap")]
         public GameMap CurrentMap { get; set; }
 
+        /// <summary>
+        /// Bit marked when blocks have changed during an update. 
+        /// </summary>
+        [Key("blocksHaveChanged")]
+        public bool BlocksHaveChanged { get; set; } = true;
+
+        private List<Block> OldBlocks { get; set; } = new List<Block>();
+
         [Key("scoreBoard")]
         public ScoreBoard ScoreBoard { get; }
 
@@ -76,7 +84,7 @@ namespace WrapAround.Logic
             CurrentMap = currentMap;
             ScoreBoard = scoreBoard;
             LobbyState = lobbyState;
-
+            BlocksHaveChanged = false;
         }
 
         /// <summary>
@@ -187,6 +195,13 @@ namespace WrapAround.Logic
                                 block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[1]))
                             .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
                             .ForAll(async block => await CollideAsync(block, Ball));
+
+                        //If blocks have changed sense last iteration, mark diff bit
+                        BlocksHaveChanged = CurrentMap.Blocks.Except(OldBlocks).Any();
+                        
+                        //update blocks for diffing
+                        OldBlocks = CurrentMap.Blocks.Copy();
+
                     }
 
                     //Goal scoring

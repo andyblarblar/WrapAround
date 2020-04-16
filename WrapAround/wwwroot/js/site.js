@@ -179,11 +179,34 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
     }
 });
 
+var oldBlockArray;
 // Called every 17ms when getting context from the server
 connection.on("ReceiveContextUpdate", (context) => {
-    // Store the context
-    _context = context;
 
+    //Always get blocks on first pass
+    if (oldBlockArray === undefined) {
+        oldBlockArray = context.currentMap.blocks;
+        _context = context;
+    }
+    //Update blocks if bit set
+    else if (context.blocksHaveChanged) {
+        //update frontend blocks on change
+        oldBlockArray = context.currentMap.blocks;
+
+        // Store the context (blocks cannot be null here, so no need for oldBlocks)
+        _context = context;
+    }
+    //Render in memory blocks if bit not set
+    else {
+        // Store the context (blocks ARE null here)
+        _context = context;
+        // Fill the null blocks with the in memory block array
+        _context.currentMap.blocks = oldBlockArray; 
+
+    }
+
+
+    //update Scoreboard
     document.getElementById("left-side").textContent = _context.scoreBoard.score.Y;
     document.getElementById("right-side").textContent = _context.scoreBoard.score.X;
 
@@ -227,7 +250,7 @@ function render(context) {
     // Render Blocks
     let blockList = context.currentMap.blocks;
 
-    if (typeof blockList !== undefined) {
+    if (blockList !== null) { 
         blockList.forEach((item) => {
             //if block is not destroyed
             if (item.health > 0) {

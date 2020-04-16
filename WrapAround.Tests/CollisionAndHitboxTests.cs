@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
 using System.Numerics;
 using WrapAround.Logic.Entities;
 using WrapAround.Logic.Util;
@@ -56,6 +59,44 @@ namespace WrapAround.Tests
 
             Assert.Pass();
         }
+
+
+        [Test]
+        public void BlockArraysDiff()
+        {
+            var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+            var BA2 = new List<Block>();
+
+            BA1[0].Damage();
+
+            Assert.True(BA1.Except(BA2).Any());
+
+            BA2 = BA1.Copy();//note the copy
+
+            BA1[0].Damage();
+
+            Assert.True(BA1.Except(BA2).Any());
+
+        }
+        
+        [Test]
+        public void BlockArraysDiffButFalseThisTime()
+        {
+            var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+            var BA2 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+
+            Assert.False(BA1.Except(BA2).Any());
+        }  
+        
+        [Test]
+        public void BlockArraysDiffWithEmptyArray()
+        {
+            var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+            var BA2 = new List<Block>();
+
+            Assert.True(BA1.Except(BA2).Any());
+        }
+
 
 
 
