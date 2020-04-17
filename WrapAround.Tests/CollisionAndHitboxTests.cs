@@ -77,6 +77,12 @@ namespace WrapAround.Tests
 
             Assert.True(BA1.Except(BA2).Any());
 
+            //simulate no change
+
+            BA2 = BA1.Copy();
+
+            Assert.False(BA1.Except(BA2).Any());
+
         }
         
         [Test]

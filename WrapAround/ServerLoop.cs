@@ -7,6 +7,7 @@ using WrapAround.hubs;
 using WrapAround.Logic;
 using WrapAround.Logic.Entities;
 using WrapAround.Logic.Interfaces;
+using WrapAround.Logic.Util;
 
 namespace WrapAround
 {
@@ -54,6 +55,7 @@ namespace WrapAround
                     {
                         //Create new Object to avoid mutating properties
                         valContext = new GameContext(context.Players, context.Ball, new GameMap(), context.ScoreBoard, context.LobbyState);
+                       
                     }
 
                     await hubContext.Clients.Group($"lobby{context.Id}").SendAsync("ReceiveContextUpdate", context.BlocksHaveChanged ? context : valContext);//send to frontend

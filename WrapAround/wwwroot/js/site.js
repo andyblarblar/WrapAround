@@ -182,7 +182,7 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 var oldBlockArray;
 // Called every 17ms when getting context from the server
 connection.on("ReceiveContextUpdate", (context) => {
-
+   
     //Always get blocks on first pass
     if (oldBlockArray === undefined) {
         oldBlockArray = context.currentMap.blocks;
