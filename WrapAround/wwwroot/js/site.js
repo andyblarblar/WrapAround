@@ -244,7 +244,7 @@ function render(context) {
     //ctx.clearRect(0, 0, ctx.width, ctx.height);
 
     // Render Background and clear previous frame
-    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillStyle = "rgb(5,5,5)";
     ctx.fillRect(0, 0, scn.width, scn.height);
 
     // Render Blocks

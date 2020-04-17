@@ -51,7 +51,7 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         public Block()
         {
-            Color = "rgb(0,0,0)";
+            Color = "rgb(153,217,234)";//change to 5,5,5 for invisible mode
             SegmentController = new QuadrantController();
 
             //initialise position
@@ -78,12 +78,12 @@ namespace WrapAround.Logic.Entities
 
             Color = health switch
             {
-                2 => "rgb(255,0,0)",
-                4 => "rgb(255,111,0)",
-                6 => "rgb(255,255,0)",
-                8 => "rgb(121,120,95)",
-                10 => "rgb(0,0,0)",
-                _ => "rgb(255,255,255)"
+                2 => "rgb(240,255,0)",
+                4 => "rgb(132,255,0)",
+                6 => "rgb(0,255,156)",
+                8 => "rgb(53,205,255)",
+                10 => "rgb(153,217,234)",
+                _ => "rgb(153,217,234)"
             };
 
         }
@@ -98,7 +98,7 @@ namespace WrapAround.Logic.Entities
         public void Reset()
         {
             health = 5;
-            Color = "rgb(0,0,0)";
+            Color = "rgb(255,255,255)";
         }
 
         public bool Equals(Block other)
