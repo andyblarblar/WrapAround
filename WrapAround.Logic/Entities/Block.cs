@@ -39,7 +39,7 @@ namespace WrapAround.Logic.Entities
         {
             SegmentController = new QuadrantController();
 
-            health = 5;
+            health = 10;
             Hitbox = new Hitbox(position, new Vector2(position.X + 40, position.Y + 20));
 
             //initialise position
@@ -78,11 +78,11 @@ namespace WrapAround.Logic.Entities
 
             Color = health switch
             {
-                1 => "rgb(255,0,0)",
-                2 => "rgb(255,111,0)",
-                3 => "rgb(255,255,0)",
-                4 => "rgb(121,120,95)",
-                5 => "rgb(0,0,0)",
+                2 => "rgb(255,0,0)",
+                4 => "rgb(255,111,0)",
+                6 => "rgb(255,255,0)",
+                8 => "rgb(121,120,95)",
+                10 => "rgb(0,0,0)",
                 _ => "rgb(255,255,255)"
             };
 

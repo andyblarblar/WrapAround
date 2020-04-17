@@ -40,6 +40,9 @@ namespace WrapAround.Logic.Implimentations
 
             var mapList = maps.ToList();
 
+            //add backwards compatibility for old maps where the health was lower
+            mapList.ForEach(map => map.Blocks.ForEach(block => block.health = 10));
+
             return mapList;
         }
     }
