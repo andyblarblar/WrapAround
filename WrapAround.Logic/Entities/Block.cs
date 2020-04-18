@@ -97,8 +97,8 @@ namespace WrapAround.Logic.Entities
 
         public void Reset()
         {
-            health = 5;
-            Color = "rgb(255,255,255)";
+            health = 10;
+            Color = "rgb(153,217,234)";
         }
 
         public bool Equals(Block other)
