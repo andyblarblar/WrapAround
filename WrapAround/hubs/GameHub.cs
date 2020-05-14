@@ -14,7 +14,7 @@ namespace WrapAround.hubs
         /// <summary>
         /// The singleton that manages the state of all lobbies.
         /// </summary>
-        private readonly IServerLoop serverLoop;
+        private readonly IServerLoop _serverLoop;
 
        
 
@@ -22,7 +22,7 @@ namespace WrapAround.hubs
 
         public GameHub(IServerLoop serverLoop, ILogger<GameHub> logger)
         {
-            this.serverLoop = serverLoop;
+            this._serverLoop = serverLoop;
             
             this.logger = logger;
         }
@@ -37,7 +37,7 @@ namespace WrapAround.hubs
         /// <returns>the id given, -1 if lobby is full.</returns>
         public async Task AddPlayer(int gameId, bool isOnRight, string hash)
         {
-            var id = await serverLoop.AddPlayer(gameId, isOnRight, hash);
+            var id = await _serverLoop.AddPlayer(gameId, isOnRight, hash);
             await Clients.Caller.SendAsync("ReceiveId", id);
             if (id != -1)
             {
@@ -51,12 +51,11 @@ namespace WrapAround.hubs
         /// <summary>
         /// Updates the location of a player.
         /// </summary>
-        /// <param name="player">a complete representation of the players state, as reported by the client.</param>
         /// <returns></returns>
         public async Task UpdatePlayerPosition(string hash, float posX,float posY, int gameId, int Id)
         {
             var position = new Vector2(posX,posY);
-            await serverLoop.UpdatePlayerPosition(new Paddle(){GameId = gameId, Position = position, Hash = hash, Id = Id});
+            await _serverLoop.UpdatePlayerPosition(new Paddle(){GameId = gameId, Position = position, Hash = hash, Id = Id});
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace WrapAround.hubs
         /// <returns></returns>
         public async Task GetLobbyPlayerCounts()
         {
-            var lobbyCounts = await serverLoop.GetLobbyPlayerCounts();
+            var lobbyCounts = await _serverLoop.GetLobbyPlayerCounts();
 
             await Clients.Caller.SendAsync("ReceiveLobbyCounts", lobbyCounts);
 
@@ -78,7 +77,7 @@ namespace WrapAround.hubs
         /// <returns></returns>
         public async Task RemovePlayerFromLobby(Paddle player)
         {
-            await serverLoop.RemovePlayer(player);
+            await _serverLoop.RemovePlayer(player);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby{player.GameId}");
         }
 

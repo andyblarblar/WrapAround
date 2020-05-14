@@ -13,7 +13,7 @@ namespace WrapAround.Logic.Entities
     /// A player controlled paddle of variable height but static 10 pixel width
     /// </summary>
     [MessagePackObject]
-    public class Paddle : ICollidable
+    public class Paddle : ICollidable, IEquatable<Paddle> //Note: needs to be class for use in async methods upstream
     {
         [Key("id")]
         public int Id { get; set; }
@@ -71,9 +71,12 @@ namespace WrapAround.Logic.Entities
             Hash = hash;
             Hitbox = hitbox;
             Height = height;
+            Position = hitbox.TopLeft;
+            StartingPosition = Position;
         }
 
-        public Paddle() {
+        public Paddle()
+        {
 
         }
 
@@ -93,22 +96,46 @@ namespace WrapAround.Logic.Entities
         /// <param name="playerPosition"></param>
         public void Update(Vector2 playerPosition)
         {
-            
             Position = playerPosition;
             Hitbox = new Hitbox(playerPosition, new Vector2(Position.X + 10, Position.Y + Height));
-
         }
 
-
-        public Task Collide(object collided)
-        {
-            return Task.CompletedTask;//purposely empty, for future use
-        }
 
         public override string ToString()
         {
             return $"{Hitbox}";
+        }
 
+        public bool IsCollidingWith(in Hitbox hitbox) => Hitbox.IsCollidingWith(in hitbox);
+
+        public void Collide<T>(in T collidedWith)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(Paddle other)
+        {
+            return Id == other.Id && IsOnRight == other.IsOnRight && GameId == other.GameId && Hitbox.Equals(other.Hitbox) && Height.Equals(other.Height) && Hash == other.Hash;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Paddle other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, IsOnRight, GameId, Hitbox, Height, Hash);
+        }
+
+        public static bool operator ==(Paddle left, Paddle right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Paddle left, Paddle right)
+        {
+            return !left.Equals(right);
         }
     }
 }

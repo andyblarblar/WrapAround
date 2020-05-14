@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
+using WrapAround.Logic.Entities;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Logic.Implimentations
@@ -39,9 +40,11 @@ namespace WrapAround.Logic.Implimentations
                        select JsonSerializer.Deserialize<GameMap>(File.ReadAllText(file));
 
             var mapList = maps.ToList();
+            
+            mapList.ForEach(map => Array.ForEach(map.Blocks,b => Console.WriteLine(b.Hitbox)));
 
             //add backwards compatibility for old maps where the health was lower
-            mapList.ForEach(map => map.Blocks.ForEach(block => block.health = 10));
+            mapList.ForEach(map => map.Blocks = Array.ConvertAll(map.Blocks,block => new Block(block.Hitbox.TopLeft)));
 
             return mapList;
         }

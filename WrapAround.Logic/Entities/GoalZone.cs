@@ -8,11 +8,11 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// Represents the area that counts as a goal. 
     /// </summary>
-    public class GoalZone
+    public readonly struct GoalZone : IEquatable<GoalZone>
     {
-        public Vector2 Position { get; set; }
+        public Vector2 Position { get; }
 
-        public Hitbox Hitbox { get; set; }
+        public Hitbox Hitbox { get; }
 
         public GoalZone(Vector2 position)
         {
@@ -22,6 +22,29 @@ namespace WrapAround.Logic.Entities
 
         public bool IsCollidingWith(in Hitbox hitbox) => Hitbox.IsCollidingWith(in hitbox);
 
+        public bool Equals(GoalZone other)
+        {
+            return Hitbox.Equals(other.Hitbox);
+        }
 
+        public override bool Equals(object obj)
+        {
+            return obj is GoalZone other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Hitbox.GetHashCode();
+        }
+
+        public static bool operator ==(GoalZone left, GoalZone right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(GoalZone left, GoalZone right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

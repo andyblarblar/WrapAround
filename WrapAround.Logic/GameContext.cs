@@ -31,8 +31,8 @@ namespace WrapAround.Logic
         [Key("players")]
         public List<Paddle> Players { get; }
 
-        [Key("ball")]
-        public Ball Ball { get; }
+        [Key("ball")] 
+        public Ball Ball;
 
         [Key("currentMap")]
         public GameMap CurrentMap { get; set; }
@@ -43,7 +43,7 @@ namespace WrapAround.Logic
         [Key("blocksHaveChanged")]
         public bool BlocksHaveChanged { get; set; } = true;
 
-        private List<Block> OldBlocks { get; set; } = new List<Block>();
+        private Block[] OldBlocks { get; set; } 
 
         [Key("scoreBoard")]
         public ScoreBoard ScoreBoard { get; }
@@ -64,6 +64,7 @@ namespace WrapAround.Logic
                 new Vector2(3, 0));
             ScoreBoard = new ScoreBoard();
             LobbyState = LobbyStates.WaitingForPlayers;
+            OldBlocks = new Block[CurrentMap.Blocks.Length - 1];
 
             UpdateTimer = new Timer
             {
@@ -179,21 +180,29 @@ namespace WrapAround.Logic
                 if (IsLobbyFull()) LobbyState = LobbyStates.InGame;
                 if (LobbyState == LobbyStates.WaitingForPlayers) return; //do nothing if the lobby is still waiting
 
-                try
-                {
-                  
+               
                     Ball.Update();
 
                     //Collision handle
-                    Players.AsParallel()
-                        .Where(paddle => paddle.Hitbox.IsCollidingWith(Ball.Hitbox)) //check for collisions with all blocks TODO pass hitbox as in readonly struct
-                        .ForAll(async paddle => await CollideAsync(paddle, Ball)); //Handle Collisions 
-
-                    if (CurrentMap.Blocks.Count > 0)
+                    foreach (var player in Players) 
                     {
-                        CurrentMap?.Blocks.AsParallel()
-                            .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
-                            .ForAll(async block => await CollideAsync(block, Ball));
+                        if (player.IsCollidingWith(in Ball.Hitbox))
+                        {
+                            CollidePaddleWithBall(player, ref Ball);
+                        }
+                    }
+
+                    if (CurrentMap.Blocks.Length > 0) 
+                    {
+                        //needs to be for loop for ref block
+                        for (var i = 0; i < (CurrentMap?.Blocks).Length; i++)
+                        {
+                            ref var block = ref (CurrentMap?.Blocks)[i];
+                            if (block.IsCollidingWith(in Ball.Hitbox))
+                            {
+                                CollideBlockWithBall(ref block, ref Ball);
+                            }
+                        }
 
                         //If blocks have changed sense last iteration, mark diff bit
                         BlocksHaveChanged = CurrentMap.Blocks.Except(OldBlocks).Any();
@@ -204,7 +213,7 @@ namespace WrapAround.Logic
                     }
 
                     //Goal scoring 
-                    var actionIfScored = CurrentMap.CheckForGoal(Ball.Hitbox) switch
+                    var actionIfScored = CurrentMap.CheckForGoal(in Ball.Hitbox) switch
                     {
                         var (leftScored, _) when leftScored => () =>
                         {
@@ -223,15 +232,8 @@ namespace WrapAround.Logic
 
                     actionIfScored.Invoke();
 
-
                     //WrapAround!
                     Ball.KeepInBounds(CurrentMap.CanvasSize);
-
-                }
-                catch (Exception)
-                {
-                    //ignore for now, crashing server big no-no
-                }
 
                 //check for wins
                 var actionIfWon = ScoreBoard.IsWon() switch
@@ -252,13 +254,18 @@ namespace WrapAround.Logic
         /// <summary>
         /// Simply calls the collision handler on each object
         /// </summary>
-        /// <param name="obj1"></param>
-        /// <param name="obj2"></param>
-        /// <returns></returns>
-        public static async Task CollideAsync(ICollidable obj1, ICollidable obj2)
+        public static void CollidePaddleWithBall(Paddle paddle, ref Ball ball)
         { 
-             await obj1.Collide(obj2);//TODO make sync
-             await obj2.Collide(obj1);
+             ball.Collide(paddle);
+        } 
+        
+        /// <summary>
+        /// Simply calls the collision handler on each object
+        /// </summary>
+        public static void CollideBlockWithBall(ref Block block, ref Ball ball)
+        { 
+             ball.Collide(in block);
+             block = Block.DamageBlock(in block);
         }
 
 

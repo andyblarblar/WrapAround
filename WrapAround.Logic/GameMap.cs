@@ -15,7 +15,7 @@ namespace WrapAround.Logic
     public class GameMap
     {
         [Key("blocks")]
-        public List<Block> Blocks { get; set; }
+        public Block[] Blocks { get; set; }
 
         [JsonIgnore]
         [IgnoreMember]
@@ -32,19 +32,16 @@ namespace WrapAround.Logic
         /// </summary>
         public GameMap()
         {
-            if (Blocks == null)
-            {
-                Blocks = new List<Block>();
-            }
+            Blocks ??= Array.Empty<Block>();
 
             CanvasSize = (1250, 703);
             _leftGoal = new GoalZone(new Vector2(0, 0));
             _rightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 20, 0));
         }
 
-        public GameMap(List<Block> blocks = default)
+        public GameMap(Block[] blocks = default)
         {
-            blocks ??= new List<Block>();
+            blocks ??= Array.Empty<Block>();
 
             _leftGoal = new GoalZone(new Vector2(0, 0));
             _rightGoal = new GoalZone(new Vector2(CanvasSize.Item1 - 20, 0));
@@ -58,12 +55,12 @@ namespace WrapAround.Logic
         public (bool,bool) CheckForGoal(in Hitbox hitbox)
         {
             //Goal scoring
-            if (_leftGoal.Hitbox.IsCollidingWith(in hitbox))
+            if (_leftGoal.IsCollidingWith(in hitbox))
             {
                 return (true, false);
             }
 
-            else if (_rightGoal.Hitbox.IsCollidingWith(in hitbox))
+            else if (_rightGoal.IsCollidingWith(in hitbox))
             {
                 return (false, true);
             }
@@ -76,7 +73,7 @@ namespace WrapAround.Logic
         public void Reset()
         {
             //reset health of all blocks
-            Blocks.ForEach(block => block.Reset());
+            Array.ForEach(Blocks,block => block = Block.Reset(in block));
         }
 
     }

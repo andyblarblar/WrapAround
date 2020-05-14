@@ -48,7 +48,7 @@ namespace WrapAround
                 {
                     GameContext valContext = null;
 
-                    await context.Update();
+                    await context.Update().ConfigureAwait(false);
 
                     //If blocks have not changed, then do not send to frontend to save bandwidth
                     if (!context.BlocksHaveChanged)
