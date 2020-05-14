@@ -13,7 +13,7 @@ namespace WrapAround.Logic.Entities
     /// A player controlled paddle of variable height but static 10 pixel width
     /// </summary>
     [MessagePackObject]
-    public class Paddle : IQuadrantHitbox, ICollidable
+    public class Paddle : ICollidable
     {
         [Key("id")]
         public int Id { get; set; }
@@ -26,10 +26,6 @@ namespace WrapAround.Logic.Entities
 
         [Key("hitbox")]
         public Hitbox Hitbox { get; set; }
-
-        [JsonIgnore]
-        [IgnoreMember]
-        public QuadrantController SegmentController { get; set; } 
 
         [JsonIgnore]
         [IgnoreMember]
@@ -53,7 +49,6 @@ namespace WrapAround.Logic.Entities
 
         public Paddle(int gameId, int playerId, bool isOnRight, int playerTotalOnSide, string hash, Vector2 startingPosition)
         {
-            SegmentController = new QuadrantController();
             Id = playerId;
             GameId = gameId;
             IsOnRight = isOnRight;
@@ -69,8 +64,7 @@ namespace WrapAround.Logic.Entities
         /// </summary>
         [SerializationConstructor]
         public Paddle(int gameId, int id, bool isOnRight, string hash, float height, Hitbox hitbox)
-        { 
-            SegmentController = new QuadrantController();
+        {
             Id = id;
             GameId = gameId;
             IsOnRight = isOnRight;
@@ -100,7 +94,6 @@ namespace WrapAround.Logic.Entities
         public void Update(Vector2 playerPosition)
         {
             
-            Console.WriteLine(playerPosition);
             Position = playerPosition;
             Hitbox = new Hitbox(playerPosition, new Vector2(Position.X + 10, Position.Y + Height));
 
@@ -115,7 +108,6 @@ namespace WrapAround.Logic.Entities
         public override string ToString()
         {
             return $"{Hitbox}";
-
 
         }
     }

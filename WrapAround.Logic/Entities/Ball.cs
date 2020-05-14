@@ -13,10 +13,10 @@ namespace WrapAround.Logic.Entities
     /// A 10 Px by 10 Px ball (well, square) that bounces around
     /// </summary>
     [MessagePackObject]
-    public class Ball : ICollidable, IQuadrantHitbox
+    public class Ball : ICollidable
     {
         [IgnoreMember]
-        public Vector2 Position;
+        private Vector2 Position;
 
         [IgnoreMember]
         private Vector2 _rate;
@@ -36,16 +36,11 @@ namespace WrapAround.Logic.Entities
         [Key("hitbox")]
         public Hitbox Hitbox { get; set; }
 
-        [JsonIgnore]
-        [IgnoreMember]
-        public QuadrantController SegmentController { get; set; }
-
         [IgnoreMember]
         private readonly Vector2 _startingPosition;
 
         public Ball(Vector2 startingPosition, Vector2 rate)
         {
-            SegmentController = new QuadrantController();
             Position = startingPosition;
             _startingPosition = startingPosition;
             _rate = rate;
@@ -75,6 +70,22 @@ namespace WrapAround.Logic.Entities
         {
             Position = _startingPosition;
             _rate = new Vector2(3, 0);
+        }
+
+        /// <summary>
+        /// Checks if the ball is above or below the playable canvas, wraps around if it is.
+        /// </summary>
+        public void KeepInBounds(in (int,int) canvasSize)
+        {
+            var (_, y) = canvasSize;
+
+            Position.Y = Position.Y switch
+            {
+                var pos when pos < 0 => y,
+                var pos when pos > y => 1,
+                _ => Position.Y
+            };
+
         }
 
 

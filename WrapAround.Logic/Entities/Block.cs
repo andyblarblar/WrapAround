@@ -13,19 +13,14 @@ namespace WrapAround.Logic.Entities
     /// <summary>
     /// A 40 px by 20 px breakable breakout-esk block
     /// </summary>
-    [Serializable]
     [MessagePackObject]
-    public class Block : IDestructable, IQuadrantHitbox, ICollidable, IEquatable<Block>
+    public class Block : IDestructable, ICollidable, IEquatable<Block>
     {
         [Key("health")]
         public int health { get; set; }
 
         [Key("hitbox")]
         public Hitbox Hitbox { get; set; }
-
-        [JsonIgnore]
-        [IgnoreMember]
-        public QuadrantController SegmentController { get; set; }
 
         [Key("color")]
         [JsonIgnore]
@@ -37,13 +32,10 @@ namespace WrapAround.Logic.Entities
         /// <param name="position">The top left position of the block</param>
         public Block(Vector2 position)
         {
-            SegmentController = new QuadrantController();
 
             health = 10;
             Hitbox = new Hitbox(position, new Vector2(position.X + 40, position.Y + 20));
 
-            //initialise position
-            _ = SegmentController.UpdateSegment(Hitbox);
         }
 
         /// <summary>
@@ -52,10 +44,6 @@ namespace WrapAround.Logic.Entities
         public Block()
         {
             Color = "rgb(153,217,234)";//change to 5,5,5 for invisible mode
-            SegmentController = new QuadrantController();
-
-            //initialise position
-            _ = SegmentController.UpdateSegment(Hitbox);
         }
 
         /// <summary>

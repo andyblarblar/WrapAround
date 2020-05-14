@@ -13,6 +13,9 @@ using MessagePack;
 
 namespace WrapAround.Logic
 {
+    /// <summary>
+    /// Encapsulates the state of a wraparound lobby
+    /// </summary>
     [MessagePackObject]
     public class GameContext
     {
@@ -107,8 +110,10 @@ namespace WrapAround.Logic
                 try
                 {
                     var newPlayer = new Paddle(
-                        gameId: Id, 
+                        gameId: Id,
+                        #pragma warning disable CA1305 // Specify IFormatProvider
                         playerId: int.Parse(hash, NumberStyles.Any) ^ ran.Next(),//we should prob fix this lol 
+                        #pragma warning restore CA1305 // Specify IFormatProvider
                         isOnRight: isRightSide,
                         playerTotalOnSide: numOnSide, 
                         hash: hash,
@@ -163,7 +168,7 @@ namespace WrapAround.Logic
         /// </summary>
         public async Task Update()
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 if (LobbyState == LobbyStates.WonByLeft || LobbyState == LobbyStates.WonByRight)//check for win
                 {
@@ -176,23 +181,17 @@ namespace WrapAround.Logic
 
                 try
                 {
-                    //update segments
+                  
                     Ball.Update();
-                    await Ball.SegmentController.UpdateSegment(Ball.Hitbox);
-                    Players.AsParallel().ForAll(async paddle => await paddle.SegmentController.UpdateSegment(paddle.Hitbox));
 
                     //Collision handle
                     Players.AsParallel()
-                        .Where(player => player.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First())) //all paddles in same segment as ball
-                        .Where(paddle => paddle.Hitbox.IsCollidingWith(Ball.Hitbox)) //check for collision
+                        .Where(paddle => paddle.Hitbox.IsCollidingWith(Ball.Hitbox)) //check for collisions with all blocks TODO pass hitbox as in readonly struct
                         .ForAll(async paddle => await CollideAsync(paddle, Ball)); //Handle Collisions 
 
                     if (CurrentMap.Blocks.Count > 0)
                     {
                         CurrentMap?.Blocks.AsParallel()
-                            .Where(block =>
-                                block.SegmentController.Segment.Contains(Ball.SegmentController.Segment.First()) ||
-                                block.SegmentController.Segment.Contains(Ball.SegmentController.Segment[1]))
                             .Where(block => block.Hitbox.IsCollidingWith(Ball.Hitbox))
                             .ForAll(async block => await CollideAsync(block, Ball));
 
@@ -204,27 +203,30 @@ namespace WrapAround.Logic
 
                     }
 
-                    //Goal scoring
-                    if (CurrentMap.LeftGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
+                    //Goal scoring 
+                    var actionIfScored = CurrentMap.CheckForGoal(Ball.Hitbox) switch
                     {
-                        ScoreBoard.ScoreLeft();
-                        Ball.Reset();
-                    }
+                        var (leftScored, _) when leftScored => () =>
+                        {
+                            ScoreBoard.ScoreLeft();
+                            Ball.Reset();
+                        },
 
-                    else if (CurrentMap.RightGoal.Hitbox.IsCollidingWith(Ball.Hitbox))
-                    {
-                        ScoreBoard.ScoreRight();
-                        Ball.Reset();
-                    }
+                        var (_, rightScored) when rightScored => () =>
+                        {
+                            ScoreBoard.ScoreRight();
+                            Ball.Reset();
+                        },
+
+                        _ => (Action) (() => {})
+                    };
+
+                    actionIfScored.Invoke();
 
 
                     //WrapAround!
-                    Ball.Position.Y = Ball.Position.Y switch
-                    {
-                        var pos when pos < 0 => CurrentMap.CanvasSize.Item2,
-                        var pos when pos > CurrentMap.CanvasSize.Item2 => 1,
-                        _ => Ball.Position.Y
-                    };
+                    Ball.KeepInBounds(CurrentMap.CanvasSize);
+
                 }
                 catch (Exception)
                 {
@@ -254,10 +256,9 @@ namespace WrapAround.Logic
         /// <param name="obj2"></param>
         /// <returns></returns>
         public static async Task CollideAsync(ICollidable obj1, ICollidable obj2)
-        {
-            await obj1.Collide(obj2);
-            await obj2.Collide(obj1);
-
+        { 
+             await obj1.Collide(obj2);//TODO make sync
+             await obj2.Collide(obj1);
         }
 
 
@@ -272,10 +273,6 @@ namespace WrapAround.Logic
             //reset for the future
             CurrentMap.Reset();
             CurrentMap = _maps[new Random().Next(0, _maps.Count)];
-
-            //update segment property
-            Ball.SegmentController.CanvasSize = CurrentMap.CanvasSize;
-            Players.ForEach(player => player.SegmentController.CanvasSize = CurrentMap.CanvasSize);
 
             ScoreBoard.Reset();
             LobbyState = IsLobbyFull() ? LobbyStates.InGame : LobbyStates.WaitingForPlayers;
