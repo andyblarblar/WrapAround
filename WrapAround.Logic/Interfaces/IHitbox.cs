@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WrapAround.Logic.Util;
 
@@ -9,6 +10,7 @@ namespace WrapAround.Logic.Interfaces
     /// </summary>
     /// <typeparam name="T">The Type of the segment controller</typeparam>
     /// <typeparam name="TU">the type of the segments</typeparam>
+    [Obsolete("Segment controller is deprecated, so this interface is obsolete.")]
     public interface IHitbox<T, TU> where T : IGameMapSegmentController<TU>
     {
         Hitbox Hitbox { get; set; }
@@ -21,6 +23,7 @@ namespace WrapAround.Logic.Interfaces
     /// Represents a nondescript segment of a game map
     /// <typeparam name="T">The Segment Type</typeparam>
     /// </summary>
+    [Obsolete("Segment controller is deprecated, so this interface is obsolete.")]
     public interface IGameMapSegmentController<T>
     {
         /// <summary>

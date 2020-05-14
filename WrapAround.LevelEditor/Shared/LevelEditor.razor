@@ -258,7 +258,7 @@
 
     private async void DownloadMap()
     {
-        _map = new GameMap(_blocks.Select(hit => new Block(hit.TopLeft)).ToList());
+        _map = new GameMap(_blocks.Select(hit => new Block(hit.TopLeft)).ToArray());
 
         //add custom converter
         var opt = new JsonSerializerOptions();
@@ -283,7 +283,7 @@
 
             //refill block array
             _blocks.Clear();
-            _blocks = _map.Blocks.ConvertAll(input => input.Hitbox);
+            _blocks = Array.ConvertAll(_map.Blocks,input => input.Hitbox).ToList();
 
         }
     }

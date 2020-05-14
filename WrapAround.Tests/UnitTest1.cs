@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Numerics;
 using System.Text.Json;
+using WrapAround.Logic.Entities;
 using WrapAround.Logic.Util;
 
 namespace WrapAround.Tests
@@ -45,6 +46,26 @@ namespace WrapAround.Tests
 
             Assert.Pass();
         }
+
+
+        [Test]
+        public void BlockSerializesProperly()
+        {
+            var block = new Block(new Vector2(10,20));
+
+            var con = new JsonSerializerOptions();
+            con.Converters.Add(new Vector2Converter());
+
+            var json = JsonSerializer.Serialize(block, con);
+            Console.WriteLine(json);
+
+            var b2 = JsonSerializer.Deserialize<Block>(json, con);
+            Console.WriteLine(b2);
+            Assert.AreEqual(b2, block);
+
+            Assert.Pass();
+        }
+
 
     }
 }

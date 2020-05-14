@@ -67,13 +67,13 @@ namespace WrapAround.Tests
             var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
             var BA2 = new List<Block>();
 
-            BA1[0].Damage();
+            BA1[0] = Block.DamageBlock(BA1[0]);
 
             Assert.True(BA1.Except(BA2).Any());
 
             BA2 = BA1.Copy();//note the copy
 
-            BA1[0].Damage();
+            BA1[0] = Block.DamageBlock(BA1[0]);
 
             Assert.True(BA1.Except(BA2).Any());
 

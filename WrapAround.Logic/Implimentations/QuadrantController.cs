@@ -11,6 +11,7 @@ namespace WrapAround.Logic.Implimentations
     /// <summary>
     /// An object that contains the segment state of the surrounding object
     /// </summary>
+    [Obsolete("Quadrant controllers have been deprecated",true)]
     public class QuadrantController : IGameMapSegmentController<Quadrant>
     {
         /// <summary>

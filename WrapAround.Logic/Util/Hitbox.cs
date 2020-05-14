@@ -9,20 +9,21 @@ namespace WrapAround.Logic.Util
     /// A rectangle representing a hitbox
     /// </summary>
     [MessagePackObject]
-    public struct Hitbox : IEquatable<Hitbox>
+    public readonly struct Hitbox : IEquatable<Hitbox>
     {
         [JsonConverter(typeof(Vector2Converter))]
         [Key("topLeft")]
-        public Vector2 TopLeft { get; set; }
+        public Vector2 TopLeft { get; }
 
         [JsonConverter(typeof(Vector2Converter))]
         [Key("bottomRight")]
-        public Vector2 BottomRight { get; set; }
+        public Vector2 BottomRight { get; }
 
+        [JsonConstructor]
         public Hitbox(Vector2 topLeft, Vector2 bottomRight)
         {
-            TopLeft = topLeft;
-            BottomRight = bottomRight;
+            this.TopLeft = topLeft;
+            this.BottomRight = bottomRight;
         }
 
         /// <summary>
