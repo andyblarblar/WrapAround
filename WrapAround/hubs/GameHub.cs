@@ -39,11 +39,10 @@ namespace WrapAround.hubs
         {
             var id = await _serverLoop.AddPlayer(gameId, isOnRight, hash);
             await Clients.Caller.SendAsync("ReceiveId", id);
+            Console.WriteLine($"sent {id} to ma dude");
             if (id != -1)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby{gameId}");
-                
-
             }
 
         }
