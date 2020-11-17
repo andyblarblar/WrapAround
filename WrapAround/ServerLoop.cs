@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using System;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,11 +32,10 @@ namespace WrapAround
         public ServerLoop(IHubContext<GameHub> hubContext, IMapLoader mapLoader)
         {
             _gameContextList = new List<GameContext>(MaxLobbyCount);
-            var maps = mapLoader.LoadMaps();
 
             for (var i = 0; i < MaxLobbyCount; i++)
             {
-                _gameContextList.Add(new GameContext(id: i, maps: maps));
+                _gameContextList.Add(new GameContext(id: i, maps: mapLoader.LoadMaps()));
             }
 
             var broadCastLoop = new Timer(BroadcastInterval);
@@ -48,7 +48,7 @@ namespace WrapAround
                 {
                     GameContext valContext = null;
 
-                    await context.Update().ConfigureAwait(false);
+                    await context.Update();
 
                     //If blocks have not changed, then do not send to frontend to save bandwidth
                     if (!context.BlocksHaveChanged)
@@ -130,6 +130,10 @@ namespace WrapAround
                 var context = _gameContextList.First(gameContext => gameContext.Id == player.GameId);
                 var serverPlayer = context.Players.First(paddle => paddle.Id == player.Id);
                 if (serverPlayer.Hash == player.Hash) serverPlayer.Update(player.Position);
+                else
+                {
+                    Console.WriteLine("Missmatched hash");
+                }
 
             });
 

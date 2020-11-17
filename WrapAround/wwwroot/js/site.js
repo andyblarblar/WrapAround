@@ -3,13 +3,6 @@
 const scn = document.getElementById("render-window");
 // Get rendering context from canvas element
 var ctx = scn.getContext("2d");
-// Determines how 'distinct' the team color has to be (higher generally means further from gray)
-const C_DISTINCTNESS = 20;
-// Determines how different each paddle on a team is colored
-const C_SCALE = 15;
-const MAX_PLAYERS = 16;
-// Consts for indexing colorHues array
-const R = 0, G = 1, B = 2, TEAM1 = 0, TEAM2 = 1;
 
 // Array of lobby button-div elements
 const lobs = [
@@ -29,6 +22,8 @@ for (let i=0; i < lobs.length; i++) {
     });
 }
 
+
+
 var _lobbyCounts = [];
 // 'Unique' user hash (unlikely to intersect) for this player
 const userHash = genHash("Pl@ceh01d&r");
@@ -42,11 +37,22 @@ var playerPaddle =
 
 // Flag is on when in a lobby -- used to toggle keyevents
 var gameLoaded = false;
+// Used to prevent a race condition between adding a player and updating that players position
+var IdReceived = false;
 const scnHeight = 703;
 // Number of pixels each paddle moves in one keystroke
 var padSpeed;
 
 //################################Colors######################################
+
+const MAX_PLAYERS = 16;
+// Consts for indexing colorHues array
+const R = 0, G = 1, B = 2, TEAM1 = 0, TEAM2 = 1;
+
+// Determines how 'distinct' the team color has to be (higher generally means further from gray)
+const C_DISTINCTNESS = 20;
+// Determines how different each paddle on a team is colored
+const C_SCALE = 15;
 
 // Randomly determine the team colors for this client (each client will have different team colors)
 var team1R = Math.floor(Math.random() * 256);
@@ -182,7 +188,7 @@ connection.on("ReceiveLobbyCounts", (lobbyCounts) => {
 var oldBlockArray;
 // Called every 17ms when getting context from the server
 connection.on("ReceiveContextUpdate", (context) => {
-   
+
     //Always get blocks on first pass
     if (oldBlockArray === undefined) {
         oldBlockArray = context.currentMap.blocks;
@@ -300,14 +306,23 @@ function joinLobby(lobbyId) {
 connection.on("ReceiveId", (id) => {
     userId = id;
     playerPaddle.id = userId;
-    playerPaddle.gameId = lobbyId;
+    //Allow the game to start sending updates
+    IdReceived = true;
+    console.log("should be true now")
 });
 
 // Called when the X is clicked in the modal, closes the canvas and leaves the lobby
 function leaveLobby() {
-    connection.invoke("RemovePlayerFromLobby", playerPaddle);
+
+    if (!gameLoaded) {
+        return;
+    }
+
     // Disable keyevents
     gameLoaded = false;
+    IdReceived = false;
+    //Remove from backend second to avoid sending update after backend removed us
+    connection.invoke("RemovePlayerFromLobby", playerPaddle);
     resetPaddle();
 }
 
@@ -343,7 +358,7 @@ window.addEventListener("keydown", function (event) { Key.onKeydown(event); }, f
 
 //send location every 30ms to server to avoid spam
 setInterval(() => {
-        if (gameLoaded) {
+        if (gameLoaded && IdReceived) {
             connection.invoke("UpdatePlayerPosition",
                 playerPaddle.hash,
                 playerPaddle.hitbox.topLeft.X,
@@ -384,7 +399,6 @@ function resetPaddle() {
     //reset hitbox
     playerPaddle.hitbox.topLeft = playerPaddle.isOnRight ? { X: 1250 - 20, Y: 0 } : { X: 20, Y: 0 };
     playerPaddle.hitbox.bottomRight = { X: 30, Y: playerPaddle.hitbox.topLeft.Y + playerPaddle.MAX_SIZE }
-
 
 }
 
