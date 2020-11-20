@@ -18,7 +18,6 @@ namespace WrapAround.Logic.Entities
         [IgnoreMember]
         private Vector2 _position;
 
-        [IgnoreMember]
         private Vector2 _rate;
 
         [IgnoreMember]
