@@ -99,5 +99,10 @@ namespace WrapAround.Logic.Entities
         {
             return !left.Equals(right);
         }
+
+        public override string ToString()
+        {
+            return $"Health:{Health},Hitbox:{Hitbox}";
+        }
     }
 }

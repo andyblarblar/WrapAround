@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using System.Numerics;
+using System.Resources;
 using WrapAround.Logic.Entities;
 using WrapAround.Logic.Util;
 
@@ -17,8 +18,8 @@ namespace WrapAround.Tests
             hitbox2 = new Hitbox(new Vector2(10, 0), new Vector2(30, -10));
             hitbox3 = new Hitbox(new Vector2(-20, 10), new Vector2(10, 0));
             hitbox4 = new Hitbox(new Vector2(-10, 10), new Vector2(1, 10));
-            goalZone = new Hitbox(new Vector2(0,0),new Vector2(10, 703));
-            ball = new Hitbox(new Vector2(5,351),new Vector2(15, 361));
+            goalZone = new Hitbox(new Vector2(0, 0), new Vector2(10, 703));
+            ball = new Hitbox(new Vector2(5, 351), new Vector2(15, 361));
         }
 
         private Hitbox hitbox1;
@@ -51,7 +52,7 @@ namespace WrapAround.Tests
 
             Assert.Pass();
         }
-        
+
         [Test]
         public void BallGoalZoneSimulation()
         {
@@ -64,7 +65,7 @@ namespace WrapAround.Tests
         [Test]
         public void BlockArraysDiff()
         {
-            var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+            var BA1 = new List<Block> { new Block(new Vector2(0, 0)), new Block(new Vector2(10, 10)) };
             var BA2 = new List<Block>();
 
             BA1[0] = Block.DamageBlock(BA1[0]);
@@ -84,25 +85,45 @@ namespace WrapAround.Tests
             Assert.False(BA1.Except(BA2).Any());
 
         }
-        
+
         [Test]
         public void BlockArraysDiffButFalseThisTime()
         {
-            var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
-            var BA2 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+            var BA1 = new List<Block> { new Block(new Vector2(0, 0)), new Block(new Vector2(10, 10)) };
+            var BA2 = new List<Block> { new Block(new Vector2(0, 0)), new Block(new Vector2(10, 10)) };
 
             Assert.False(BA1.Except(BA2).Any());
-        }  
-        
+        }
+
         [Test]
         public void BlockArraysDiffWithEmptyArray()
         {
-            var BA1 = new List<Block>{new Block(new Vector2(0,0)) , new Block(new Vector2(10, 10))};
+            var BA1 = new List<Block> { new Block(new Vector2(0, 0)), new Block(new Vector2(10, 10)) };
             var BA2 = new List<Block>();
 
             Assert.True(BA1.Except(BA2).Any());
         }
 
+        [Test]
+        public void BlocksReset()
+        {
+            var list1 = new List<Block>{new Block(new Vector2(0,1)), new Block(new Vector2(10, 12)) };
+            var list2 = new List<Block>{new Block(new Vector2(0,1)), new Block(new Vector2(10, 12)) };
+
+            list2[0] = Block.DamageBlock(list2[0]);
+
+            for (var i = 0; i < 2; i++)
+            {
+                var block = list2[i];
+                list2[i] = Block.Reset(in block);
+            }
+
+            for (var i = 0; i < 2; i++)
+            {
+                Assert.AreEqual(list1[i],list2[i]);
+            }
+
+        }
 
 
 

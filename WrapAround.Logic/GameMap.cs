@@ -73,7 +73,10 @@ namespace WrapAround.Logic
         public void Reset()
         {
             //reset health of all blocks
-            Array.ForEach(Blocks,block => block = Block.Reset(in block));
+            for (var i = 0; i < Blocks.Length; i++)
+            {
+                Blocks[i] = Block.Reset(in Blocks[i]);
+            }
         }
 
     }
