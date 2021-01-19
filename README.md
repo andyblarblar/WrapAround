@@ -6,11 +6,11 @@ breakable blocks like in breakout. The game is made up of a few components. Firs
 
 ## WrapAround
 
-The WrapAround project contains the main ASP.NET Core server that both serves the static wraparound site, and the games internal "runtime". The game logic is controlled by the `ServerLoop` object, which is injected as a singleton. This object contains the lobbys, the timers for sending updates, as well as interfaces for mutating the state of lobbys. This interface (litterally) is consumed by the `GameHub` SignalR hub. this hub accepts connections at the /game endpoint. Any requests to be added to a lobby, move to a new location ect. Are sent from the client to this endpoint, and are filtered through the abstractions until the underlieing object is mutated. the /gameMaps directory holds all of the maps the server will load created by the level editor. 
+The WrapAround project contains the main ASP.NET Core server that both serves the static wraparound site, and the games internal "runtime". The game logic is controlled by the `ServerLoop` object, which is injected as a singleton. This object contains the lobbies, the timers for sending updates, as well as interfaces for mutating the state of lobbys. This interface is consumed by the `GameHub` SignalR hub. This hub accepts connections at the /game endpoint. Any requests to be added to a lobby, move to a new location ect. Are sent from the client to this endpoint, and are filtered through the abstractions until the underlieing object is mutated. the /gameMaps directory holds all of the maps the server will load created by the level editor. 
 
 ## WrapAround.Logic
 
-This project contains the game logic and entitys unrelated to the server. `GameContext` is the main class here, and contains all of the state of a lobby, as well as the core update loop of the game. The rest of the project is pretty self documenting, looking through the folders is quite simple.
+This project contains the game logic and entitys unrelated to the server. `GameContext` is the main class here, and contains all of the state of a lobby, as well as the core update loop of the game. 
 
 ## WrapAround.LevelEditor
 
